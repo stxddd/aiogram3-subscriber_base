@@ -1,22 +1,13 @@
 import re
-from pathlib import Path
 
 from aiogram import F, Router
-from aiogram.filters.state import StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, FSInputFile, Message
+from aiogram.types import CallbackQuery
 
 from bot.database.tables.lines.dao import LineDAO
-from bot.keyboards.home import delete_last_keyboard, home_keyboard
 from bot.keyboards.tables import actions_with_table_keyboard
-from bot.templates.errors import adding_data_error, table_dose_not_exists_error
-from bot.templates.messages import main_menu, new_data_added_message
-from bot.utils.excel_generator import ExcelCRUD
 
 router = Router()
-
-
 
 
 @router.callback_query(F.data.regexp(r"^get_(\d+)_(.+?)_table$"))

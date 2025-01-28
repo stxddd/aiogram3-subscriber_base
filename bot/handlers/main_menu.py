@@ -11,7 +11,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def start(message: Message):
-    tg_id = message.from_user.id
+    tg_id = message.from_user.id 
 
     user = await UsersDAO.find_one_or_none(tg_id=tg_id)
 

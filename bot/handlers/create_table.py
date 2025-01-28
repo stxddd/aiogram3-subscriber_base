@@ -10,6 +10,7 @@ from bot.templates.errors import imposible_to_create_table_error
 from bot.templates.messages import (enter_table_name_message,
                                     table_has_been_created_message)
 from bot.utils.excel_generator import ExcelCRUD
+from bot.keyboards.tables import get_my_tables_keyboard
 
 router = Router()
 
@@ -47,4 +48,4 @@ async def create_table_name(message: Message, state: FSMContext):
         return await message.answer(imposible_to_create_table_error)
 
     await state.set_state(Form.waiting_for_table_lines)
-    return await message.answer(table_has_been_created_message)
+    return await message.answer(table_has_been_created_message + table.name)
