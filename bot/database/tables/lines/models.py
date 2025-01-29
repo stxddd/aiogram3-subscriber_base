@@ -9,6 +9,6 @@ class Line(Base):
     id = Column(Integer, primary_key=True)
     owner_tg_id = Column(BigInteger, nullable=False)
     table_id = Column(ForeignKey("tables.id"))
-    subscriber_tg_id = Column(String, nullable=False)
+    subscriber_tg_id = Column(String(32), nullable=False)
     subscriber_price = Column(Integer, nullable=False)
-    subscriber_date = Column(String, nullable=False)
+    subscriber_date = Column(String(32), nullable=False)

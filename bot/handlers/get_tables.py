@@ -2,9 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.home import home_keyboard
 from bot.keyboards.tables import get_my_tables_keyboard
-from bot.templates.errors import table_are_missing_error
 from bot.templates.messages import our_tables
 
 router = Router()
@@ -18,11 +16,6 @@ async def get_tables(callback: CallbackQuery):
     tables = await TableDAO.find_all(owner_tg_id=tg_id)
 
     await callback.answer()
-
-    if not tables:
-        return await callback.message.edit_text(
-            table_are_missing_error, reply_markup=home_keyboard
-        )
 
     try:
         return await callback.message.edit_text(

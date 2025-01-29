@@ -1,2 +1,10 @@
-my_tables = "Мои таблицы"
-create_table = "Создать таблицу"
+my_tables_text = "Мои таблицы"
+create_table_text = "Создать таблицу"
+
+back_text = 'Назад'
+cancel_text = 'Отмена'
+
+download_text = 'Скачать'
+edit_text = 'Редактировать'
+add_data_text = "Добавить данные"
+look_all_text = 'Посмотреть'

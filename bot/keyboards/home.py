@@ -1,16 +1,11 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from bot.templates.keyboards import create_table, my_tables
+from bot.templates.keyboards import create_table_text, my_tables_text
 
 home_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [(InlineKeyboardButton(text=my_tables, callback_data="get_tables"))],
-        [(InlineKeyboardButton(text=create_table, callback_data="create_table"))],
+        [(InlineKeyboardButton(text=my_tables_text, callback_data="get_tables"))],
+        [(InlineKeyboardButton(text=create_table_text, callback_data="create_table"))],
     ]
 )
 
-delete_last_keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [(InlineKeyboardButton(text="Отмена", callback_data="delete_last_message"))],
-    ]
-)

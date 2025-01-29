@@ -4,8 +4,8 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from bot.database.tables.lines.dao import LineDAO
 from bot.keyboards.tables import actions_with_table_keyboard
+from bot.templates.messages import table_name_message
 
 router = Router()
 
@@ -18,13 +18,9 @@ async def actions_with_table(callback: CallbackQuery, state: FSMContext):
     table_id = int(match.group(1))
     table_name = match.group(2)
 
-    await state.update_data(table_id=table_id, table_name=table_name)
+    await state.update_data(table_id=table_id, table_name=table_name, message_sent_id = callback.message.message_id)
 
-    message_sent = await callback.message.edit_text(
-        f"Таблица: «{table_name}»", reply_markup=actions_with_table_keyboard
-    )
+
+    message_sent = await callback.message.edit_text(table_name_message(table_name), reply_markup=actions_with_table_keyboard)
 
     await state.update_data(message_sent_id_actions_with_table=message_sent.message_id)
-
-
-

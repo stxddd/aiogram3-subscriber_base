@@ -10,13 +10,13 @@ class ExcelCRUD:
 
     @classmethod
     async def create_new_excel(cls, table_id: int, table_name: str, tg_id: int):
-        file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
+        try:
+            file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
-        workbook = Workbook()
-        sheet = workbook.active
-        sheet.title = table_name
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = table_name
 
-        if not file_path.exists():
             header_items = ["TG", "ЦЕНА", "СРОК"]
             for i, header in enumerate(header_items, start=1):
                 cell = sheet.cell(row=1, column=i, value=header)
@@ -29,7 +29,8 @@ class ExcelCRUD:
 
             workbook.save(file_path)
             return True
-        else:
+        
+        except:
             return False
 
     @classmethod
