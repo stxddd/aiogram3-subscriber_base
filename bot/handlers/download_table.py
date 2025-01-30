@@ -1,39 +1,28 @@
 from pathlib import Path
+import re
 
 from aiogram import F, Router
-from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, FSInputFile
 
-from bot.keyboards.home import  home_keyboard
 from bot.templates.errors import table_dose_not_exists_error
-from bot.templates.messages import main_menu
+from bot.templates.messages import table_name_message
 
 router = Router()
 
 
-@router.callback_query(F.data == "download_table")
-async def download_table(callback: CallbackQuery, state: FSMContext):
-    current_dir = Path(__file__).resolve().parent.parent
-
+@router.callback_query(F.data.regexp(r"^download_(\d+)_(.+)$"))
+async def handle_download_table(callback: CallbackQuery):
+    match = re.match(r"^download_(\d+)_(.+)$", callback.data)
     await callback.answer()
-    data = await state.get_data()
 
-    message_sent_id_actions_with_table = data.get("message_sent_id_actions_with_table")
-    await callback.message.bot.delete_message(
-        callback.message.chat.id, message_sent_id_actions_with_table
-    )
-
-    table_id = data.get("table_id")
-    table_name = data.get("table_name")
+    table_id = int(match.group(1))
+    table_name = match.group(2)
     tg_id = callback.from_user.id
-    file_path = current_dir / "files" / f"{table_name}_{table_id}_{tg_id}.xlsx"
+
+    file_path = Path(__file__).resolve().parent.parent / "files" / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
     if not file_path.exists():
         return await callback.message.edit_text(table_dose_not_exists_error)
 
-    table = FSInputFile(file_path)
-
-    sent_file_message = await callback.message.answer_document(document=table)
-    await callback.message.answer(main_menu, reply_markup=home_keyboard)
-
-    await state.update_data(message_ids=[sent_file_message.message_id])
+    await callback.message.answer(table_name_message(table_name))
+    await callback.message.answer_document(document=FSInputFile(file_path))

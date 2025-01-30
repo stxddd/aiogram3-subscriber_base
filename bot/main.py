@@ -8,10 +8,10 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.config import settings
 from bot.handlers.actions_with_table import  router as get_exel_table_by_id_router
-from bot.handlers.create_table import router as create_table_router
+from bot.handlers.handle_create_table import router as create_table_router
 from bot.handlers.delete_last_message import router as delete_last_message_router
 from bot.handlers.get_tables import router as get_tables_router
-from bot.handlers.main_menu import router as base_commands_router
+from bot.handlers.handle_start import router as base_commands_router
 from bot.handlers.download_table import router as download_table_router
 from bot.handlers.add_data_to_table import router as add_data_to_table_router
 from bot.handlers.look_all_lines import router as look_all_lines_router

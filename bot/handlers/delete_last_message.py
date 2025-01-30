@@ -2,10 +2,13 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
+from bot.templates.messages import action_is_cancel_text
+
 router = Router()
 
 
 @router.callback_query(F.data == "delete_last_message")
-async def delete_last_message(callback: CallbackQuery, state: FSMContext):
+async def handle_action_is_cancel_message(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()
+    await callback.message.answer(action_is_cancel_text)
