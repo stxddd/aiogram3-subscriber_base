@@ -4,6 +4,7 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, FSInputFile
 
+from bot.keyboards.inline.tables import get_actions_with_table_keyboard
 from bot.templates.errors import table_dose_not_exists_error
 from bot.templates.messages import table_name_message
 
@@ -25,4 +26,4 @@ async def handle_download_table(callback: CallbackQuery):
         return await callback.message.edit_text(table_dose_not_exists_error)
 
     await callback.message.answer(table_name_message(table_name))
-    await callback.message.answer_document(document=FSInputFile(file_path))
+    await callback.message.answer_document(document=FSInputFile(file_path), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))

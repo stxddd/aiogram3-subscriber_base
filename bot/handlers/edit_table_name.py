@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
+from bot.keyboards.inline.tables import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils import cancel_delete_last_keyboard
 from bot.templates.errors import (
     name_so_long_error,
@@ -65,6 +66,6 @@ async def handle_line_name(message: Message, state: FSMContext):
                 new_table_name=new_table_name,
                 table_name=table_name,
                 tg_id=tg_id)
-            return await message.answer(name_changed_successfully_message(table_name=new_table_name, old_table_name=table_name))
+            return await message.answer(name_changed_successfully_message(table_name=new_table_name, old_table_name=table_name), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
 
     return message.answer(name_not_changed_message(table_name=new_table_name))

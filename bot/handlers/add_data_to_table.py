@@ -7,6 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
 from bot.database.tables.lines.dao import LineDAO
+from bot.keyboards.inline.tables import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils import cancel_delete_last_keyboard
 from bot.templates.errors import (
     adding_data_error,
@@ -133,4 +134,4 @@ async def handle_line_date(message: Message, state: FSMContext):
         return await message.answer(adding_data_error)
 
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_date"))
-    await message.answer(data_added_message(table_name, name, price, date ))
+    await message.answer(data_added_message(table_name, name, price, date ), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))

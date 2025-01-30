@@ -5,6 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
 from bot.database.tables.dao import TableDAO
+from bot.keyboards.inline.tables import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils import cancel_delete_last_keyboard
 from bot.templates.errors import (imposible_to_create_table_error,
                                    name_so_long_error
@@ -58,4 +59,4 @@ async def handle_table_name(message: Message, state: FSMContext):
         await TableDAO.delete(id=table.id)
         return await message.answer(imposible_to_create_table_error)
 
-    await message.answer(table_has_been_created_message(table_name))
+    await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
