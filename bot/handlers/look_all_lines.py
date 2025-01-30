@@ -2,7 +2,7 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from bot.database.tables.lines.dao import LineDAO
-from bot.templates.messages import all_table_lines, table_has_no_lines_message
+from bot.templates.messages import all_table_lines_message, table_has_no_lines_message
 
 router = Router()
 
@@ -20,4 +20,4 @@ async def handle_look_all_lines(callback: CallbackQuery):
     if not lines:
         return await callback.message.answer(table_has_no_lines_message(table_name))
     
-    return await callback.message.answer(all_table_lines(lines, table_name), parse_mode="HTML")
+    return await callback.message.answer(all_table_lines_message(lines, table_name), parse_mode="HTML")
