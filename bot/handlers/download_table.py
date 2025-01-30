@@ -10,9 +10,9 @@ from bot.templates.messages import table_name_message
 router = Router()
 
 
-@router.callback_query(F.data.regexp(r"^download_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(r"^download_table_(\d+)_(.+)$"))
 async def handle_download_table(callback: CallbackQuery):
-    match = re.match(r"^download_(\d+)_(.+)$", callback.data)
+    match = re.match(r"^download_table_(\d+)_(.+)$", callback.data)
     await callback.answer()
 
     table_id = int(match.group(1))

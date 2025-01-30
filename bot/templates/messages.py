@@ -7,12 +7,15 @@ pick_table_for_download_message = "❔Выберите таблицу, кото�
 our_tables = "✅ Ваши таблицы"
 table_are_missing_text = "❌ В настоящие время у Вас нет таблиц."
 action_is_cancel_text = '❌ Действие отменено.'
+def are_you_sure_to_delete_table_message(table_name): return f'❔ Вы уверены, что хотите удалить таблицу «{table_name}»?'
+def table_are_deleted(table_name): return f"✅ Таблица «{table_name}» удалена!"
+def table_are_not_deleted(table_name): return f"❌ Невозможно удалить таблицу «{table_name}»!"
 
 def sent_client_name_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте имя клиента (до 32 символов)"
 def sent_client_price_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте цену услуги (целое число)"
 def sent_client_date_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте даты оказания услуг в формате dd.mm.yyyy-dd.mm.yyyy"
 
-def select_an_action_for_the_table(table_name): return f'Выберите, что Вы хотите изменить в таблице «{table_name}»?'
+def select_an_action_for_the_table(table_name): return f'❔Выберите, что Вы хотите изменить в таблице «{table_name}»?'
 def enter_new_table_name(table_name): return f'❔ Введите новое имя для таблицы «{table_name}» (до 32 символов)'
 def table_name_message(table_name) -> str: return f"✅ Таблица: «{table_name}»"
 def data_added_message(table_name, name, price, date): return f'💾✅ Данные добавлены в таблицу «{table_name}»\n\nКлиент: {name}\nЦена: {price}\nДаты: {date}'

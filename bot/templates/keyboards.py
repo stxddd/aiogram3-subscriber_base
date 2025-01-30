@@ -8,6 +8,11 @@ download_text = 'Скачать'
 edit_text = 'Редактировать'
 add_data_text = "Добавить данные"
 look_all_text = 'Посмотреть'
+delete_text = 'Удалить'
 
 change_table_name_text = 'Имя'
 change_table_data_text = 'Содержимое'
+
+
+yes_text = 'ДА'
+no_text = 'НЕТ'

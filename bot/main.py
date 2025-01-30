@@ -17,6 +17,7 @@ from bot.handlers.add_data_to_table import router as add_data_to_table_router
 from bot.handlers.look_all_lines import router as look_all_lines_router
 from bot.handlers.edit_table import router as edit_table_router
 from bot.handlers.edit_table_name import router as edit_table_name_router
+from bot.handlers.delete_table import router as delete_table_router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,7 +38,8 @@ async def main():
         add_data_to_table_router,
         look_all_lines_router,
         edit_table_router,
-        edit_table_name_router
+        edit_table_name_router,
+        delete_table_router
     )
 
     await dp.start_polling(bot)

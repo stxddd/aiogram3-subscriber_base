@@ -47,11 +47,11 @@ async def delete_message_safely(bot, chat_id, message_id):
         pass  
 
 
-@router.callback_query(F.data.regexp(r"^add_data_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(r"^add_data_to_table_(\d+)_(.+)$"))
 async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
-    match = re.match(r"^add_data_(\d+)_(.+)$", callback.data)
+    match = re.match(r"^add_data_to_table_(\d+)_(.+)$", callback.data)
     table_id = int(match.group(1))
     table_name = match.group(2)
 

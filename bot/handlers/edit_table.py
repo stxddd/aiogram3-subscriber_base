@@ -13,11 +13,11 @@ class Form(StatesGroup):
     waiting_for_name_data = State()
 
 
-@router.callback_query(F.data.regexp(r"^edit_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(r"^edit_table_(\d+)_(.+)$"))
 async def handle_edit_table_actions(callback: CallbackQuery):
     await callback.answer()
 
-    match = re.match(r"^edit_(\d+)_(.+)$", callback.data)
+    match = re.match(r"^edit_table_(\d+)_(.+)$", callback.data)
     
     table_id = int(match.group(1))
     table_name = match.group(2)

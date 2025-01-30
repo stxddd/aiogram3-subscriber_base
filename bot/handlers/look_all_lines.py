@@ -7,11 +7,11 @@ from bot.templates.messages import all_table_lines_message, table_has_no_lines_m
 router = Router()
 
 
-@router.callback_query(F.data.regexp(r"^look_all_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(r"^look_all_table_data_(\d+)_(.+)$"))
 async def handle_look_all_lines(callback: CallbackQuery):
     await callback.answer()
 
-    match = re.match(r"^look_all_(\d+)_(.+)$", callback.data)
+    match = re.match(r"^look_all_table_data_(\d+)_(.+)$", callback.data)
     table_id = int(match.group(1))
     table_name = match.group(2)
 

@@ -11,25 +11,20 @@ class ExcelCRUD:
     @classmethod
     async def rename_excel_table(cls, table_id: int, new_table_name: str, table_name: str, tg_id: int):
         try:
-            # Find the existing file by its table name, table_id, and tg_id
             file_path = cls.file_path / f"{new_table_name}_{table_id}_{tg_id}.xlsx"
 
-            # Check if the file exists
             if file_path.exists():
-                return False  # Return False if the new table name already exists
+                return False 
 
-            # Find the old file path using the same table_id and tg_id
             old_file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
-            # Check if the old file exists
             if old_file_path.exists():
-                # Rename the file
                 old_file_path.rename(file_path)
-                return True  # Return True on successful rename
+                return True
             else:
-                return False  # Return False if the original file doesn't exist
+                return False
         except Exception as e:
-            return False  # Return False in case of an excep
+            return False
 
     @classmethod
     async def create_new_excel(cls, table_id: int, table_name: str, tg_id: int):
@@ -73,3 +68,16 @@ class ExcelCRUD:
 
             return True
         return False
+    
+    @classmethod
+    async def delete_excel_file(cls, table_id: int, table_name: str, tg_id: int):
+        try:
+            file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
+
+            if file_path.exists():
+                file_path.unlink() 
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
