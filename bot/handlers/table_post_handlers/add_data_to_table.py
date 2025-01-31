@@ -9,12 +9,14 @@ from aiogram.types import CallbackQuery, Message
 from bot.database.tables.lines.dao import LineDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
+from bot.keyboards.reply import main_keyboards
 from bot.templates.errors_templates import (
     adding_data_error,
     name_so_long_error,
     price_must_be_int_error,
     invalid_date_format_error,
-    table_dose_not_exists_error
+    table_dose_not_exists_error,
+    exceeded_the_limit_on_the_line_error
 )
 from bot.templates.messages_templates import (
     data_added_message,
@@ -23,6 +25,7 @@ from bot.templates.messages_templates import (
     sent_client_date_message
 )
 from bot.database.tables.dao import TableDAO
+from bot.config import settings
 
 router = Router()
 
@@ -59,13 +62,18 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
 
     table = await TableDAO.find_all(id=table_id)
     
-    if not table:
-        return await callback.message.answer(table_dose_not_exists_error)
+    lines = await LineDAO.find_all(table_id = table_id)
 
-    message_sent = await callback.message.answer(sent_client_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
+    if len(lines) <= settings.MAX_LINE_LIMIT:
+        if not table:
+            return await callback.message.answer(table_dose_not_exists_error)
 
-    await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
-    await state.set_state(Form.waiting_for_name_data)
+        message_sent = await callback.message.answer(sent_client_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
+
+        await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
+        await state.set_state(Form.waiting_for_name_data)
+
+    return await callback.message.answer(exceeded_the_limit_on_the_line_error, reply_markup=main_keyboards)
 
 
 @router.message(StateFilter(Form.waiting_for_name_data))

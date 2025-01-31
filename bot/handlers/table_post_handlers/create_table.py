@@ -16,6 +16,7 @@ from bot.templates.messages_templates import (enter_table_name_message,
                                     table_has_been_created_message)
 from bot.templates.keyboards_templates import create_table_text
 from bot.keyboards.reply.main_keyboards import main_keyboard
+from bot.config import settings
 
 router = Router()
 
@@ -50,7 +51,7 @@ async def handle_table_name(message: Message, state: FSMContext):
 
     all_tables = await TableDAO.find_all(owner_tg_id=message.from_user.id)
 
-    if len(all_tables) < 5:
+    if len(all_tables) < settings.MAX_TABLE_LIMIT:
         new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
         table = await TableDAO.find_by_id(model_id=new_table["id"])
 

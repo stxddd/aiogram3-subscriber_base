@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_PASS: str
 
+    MAX_TABLE_LIMIT: int
+    MAX_LINE_LIMIT: int
+
     @property
     def DATABASE_URL(self) -> str:
         return (
