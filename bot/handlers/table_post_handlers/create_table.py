@@ -8,12 +8,14 @@ from bot.database.tables.dao import TableDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.templates.errors_templates import (imposible_to_create_table_error,
-                                   name_so_long_error
-                                  , table_already_exists_error)
+                                   name_so_long_error, 
+                                   table_already_exists_error,
+                                   exceeded_the_limit_on_the_table_error)
 from bot.templates.messages_templates import (enter_table_name_message,
                                     table_has_been_created_message,
                                     table_has_been_created_message)
 from bot.templates.keyboards_templates import create_table_text
+from bot.keyboards.reply.main_keyboards import main_keyboard
 
 router = Router()
 
@@ -46,10 +48,14 @@ async def handle_table_name(message: Message, state: FSMContext):
     if await is_not_uniqe_table(table_name, message.from_user.id):
         return await message.answer(table_already_exists_error)
 
-    new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
-    table = await TableDAO.find_by_id(model_id=new_table["id"])
+    all_tables = await TableDAO.find_all(owner_tg_id=message.from_user.id)
 
-    if not table:
-        return await message.answer(imposible_to_create_table_error)
+    if len(all_tables) < 5:
+        new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
+        table = await TableDAO.find_by_id(model_id=new_table["id"])
 
-    await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
+        if not table:
+            return await message.answer(imposible_to_create_table_error)
+
+        return await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
+    return await message.answer(exceeded_the_limit_on_the_table_error,reply_markup=main_keyboard)
