@@ -1,13 +1,13 @@
-from pathlib import Path
 import re
 
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
-from bot.templates.messages import select_an_action_for_the_table
-from bot.keyboards.inline.tables import get_edit_actions_with_table_keyboard
+from bot.templates.messages_templates import select_an_action_for_the_table_message
+from bot.keyboards.inline.table_keyboards import get_edit_actions_with_table_keyboard
 
 router = Router()
+
 
 class Form(StatesGroup):
     waiting_for_name_data = State()
@@ -24,8 +24,8 @@ async def handle_edit_table_actions(callback: CallbackQuery):
     tg_id = callback.from_user.id
 
     await callback.message.answer(
-        select_an_action_for_the_table(table_name),
-        reply_markup = await get_edit_actions_with_table_keyboard
-        (table_name=table_name, 
+        select_an_action_for_the_table_message(table_name),
+        reply_markup = await get_edit_actions_with_table_keyboard(
+        table_name=table_name, 
         table_id=table_id
     ))

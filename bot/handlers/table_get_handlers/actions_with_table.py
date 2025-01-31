@@ -4,8 +4,8 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from bot.keyboards.inline.tables import get_actions_with_table_keyboard
-from bot.templates.messages import table_name_message
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
+from bot.templates.messages_templates import table_name_message
 
 router = Router()
 

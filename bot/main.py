@@ -7,17 +7,21 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.config import settings
-from bot.handlers.actions_with_table import  router as get_exel_table_by_id_router
-from bot.handlers.create_table import router as create_table_router
-from bot.handlers.delete_last_message import router as delete_last_message_router
-from bot.handlers.get_tables import router as get_tables_router
-from bot.handlers.start import router as base_commands_router
-from bot.handlers.download_table import router as download_table_router
-from bot.handlers.add_data_to_table import router as add_data_to_table_router
-from bot.handlers.look_all_lines import router as look_all_lines_router
-from bot.handlers.edit_table import router as edit_table_router
-from bot.handlers.edit_table_name import router as edit_table_name_router
-from bot.handlers.delete_table import router as delete_table_router
+from bot.handlers.table_get_handlers.actions_with_table import  router as get_exel_table_by_id_router
+from bot.handlers.table_post_handlers.create_table import router as create_table_router
+from bot.handlers.utils_hadnlers.delete_last_message import router as delete_last_message_router
+from bot.handlers.table_get_handlers.get_tables import router as get_tables_router
+from bot.handlers.base_handlers.start import router as base_commands_router
+from bot.handlers.table_post_handlers.add_data_to_table import router as add_data_to_table_router
+from bot.handlers.table_get_handlers.look_all_lines import router as look_all_lines_router
+from bot.handlers.edit_table_handlers.edit_table import router as edit_table_router
+from bot.handlers.edit_table_handlers.edit_table_name import router as edit_table_name_router
+from bot.handlers.delete_handlers.delete_table import router as delete_table_router
+from bot.handlers.delete_handlers.delete_line import router as delete_line_router
+from bot.handlers.edit_table_data_handlers.edit_table_data import router as edit_table_data_router
+from bot.handlers.edit_table_data_handlers.edit_data_name import router as edit_data_name_router
+from bot.handlers.edit_table_data_handlers.edit_data_price import router as edit_data_price_router
+from bot.handlers.edit_table_data_handlers.edit_data_date import router as edit_data_date_router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -34,12 +38,16 @@ async def main():
         create_table_router,
         get_exel_table_by_id_router,
         delete_last_message_router,
-        download_table_router,
         add_data_to_table_router,
         look_all_lines_router,
         edit_table_router,
         edit_table_name_router,
-        delete_table_router
+        delete_table_router,
+        delete_line_router,
+        edit_table_data_router,
+        edit_data_name_router,
+        edit_data_price_router,
+        edit_data_date_router,
     )
 
     await dp.start_polling(bot)

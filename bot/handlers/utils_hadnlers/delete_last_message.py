@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
-from bot.templates.messages import action_is_cancel_text
+from bot.templates.messages_templates import action_is_cancel_text
 
 router = Router()
 

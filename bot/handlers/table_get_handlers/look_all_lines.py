@@ -2,8 +2,8 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from bot.database.tables.lines.dao import LineDAO
-from bot.keyboards.inline.tables import get_actions_with_table_keyboard
-from bot.templates.messages import all_table_lines_message, table_has_no_lines_message
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
+from bot.templates.messages_templates import all_table_lines_message, table_has_no_lines_message
 
 router = Router()
 

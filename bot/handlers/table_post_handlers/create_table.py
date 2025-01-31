@@ -5,16 +5,15 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.tables import get_actions_with_table_keyboard
-from bot.keyboards.inline.utils import cancel_delete_last_keyboard
-from bot.templates.errors import (imposible_to_create_table_error,
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
+from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
+from bot.templates.errors_templates import (imposible_to_create_table_error,
                                    name_so_long_error
                                   , table_already_exists_error)
-from bot.templates.messages import (enter_table_name_message,
+from bot.templates.messages_templates import (enter_table_name_message,
                                     table_has_been_created_message,
                                     table_has_been_created_message)
-from bot.utils.excel_generator import ExcelCRUD
-from bot.templates.keyboards import create_table_text
+from bot.templates.keyboards_templates import create_table_text
 
 router = Router()
 
@@ -36,6 +35,7 @@ async def handle_create_table(message: Message, state: FSMContext):
 
     await state.set_state(Form.waiting_for_table_name)
 
+
 @router.message(StateFilter(Form.waiting_for_table_name))
 async def handle_table_name(message: Message, state: FSMContext):
     table_name = message.text.strip()
@@ -46,17 +46,10 @@ async def handle_table_name(message: Message, state: FSMContext):
     if await is_not_uniqe_table(table_name, message.from_user.id):
         return await message.answer(table_already_exists_error)
 
-
     new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
     table = await TableDAO.find_by_id(model_id=new_table["id"])
 
     if not table:
-        return await message.answer(imposible_to_create_table_error)
-
-    excel_table = await ExcelCRUD.create_new_excel(table_id=table.id, table_name=table.name, tg_id=message.from_user.id)
-
-    if not excel_table:
-        await TableDAO.delete(id=table.id)
         return await message.answer(imposible_to_create_table_error)
 
     await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))

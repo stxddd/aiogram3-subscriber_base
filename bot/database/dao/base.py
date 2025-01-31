@@ -49,27 +49,26 @@ class BaseDAO:
                 await session.commit()
                 return result
             return None
+        
+    @classmethod
+    async def delete_all(cls, **data):
+        async with async_session_maker() as session:
+            query = await session.execute(select(cls.model).filter_by(**data))
+            result = query.scalars()
+            if result:
+                await session.delete(result)
+                await session.commit()
+                return result
+            return None
 
     @classmethod
     async def update(cls, model_id: int, **data):
         async with async_session_maker() as session:
             query = await session.execute(select(cls.model).filter_by(id=model_id))
             result = query.scalars().first()
-            if result:
-                existing_query = await session.execute(
-                    select(cls.model)
-                    .filter_by(name=data["name"], owner_tg_id=result.owner_tg_id)
-                    .filter(cls.model.id != model_id)  
-                )
-                existing_object = existing_query.scalars().first()
-                
-                if existing_object:
-                    return None
-                
+            if result:                
                 for key, value in data.items():
                     setattr(result, key, value)
-                
                 await session.commit()
                 return result
-            
             return None

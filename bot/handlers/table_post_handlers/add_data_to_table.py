@@ -7,21 +7,22 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
 from bot.database.tables.lines.dao import LineDAO
-from bot.keyboards.inline.tables import get_actions_with_table_keyboard
-from bot.keyboards.inline.utils import cancel_delete_last_keyboard
-from bot.templates.errors import (
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
+from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
+from bot.templates.errors_templates import (
     adding_data_error,
     name_so_long_error,
     price_must_be_int_error,
-    invalid_date_format_error
+    invalid_date_format_error,
+    table_dose_not_exists_error
 )
-from bot.templates.messages import (
+from bot.templates.messages_templates import (
     data_added_message,
     sent_client_name_message,
     sent_client_price_message,
     sent_client_date_message
 )
-from bot.utils.excel_generator import ExcelCRUD
+from bot.database.tables.dao import TableDAO
 
 router = Router()
 
@@ -56,10 +57,16 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     table_id = int(match.group(1))
     table_name = match.group(2)
 
+    table = await TableDAO.find_all(id=table_id)
+    
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
+
     message_sent = await callback.message.answer(sent_client_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
     await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
     await state.set_state(Form.waiting_for_name_data)
+
 
 @router.message(StateFilter(Form.waiting_for_name_data))
 async def handle_line_name(message: Message, state: FSMContext):
@@ -115,23 +122,6 @@ async def handle_line_date(message: Message, state: FSMContext):
 
     if not new_line:
         return await message.answer(adding_data_error)
-
-    excel_file = await ExcelCRUD.add_words_to_existing_excel(
-        data=[name, price, date],
-        table_id=table_id, 
-        tg_id=message.from_user.id, 
-        table_name=table_name
-    )
-
-    if not excel_file:
-        line_to_delete = await LineDAO.delete(
-            owner_tg_id=message.from_user.id, 
-            table_id=table_id, 
-            subscriber_tg_id=name, 
-            subscriber_price=price,
-            subscriber_date=date
-        )
-        return await message.answer(adding_data_error)
-
+    
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_date"))
     await message.answer(data_added_message(table_name, name, price, date ), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
