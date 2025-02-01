@@ -9,7 +9,7 @@ from aiogram.types import CallbackQuery, Message
 from bot.handlers.table_post_handlers.add_data_to_table import is_valid_price
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
-    price_must_be_int_error,
+    price_must_be_int_error, line_dose_not_exists_error
 )
 from bot.templates.messages_templates import (
     line_client_price_changed_successfully_message,
@@ -36,6 +36,9 @@ async def handle_edit_data_price(callback: CallbackQuery, state: FSMContext):
     table_name = match.group(2)
 
     current_line = await LineDAO.find_by_id(line_id)
+    
+    if not current_line:
+        return await callback.message.answer(line_dose_not_exists_error)
 
     old_client_name = current_line.subscriber_tg_id
 
@@ -52,7 +55,6 @@ async def handle_new_line_price(message: Message, state: FSMContext):
     new_client_price = int(message.text.strip())
 
     data = await state.get_data()
-    table_name = data.get("table_name")
     line_id = data.get("line_id")
 
     current_line = await LineDAO.find_by_id(line_id)

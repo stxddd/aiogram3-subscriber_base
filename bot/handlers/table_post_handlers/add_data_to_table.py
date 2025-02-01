@@ -62,6 +62,9 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
 
     table = await TableDAO.find_all(id=table_id)
     
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
+
     lines = await LineDAO.find_all(table_id = table_id)
 
     if len(lines) <= settings.MAX_LINE_LIMIT:

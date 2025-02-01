@@ -11,7 +11,7 @@ from bot.templates.messages_templates import (
     line_are_not_deleted_message,
 )
 from bot.database.tables.lines.dao import LineDAO
-
+from bot.templates.errors_templates import line_dose_not_exists_error
 router = Router()
 
 
@@ -21,8 +21,12 @@ async def handle_add_line_to_table(callback: CallbackQuery):
     match = re.match(r"^prepare_to_delete_line_(\d+)_(.+)$", callback.data)
 
     line_id = int(match.group(1))
-    table_name = match.group(2) 
     line = await LineDAO.find_one_or_none(id=line_id)
+    
+    if not line:
+        return await callback.message.answer(line_dose_not_exists_error)
+
+    table_name = match.group(2) 
 
     return await callback.message.answer(
         are_you_sure_to_delete_line_message(table_name=table_name, line=line),
@@ -39,9 +43,9 @@ async def handle_line_name(callback: CallbackQuery, state: FSMContext):
     table_name = match.group(2)
 
     line = await LineDAO.find_one_or_none(id=line_id)
-
+    
     if not line:
-        return await callback.message.answer(line_are_not_deleted_message(table_name=table_name, line=line))
+        return await callback.message.answer(line_dose_not_exists_error)
     
     delte_line = await LineDAO.delete(id=line_id)
 

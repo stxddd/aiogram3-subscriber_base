@@ -8,7 +8,7 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.handlers.table_post_handlers.add_data_to_table import is_valid_date
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import invalid_date_format_error
+from bot.templates.errors_templates import invalid_date_format_error, line_dose_not_exists_error
 from bot.templates.messages_templates import (
     line_client_date_changed_successfully_message,
     line_client_date_not_changed_message,
@@ -31,10 +31,10 @@ async def handle_edit_data_date(callback: CallbackQuery, state: FSMContext):
     line_id = int(match.group(1))
     table_name = match.group(2)
 
-    current_line = await LineDAO.find_by_id(line_id)
+    current_line = await LineDAO.find_one_or_none(id=line_id)
 
     if not current_line:
-        return await callback.message.answer(table_name_not_changed_error(table_name))
+        return await callback.message.answer(line_dose_not_exists_error)
 
     old_client_name = current_line.subscriber_tg_id
 
@@ -51,7 +51,6 @@ async def handle_line_date(message: Message, state: FSMContext):
         return await message.answer(invalid_date_format_error)
 
     data = await state.get_data()
-    table_name = data.get("table_name")
     line_id = data.get("line_id")
 
     current_line = await LineDAO.find_by_id(line_id)

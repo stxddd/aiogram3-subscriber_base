@@ -34,10 +34,13 @@ async def is_not_uniqe_table(name: str, tg_id: int) -> bool:
 
 @router.message(F.text == create_table_text)
 async def handle_create_table(message: Message, state: FSMContext):
-    message = await message.answer(enter_table_name_message, reply_markup=cancel_delete_last_keyboard)
 
-    await state.set_state(Form.waiting_for_table_name)
-
+    all_tables = await TableDAO.find_all(owner_tg_id=message.from_user.id)
+    if len(all_tables) < settings.MAX_TABLE_LIMIT:
+        return await message.answer(enter_table_name_message, reply_markup=cancel_delete_last_keyboard)
+        await state.set_state(Form.waiting_for_table_name)
+    return await message.answer(exceeded_the_limit_on_the_table_error,reply_markup=main_keyboard)
+   
 
 @router.message(StateFilter(Form.waiting_for_table_name))
 async def handle_table_name(message: Message, state: FSMContext):
@@ -49,14 +52,11 @@ async def handle_table_name(message: Message, state: FSMContext):
     if await is_not_uniqe_table(table_name, message.from_user.id):
         return await message.answer(table_already_exists_error)
 
-    all_tables = await TableDAO.find_all(owner_tg_id=message.from_user.id)
+    new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
+    table = await TableDAO.find_by_id(model_id=new_table["id"])
 
-    if len(all_tables) < settings.MAX_TABLE_LIMIT:
-        new_table = await TableDAO.add(owner_tg_id=message.from_user.id, name=table_name)
-        table = await TableDAO.find_by_id(model_id=new_table["id"])
+    if not table:
+        return await message.answer(imposible_to_create_table_error)
 
-        if not table:
-            return await message.answer(imposible_to_create_table_error)
-
-        return await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
-    return await message.answer(exceeded_the_limit_on_the_table_error,reply_markup=main_keyboard)
+    return await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
+    

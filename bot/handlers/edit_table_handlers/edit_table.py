@@ -3,8 +3,10 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.fsm.state import State, StatesGroup
+from bot.database.tables.dao import TableDAO
 from bot.templates.messages_templates import select_an_action_for_the_table_message
 from bot.keyboards.inline.table_keyboards import get_edit_actions_with_table_keyboard
+from bot.templates.errors_templates import table_dose_not_exists_error
 
 router = Router()
 
@@ -21,7 +23,11 @@ async def handle_edit_table_actions(callback: CallbackQuery):
     
     table_id = int(match.group(1))
     table_name = match.group(2)
-    tg_id = callback.from_user.id
+
+    table = await TableDAO.find_all(id=table_id)
+    
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
 
     await callback.message.answer(
         select_an_action_for_the_table_message(table_name),

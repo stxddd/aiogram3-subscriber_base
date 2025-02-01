@@ -11,6 +11,7 @@ from bot.templates.messages_templates import (
     table_are_not_deleted_message,
 )
 from bot.database.tables.dao import TableDAO
+from bot.templates.errors_templates import table_dose_not_exists_error
 
 router = Router()
 
@@ -22,6 +23,11 @@ async def handle_prepate_to_delete_table(callback: CallbackQuery):
 
     table_id = int(match.group(1))
     table_name = match.group(2)
+
+    table = await TableDAO.find_all(id=table_id)
+    
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
 
     return await callback.message.answer(
         are_you_sure_to_delete_table_message(table_name), 
