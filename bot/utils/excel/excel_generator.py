@@ -16,10 +16,10 @@ class ExcelCRUD:
             if file_path.exists():
                 return False 
 
-            old_file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
+            current_file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
-            if old_file_path.exists():
-                old_file_path.rename(file_path)
+            if current_file_path.exists():
+                current_file_path.rename(file_path)
                 return True
             else:
                 return False

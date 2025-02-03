@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
-from bot.database.tables.lines.dao import LineDAO
+from bot.database.tables.lines.dao import ClientDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply import main_keyboards
@@ -20,9 +20,9 @@ from bot.templates.errors_templates import (
 )
 from bot.templates.messages_templates import (
     data_added_message,
-    sent_client_name_message,
-    sent_client_price_message,
-    sent_client_date_message
+    sent_name_message,
+    sent_price_message,
+    sent_date_message
 )
 from bot.database.tables.dao import TableDAO
 from bot.config import settings
@@ -57,13 +57,13 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
 
-    lines = await LineDAO.find_all(table_id = table_id)
+    lines = await ClientDAO.find_all(table_id = table_id)
 
-    if len(lines) <= settings.MAX_LINE_LIMIT:
+    if len(lines) <= settings.MAX_CLIENT_LIMIT:
         if not table:
             return await callback.message.answer(table_dose_not_exists_error)
 
-        message_sent = await callback.message.answer(sent_client_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
+        message_sent = await callback.message.answer(sent_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
         await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
         return await state.set_state(Form.waiting_for_name_data)
@@ -83,7 +83,7 @@ async def handle_line_name(message: Message, state: FSMContext):
 
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_name"))
 
-    message_sent = await message.answer(sent_client_price_message(table_name), reply_markup=cancel_delete_last_keyboard)
+    message_sent = await message.answer(sent_price_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
     await state.update_data(name=name, message_sent_id_price=message_sent.message_id)
     await state.set_state(Form.waiting_for_price_data)
@@ -100,7 +100,7 @@ async def handle_line_price(message: Message, state: FSMContext):
 
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_price"))
 
-    message_sent = await message.answer(sent_client_date_message(table_name), reply_markup=cancel_delete_last_keyboard)
+    message_sent = await message.answer(sent_date_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
     await state.update_data(price=int(price), message_sent_id_date=message_sent.message_id)
     await state.set_state(Form.waiting_for_date_data)
@@ -112,21 +112,21 @@ async def handle_line_date(message: Message, state: FSMContext):
     if not is_valid_date(date):
         return await message.answer(invalid_date_format_error)
     
-    date = get_date_for_db(date)
+    date = get_date_for_db(date).split('-')
 
     data = await state.get_data()
     name, price, table_id, table_name = data.get("name"), data.get("price"), data.get("table_id"), data.get("table_name")
 
-    new_line = await LineDAO.add(
-        owner_tg_id=message.from_user.id,
+    new_client = await ClientDAO.add(
         table_id=table_id, 
-        subscriber_tg_id=name,
-        subscriber_price=price,
-        subscriber_date=date
+        name=name,
+        price=price,
+        date_from = date[0],
+        date_to = date[1],
     )
 
-    if not new_line:
+    if not new_client:
         return await message.answer(adding_data_error)
     
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_date"))
-    await message.answer(data_added_message(table_name, name, price, date ), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
+    await message.answer(data_added_message(table_name, name, price, date), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))

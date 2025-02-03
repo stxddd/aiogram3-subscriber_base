@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     DB_PASS: str
 
     MAX_TABLE_LIMIT: int
-    MAX_LINE_LIMIT: int
+    MAX_CLIENT_LIMIT: int
 
     @property
     def DATABASE_URL(self) -> str:

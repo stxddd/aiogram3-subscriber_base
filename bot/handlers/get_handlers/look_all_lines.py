@@ -2,7 +2,7 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from bot.database.tables.dao import TableDAO
-from bot.database.tables.lines.dao import LineDAO
+from bot.database.tables.lines.dao import ClientDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.templates.messages_templates import all_table_lines_message, table_has_no_lines_message
 from bot.templates.errors_templates import table_dose_not_exists_error
@@ -17,7 +17,7 @@ async def handle_look_all_lines(callback: CallbackQuery):
     table_id = int(match.group(1))
     table_name = match.group(2)
 
-    lines = await LineDAO.find_all(table_id=table_id)
+    lines = await ClientDAO.find_all(table_id=table_id)
     
     table = await TableDAO.find_all(id=table_id)
     

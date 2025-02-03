@@ -6,11 +6,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
-from bot.handlers.table_post_handlers.add_data_to_table import is_valid_name
+from bot.utils.validators import is_valid_name
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.templates.errors_templates import (
     name_so_long_error,
+    table_dose_not_exists_error
 )
 from bot.templates.messages_templates import (
     enter_new_table_name_message,
@@ -34,6 +35,11 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     table_id = int(match.group(1))
     table_name = match.group(2)
 
+    table = await TableDAO.find_one_or_none(id=table_id)
+
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
+
     message_sent = await callback.message.answer(enter_new_table_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
     await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
@@ -55,6 +61,7 @@ async def handle_table_name(message: Message, state: FSMContext):
 
     if current_table:
         updated_table = await TableDAO.update(model_id=table_id, name=new_table_name)
-        return await message.answer(table_name_changed_successfully_message(table_name=new_table_name, old_table_name=table_name), reply_markup = main_keyboard)
+        if updated_table:
+            return await message.answer(table_name_changed_successfully_message(table_name=new_table_name, current_table_name=table_name), reply_markup = main_keyboard)
 
-    return message.answer(table_name_not_changed_error(table_name=new_table_name))
+    return message.answer(table_name_not_changed_error(table_name=table_name))

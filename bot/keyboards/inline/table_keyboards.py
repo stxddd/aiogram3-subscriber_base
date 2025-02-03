@@ -14,8 +14,8 @@ from bot.templates.keyboards_templates import (
 from bot.templates.keyboards_templates import cancel_text
 
 
-async def get_my_tables_keyboard(owner_tg_id: int):
-    tables = await TableDAO.find_all(owner_tg_id=owner_tg_id)
+async def get_my_tables_keyboard(user_tg_id: int):
+    tables = await TableDAO.find_all(user_tg_id=user_tg_id)
     keyboard = InlineKeyboardBuilder()
 
     for table in tables:
