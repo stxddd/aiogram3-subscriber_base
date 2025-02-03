@@ -14,8 +14,8 @@ from bot.templates.messages_templates import (
     line_client_date_not_changed_message,
     enter_new_client_date_message
 )
-from bot.templates.errors_templates import table_name_not_changed_error
 from bot.database.tables.lines.dao import LineDAO
+from bot.utils.date_converter import get_date_for_db
 
 router = Router()
 
@@ -49,6 +49,8 @@ async def handle_line_date(message: Message, state: FSMContext):
 
     if not is_valid_date(new_client_date):
         return await message.answer(invalid_date_format_error)
+
+    new_client_date = get_date_for_db(new_client_date)
 
     data = await state.get_data()
     line_id = data.get("line_id")

@@ -34,11 +34,12 @@ async def is_not_uniqe_table(name: str, tg_id: int) -> bool:
 
 @router.message(F.text == create_table_text)
 async def handle_create_table(message: Message, state: FSMContext):
-
     all_tables = await TableDAO.find_all(owner_tg_id=message.from_user.id)
-    if len(all_tables) < settings.MAX_TABLE_LIMIT:
-        return await message.answer(enter_table_name_message, reply_markup=cancel_delete_last_keyboard)
+    
+    if len(all_tables) < settings.MAX_TABLE_LIMIT:       
         await state.set_state(Form.waiting_for_table_name)
+        return await message.answer(enter_table_name_message, reply_markup=cancel_delete_last_keyboard)
+    
     return await message.answer(exceeded_the_limit_on_the_table_error,reply_markup=main_keyboard)
    
 

@@ -24,7 +24,7 @@ async def handle_edit_table_actions(callback: CallbackQuery):
     table_id = int(match.group(1))
     table_name = match.group(2)
 
-    table = await TableDAO.find_all(id=table_id)
+    table = await TableDAO.find_all(id=table_id, name = table_name)
     
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)

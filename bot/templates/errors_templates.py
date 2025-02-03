@@ -12,6 +12,6 @@ exceeded_the_limit_on_the_table_error = "❌ У вас достигнут лим
 #line errors
 table_already_exists_error = "❌ Ошибка: таблица с такиим названием уже существует. Введите заново."
 price_must_be_int_error = "❌ Ошибка: цена должна быть целым числом. Попробуйте снова."
-invalid_date_format_error = "❌ Ошибка: неверный формат даты. Введите в формате dd.mm.yyyy-dd.mm.yyyy."
+invalid_date_format_error = "❌ Ошибка: неверная дата. Введите в одном из форматов:\n 1) ddmmmYYYY-ddmmmYYYY \n 2) dd.mm.yyyy-dd.mm.yyyy\n\n Проверьте, чтобы даты были корректны."
 exceeded_the_limit_on_the_line_error = "❌ У вас достигнут лимит таблиц. 250/250"
 line_dose_not_exists_error = "❌ Ошибка: такой строки не существует."

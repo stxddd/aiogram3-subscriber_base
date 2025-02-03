@@ -26,6 +26,8 @@ from bot.templates.messages_templates import (
 )
 from bot.database.tables.dao import TableDAO
 from bot.config import settings
+from bot.utils.date_converter import get_date_for_db
+from bot.utils.validators import is_valid_date, is_valid_name, is_valid_price
 
 router = Router()
 
@@ -34,16 +36,6 @@ class Form(StatesGroup):
     waiting_for_name_data = State()
     waiting_for_price_data = State()
     waiting_for_date_data = State()
-
-
-def is_valid_date(date: str) -> bool:
-    return bool(re.fullmatch(r"\d{2}\.\d{2}\.\d{4}-\d{2}\.\d{2}\.\d{4}", date))
-
-def is_valid_price(price: str) -> bool:
-    return price.isdigit()
-
-def is_valid_name(name: str) -> bool:
-    return len(name) <= 32
 
 async def delete_message_safely(bot, chat_id, message_id):
     try:
@@ -74,7 +66,7 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
         message_sent = await callback.message.answer(sent_client_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
 
         await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
-        await state.set_state(Form.waiting_for_name_data)
+        return await state.set_state(Form.waiting_for_name_data)
 
     return await callback.message.answer(exceeded_the_limit_on_the_line_error, reply_markup=main_keyboards)
 
@@ -119,6 +111,8 @@ async def handle_line_date(message: Message, state: FSMContext):
 
     if not is_valid_date(date):
         return await message.answer(invalid_date_format_error)
+    
+    date = get_date_for_db(date)
 
     data = await state.get_data()
     name, price, table_id, table_name = data.get("name"), data.get("price"), data.get("table_id"), data.get("table_name")

@@ -71,7 +71,7 @@ def line_are_deleted_message(table_name, line):
     return text
 def sent_client_name_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте имя клиента (до 32 символов)"
 def sent_client_price_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте цену услуги (целое число)"
-def sent_client_date_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте даты оказания услуг в формате dd.mm.yyyy-dd.mm.yyyy"
+def sent_client_date_message(table_name): return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nВведите в одном из форматов:\n 1) ddmmmYYYY-ddmmmYYYY \n 2) dd.mm.yyyy-dd.mm.yyyy\n"
 def data_added_message(table_name, name, price, date): return f'💾✅ Данные добавлены в таблицу «{table_name}»\n\nКлиент: {name}\nЦена: {price}\nДаты: {date}'
 def line_client_name_changed_successfully_message(client_name, old_client_name): return f"✅ Имя «{old_client_name}» изменено.\n\n{old_client_name} > {client_name}"
 def line_client_name_not_changed_message(old_client_name): return f"❌ Ошибка при измении имени «{old_client_name}»"
@@ -81,16 +81,16 @@ def line_client_date_changed_successfully_message(client_date, old_client_date):
 def line_client_date_not_changed_message(old_client_date): return f"❌ Ошибка при измении даты «{old_client_date}»"
 def all_table_lines_message(lines, table_name):
 
-
     text = "\n".join(
-        f"👤 {hbold(line.subscriber_tg_id)}\n"
-        f"💶 {hbold(line.subscriber_price)}\n"
-        f"⌚️ {hbold(line.subscriber_date)}\n"
+        f"👤 {hitalic(line.subscriber_tg_id)}\n"
+        f"💶 {hitalic(line.subscriber_price)}\n"
+        f"{hbold('С:')} {hitalic(line.subscriber_date.split('-')[0])}\n"
+        f"{hbold('До:')} {hitalic(line.subscriber_date.split('-')[1])}\n"
         f"{'➖' * 12}"
         for index, line in enumerate(lines)
     )
     return f"{hbold('Таблица:')} «{hitalic(table_name)}»\n{hbold('Клиентов:')} {hitalic(len(lines))}\n{'➖' * 12}\n{text}"
-impossible_to_edit_line_message = "Невозможно изменить эту строку"
+impossible_to_edit_line_message = "❌ Невозможно изменить эту строку"
 pick_line_for_edit_message = "Выберите строку, которую хотите изменить"
 def enter_new_client_price_message(client_name, table_name): return f'{table_name_message(table_name)}\nУкажите новую цену услуги для клиента {client_name}.'
 def enter_new_client_name_message(client_name, table_name): return f'{table_name_message(table_name)}\nУкажите новое имя для клиента {client_name}.'
