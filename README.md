@@ -16,14 +16,19 @@ git clone https://github.com/stxddd/aiogram3-subscriber_base.git
 Задайте эти параметры в корневом .env 
 ```bash
 TOKEN
+
 DB_HOST
 DB_PORT
 DB_USER
 DB_NAME
 DB_PASS
+
+FLOOD_THRESHOLD
+
 MAX_TABLE_LIMIT
 MAX_CLIENT_LIMIT 
 DOWNLOAD_DAY_LIMIT 
+
 TIME_TO_RECEIVE_NOTIFICATIONS 
 ```
 

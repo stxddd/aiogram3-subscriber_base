@@ -6,7 +6,7 @@ from aiogram.types import CallbackQuery
 
 from bot.database.tables.clients.dao import ClientDAO
 from bot.templates.errors_templates import client_dose_not_exists_error
-from bot.templates.messages_templates import payment_didnt_completed
+from bot.templates.messages_templates import payment_didnt_completed_message
 from bot.utils.data_processing.date_converter import (get_date_for_db,
                                                       parse_db_date)
 
@@ -46,7 +46,7 @@ async def handle_base_table_info(callback: CallbackQuery):
         return await callback.message.answer(client_dose_not_exists_error)
 
     await callback.message.answer(
-        payment_didnt_completed(client_name=client.name, days_late=days_late)
+        payment_didnt_completed_message(client_name=client.name, days_late=days_late)
     )
     await callback.message.bot.delete_message(
         callback.message.chat.id, callback.message.message_id

@@ -12,7 +12,7 @@ from bot.templates.errors_templates import (client_dose_not_exists_error,
                                             invalid_date_format_error)
 from bot.templates.messages_templates import (
     line_date_changed_successfully_message, line_date_not_changed_message,
-    payment_has_been_completed)
+    payment_has_been_completed_message)
 from bot.utils.data_processing.date_converter import (convert_to_short_format,
                                                       get_date_for_db)
 from bot.utils.data_processing.validators import (is_valid_date,
@@ -40,7 +40,7 @@ async def handle_base_table_info(callback: CallbackQuery, state: FSMContext):
         return await callback.message.answer(client_dose_not_exists_error)
 
     await callback.message.answer(
-        payment_has_been_completed(
+        payment_has_been_completed_message(
             client_name=client.name,
             client_date_from=client.date_from,
             client_date_to=client.date_to,
@@ -70,6 +70,8 @@ async def handle_line_date_to(message: Message, state: FSMContext):
         return await message.answer(client_dose_not_exists_error)
 
     current_date_to = current_client.date_to
+    
+
 
     date_to_validate = convert_to_short_format(
         f"{current_client.date_from}-{new_date_to}"
@@ -80,7 +82,7 @@ async def handle_line_date_to(message: Message, state: FSMContext):
             line_date_not_changed_message(current_date=current_date_to)
         )
 
-    updated_client = await ClientDAO.update(model_id=client_id, date_to=new_date_to)
+    updated_client = await ClientDAO.update(model_id=client_id, date_to=new_date_to, days_delay=0)
     if updated_client:
         return await message.answer(
             line_date_changed_successfully_message(

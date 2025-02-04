@@ -45,18 +45,22 @@ from bot.handlers.post_handlers.create_table import \
     router as create_table_router
 from bot.handlers.utils_hadnlers.delete_last_message import \
     router as delete_last_message_router
+from bot.middlewares.anti_flood import AntiFloodMiddleware
 from bot.utils.notifications.check_expired_clients import check_expired_clients
 
 logging.basicConfig(level=logging.INFO)
 
 
-async def main():
-    bot = Bot(
-        token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
-    storage = MemoryStorage()
-    dp = Dispatcher(storage=storage)
+bot = Bot(
+    token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
+storage = MemoryStorage()
+dp = Dispatcher(storage=storage)
 
+#dp.message.middleware(AntiFloodMiddleware())
+#dp.callback_query.middleware(AntiFloodMiddleware())
+
+async def main():
     dp.include_routers(
         base_commands_router,
         get_tables_router,
