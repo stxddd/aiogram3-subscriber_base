@@ -24,6 +24,7 @@ from bot.handlers.edit_table_data_handlers.edit_data_price import router as edit
 from bot.handlers.edit_table_data_handlers.edit_data_date_from import router as edit_data_date_from_router
 from bot.handlers.edit_table_data_handlers.edit_data_date_to import router as edit_data_date_to_router
 from bot.handlers.info_handlers.get_table_info import router as get_table_info_router
+from bot.handlers.get_handlers.download_table import router as download_table_router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -51,6 +52,7 @@ async def main():
         edit_data_date_from_router,
         edit_data_date_to_router,
         get_table_info_router,
+        download_table_router
     )
 
     await dp.start_polling(bot)
