@@ -21,6 +21,8 @@ DB_PORT
 DB_USER
 DB_NAME
 DB_PASS
+MAX_TABLE_LIMIT 
+MAX_CLIENT_LIMIT
 ```
 
 Создаейте venv и установите зависимости

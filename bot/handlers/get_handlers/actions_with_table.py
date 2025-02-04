@@ -28,4 +28,3 @@ async def actions_with_table(callback: CallbackQuery, state: FSMContext):
     message_sent = await callback.message.answer(table_name_message(table_name), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
 
     await state.update_data(table_id=table_id, table_name=table_name, message_sent_id = callback.message.message_id)
-    await state.update_data(message_sent_id_actions_with_table=message_sent.message_id)

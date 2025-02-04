@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
-from bot.database.tables.lines.dao import ClientDAO
+from bot.database.tables.clients.dao import ClientDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply import main_keyboards

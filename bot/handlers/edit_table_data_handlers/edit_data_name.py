@@ -7,13 +7,13 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.utils.validators import is_valid_name
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import name_so_long_error, line_dose_not_exists_error
+from bot.templates.errors_templates import name_so_long_error, client_dose_not_exists_error
 from bot.templates.messages_templates import (
     line_name_changed_successfully_message,
     line_name_not_changed_message,
     enter_new_name_message
 )
-from bot.database.tables.lines.dao import ClientDAO
+from bot.database.tables.clients.dao import ClientDAO
 
 router = Router()
 
@@ -34,7 +34,7 @@ async def handle_edit_data_name(callback: CallbackQuery, state: FSMContext):
 
     current_line = await ClientDAO.find_one_or_none(id=line_id)
     if not current_line:
-        return await callback.message.answer(line_dose_not_exists_error)
+        return await callback.message.answer(client_dose_not_exists_error)
 
     await state.update_data(line_id=line_id, table_name=table_name)
 
@@ -56,7 +56,7 @@ async def handle_new_line_name(message: Message, state: FSMContext):
 
     current_line = await ClientDAO.find_by_id(line_id)
     if not current_line:
-        return await message.answer(line_dose_not_exists_error)
+        return await message.answer(client_dose_not_exists_error)
 
     current_name = current_line.name
 

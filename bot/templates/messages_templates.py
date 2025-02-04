@@ -17,6 +17,9 @@ def table_has_been_created_message(table_name): return f"💾✅ Создана 
 def table_has_no_lines_message(table_name): return f"✅ Записей в таблице «{table_name}» нет."
 def table_name_changed_successfully_message(table_name, current_table_name): return f"✅ Таблица «{current_table_name}» переименована.\n\n{current_table_name} > {table_name}"
 def table_has_no_lines_message(table_name): return f"❌ В таблице «{table_name}» нет данных!"
+def table_base_info_message(table_name, clients_count, all_prices): return  f'{table_name_message(table_name)}\n\nКоличество клиентов: {clients_count}\nОбщая сумма цен всех клиентов: {all_prices}'
+def table_base_info_period_message(table_name, clients_count, all_prices, date_from, date_to): return  f'{table_name_message(table_name)}\n\nДанные с {date_from} по {date_to}\n\nКоличество клиентов: {clients_count}\nОбщая сумма цен всех клиентов: {all_prices}'
+def enter_info_period_message(table_name): return f"{table_name_message(table_name)}\n\nУкажите период, в который хотите получить данные\n\ndmmmYYYY-dmmmYYY"
 
 def one_line_message(line, table_name):
     text = (

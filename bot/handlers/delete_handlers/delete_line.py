@@ -10,8 +10,8 @@ from bot.templates.messages_templates import (
     line_are_deleted_message,
     line_are_not_deleted_message,
 )
-from bot.database.tables.lines.dao import ClientDAO
-from bot.templates.errors_templates import line_dose_not_exists_error
+from bot.database.tables.clients.dao import ClientDAO
+from bot.templates.errors_templates import client_dose_not_exists_error
 router = Router()
 
 
@@ -24,7 +24,7 @@ async def handle_add_line_to_table(callback: CallbackQuery):
     line = await ClientDAO.find_one_or_none(id=line_id)
     
     if not line:
-        return await callback.message.answer(line_dose_not_exists_error)
+        return await callback.message.answer(client_dose_not_exists_error)
 
     table_name = match.group(2) 
 
@@ -45,7 +45,7 @@ async def handle_line_name(callback: CallbackQuery, state: FSMContext):
     line = await ClientDAO.find_one_or_none(id=line_id)
     
     if not line:
-        return await callback.message.answer(line_dose_not_exists_error)
+        return await callback.message.answer(client_dose_not_exists_error)
     
     delte_line = await ClientDAO.delete(id=line_id)
 

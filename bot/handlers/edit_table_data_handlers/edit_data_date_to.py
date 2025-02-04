@@ -7,13 +7,13 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.utils.validators import is_valid_date, is_valid_date_part
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import invalid_date_format_error, line_dose_not_exists_error
+from bot.templates.errors_templates import invalid_date_format_error, client_dose_not_exists_error
 from bot.templates.messages_templates import (
     line_date_changed_successfully_message,
     line_date_not_changed_message,
     enter_new_date_to_message
 )
-from bot.database.tables.lines.dao import ClientDAO
+from bot.database.tables.clients.dao import ClientDAO
 from bot.utils.date_converter import convert_to_short_format, get_date_for_db
 
 router = Router()
@@ -35,7 +35,7 @@ async def handle_edit_data_date_to(callback: CallbackQuery, state: FSMContext):
 
     current_line = await ClientDAO.find_one_or_none(id=line_id)
     if not current_line:
-        return await callback.message.answer(line_dose_not_exists_error)
+        return await callback.message.answer(client_dose_not_exists_error)
 
     await state.update_data(line_id=line_id, table_name=table_name)
     await state.set_state(Form.waiting_for_data_new_date_to)
@@ -59,7 +59,7 @@ async def handle_line_date_to(message: Message, state: FSMContext):
 
     current_client = await ClientDAO.find_by_id(line_id)
     if not current_client:
-        return await message.answer(line_dose_not_exists_error)
+        return await message.answer(client_dose_not_exists_error)
 
     current_date_to = current_client.date_to
 

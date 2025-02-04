@@ -16,6 +16,8 @@ change_name_text = 'Изменить имя клиента'
 change_price_text = "Изменить цену"
 change_date_to_text = "Изменить дату 'До'"
 change_date_from_text = "Изменить дату 'С'"
+table_statistic_text = 'Статистика'
+clients_for_some_period_text = 'Клиенты на опредленный период'
 
 yes_text = 'ДА'
 no_text = 'НЕТ'

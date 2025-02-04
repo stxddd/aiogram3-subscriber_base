@@ -4,8 +4,7 @@ from datetime import date
 from bot.utils.date_converter import parse_date
 
 def is_valid_date_part(date_str: str)-> bool:
-    pattern = r"(\d{1,2}\.\d{2}\.\d{4}|\d{1,2}[а-я]{3}\d{4})"
-    return re.fullmatch(pattern, date_str)
+    return bool(re.fullmatch(r"\d{1,2}[а-я]{3}\d{4}(-\d{1,2}[а-я]{3}\d{4})?", date_str))
 
 
 def is_valid_date(date_str: str) -> bool:

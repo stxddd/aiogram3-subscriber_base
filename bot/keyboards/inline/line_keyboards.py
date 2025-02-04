@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from bot.database.tables.lines.dao import ClientDAO
+from bot.database.tables.clients.dao import ClientDAO
 from bot.templates.keyboards_templates import (
     delete_line_text,
     change_name_text,

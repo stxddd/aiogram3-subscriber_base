@@ -23,16 +23,15 @@ from bot.handlers.edit_table_data_handlers.edit_data_name import router as edit_
 from bot.handlers.edit_table_data_handlers.edit_data_price import router as edit_data_price_router
 from bot.handlers.edit_table_data_handlers.edit_data_date_from import router as edit_data_date_from_router
 from bot.handlers.edit_table_data_handlers.edit_data_date_to import router as edit_data_date_to_router
+from bot.handlers.info_handlers.get_table_info import router as get_table_info_router
 
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-storage = MemoryStorage()
-dp = Dispatcher(storage=storage)
 
 async def main():
-
-
+    bot = Bot(token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    storage = MemoryStorage()
+    dp = Dispatcher(storage=storage)
 
     dp.include_routers(
         base_commands_router,
@@ -51,6 +50,7 @@ async def main():
         edit_data_price_router,
         edit_data_date_from_router,
         edit_data_date_to_router,
+        get_table_info_router,
     )
 
     await dp.start_polling(bot)

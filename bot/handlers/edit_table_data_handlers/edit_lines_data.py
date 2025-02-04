@@ -11,7 +11,7 @@ from bot.templates.messages_templates import (
     impossible_to_edit_line_message
 )
 from bot.templates.errors_templates import table_dose_not_exists_error
-from bot.database.tables.lines.dao import ClientDAO
+from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 
 router = Router()
@@ -21,7 +21,7 @@ GET_LINE_TO_EDIT_PATTERN = r"^get_line_to_edit_(\d+)_(.+)$"
 
 
 @router.callback_query(F.data.regexp(EDIT_DATA_PATTERN))
-async def handle_get_line_to_edit(callback: CallbackQuery, state: FSMContext):
+async def handle_get_line_to_edit(callback: CallbackQuery):
     await callback.answer()
 
     match = re.match(EDIT_DATA_PATTERN, callback.data)
