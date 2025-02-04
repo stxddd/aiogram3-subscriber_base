@@ -5,9 +5,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
+from bot.database.tables.dao import TableDAO
 from bot.utils.validators import is_valid_date, is_valid_date_part
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import invalid_date_format_error, client_dose_not_exists_error
+from bot.templates.errors_templates import invalid_date_format_error, client_dose_not_exists_error, table_dose_not_exists_error
 from bot.templates.messages_templates import (
     line_date_changed_successfully_message,
     line_date_not_changed_message,
@@ -18,7 +19,7 @@ from bot.utils.date_converter import convert_to_short_format, get_date_for_db
 
 router = Router()
 
-EDIT_DATE_FROM_PATTERN = r"^edit_data_date_from_(\d+)_(.+)$"
+EDIT_DATE_FROM_PATTERN = r"^edit_data_date_from_(\d+)$"
 
 
 class Form(StatesGroup):
@@ -31,17 +32,22 @@ async def handle_edit_data_date_from(callback: CallbackQuery, state: FSMContext)
 
     match = re.match(EDIT_DATE_FROM_PATTERN, callback.data)
     line_id = int(match.group(1))
-    table_name = match.group(2)
 
-    current_line = await ClientDAO.find_one_or_none(id=line_id)
-    if not current_line:
+    current_client = await ClientDAO.find_by_id(line_id)
+    if not current_client:
         return await callback.message.answer(client_dose_not_exists_error)
+    
+    table = await TableDAO.find_one_or_none(id = current_client.table_id) 
 
+    if not table:
+        return await callback.message.answer(table_dose_not_exists_error)
+
+    table_name = table.name
     await state.update_data(line_id=line_id, table_name=table_name)
     await state.set_state(Form.waiting_for_data_new_date_from)
 
     await callback.message.answer(
-        enter_new_date_from_message(table_name=table_name, name=current_line.name)
+        enter_new_date_from_message(table_name=table_name, name=current_client.name)
     )
 
 

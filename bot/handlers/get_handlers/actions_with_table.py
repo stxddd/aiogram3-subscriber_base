@@ -11,20 +11,22 @@ from bot.templates.errors_templates import table_dose_not_exists_error
 
 router = Router()
 
+ACTIONS_WITH_TABLE_PATTERN = r"^get_(\d+)_table$"
 
-@router.callback_query(F.data.regexp(r"^get_(\d+)_(.+?)_table$"))
+@router.callback_query(F.data.regexp(ACTIONS_WITH_TABLE_PATTERN))
 async def actions_with_table(callback: CallbackQuery, state: FSMContext):
-    match = re.match(r"^get_(\d+)_(.+?)_table$", callback.data)
     await callback.answer()
 
+    match = re.match(ACTIONS_WITH_TABLE_PATTERN, callback.data)
     table_id = int(match.group(1))
-    table_name = match.group(2)
 
-    table = await TableDAO.find_all(id=table_id, name = table_name)
-    
+    table = await TableDAO.find_one_or_none(id=table_id)
+
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
+    
+    table_name = table.name
 
-    message_sent = await callback.message.answer(table_name_message(table_name), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
+    message_sent = await callback.message.answer(table_name_message(table_name), reply_markup = await get_actions_with_table_keyboard(table_id=table_id))
 
     await state.update_data(table_id=table_id, table_name=table_name, message_sent_id = callback.message.message_id)

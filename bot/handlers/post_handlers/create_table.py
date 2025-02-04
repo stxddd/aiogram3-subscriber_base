@@ -38,11 +38,11 @@ async def handle_create_table(message: Message, state: FSMContext):
         await state.set_state(Form.waiting_for_table_name)
         return await message.answer(enter_table_name_message, reply_markup=cancel_delete_last_keyboard)
     
-    return await message.answer(exceeded_the_limit_on_the_table_error,reply_markup=main_keyboard)
+    return await message.answer(exceeded_the_limit_on_the_table_error, reply_markup=main_keyboard)
    
 
 @router.message(StateFilter(Form.waiting_for_table_name))
-async def handle_table_name(message: Message, state: FSMContext):
+async def handle_table_name(message: Message):
     table_name = message.text.strip()
 
     if not is_valid_name(table_name):
@@ -57,5 +57,5 @@ async def handle_table_name(message: Message, state: FSMContext):
     if not table:
         return await message.answer(imposible_to_create_table_error)
 
-    return await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table.id, table.name))
+    return await message.answer(table_has_been_created_message(table_name), reply_markup = await get_actions_with_table_keyboard(table_id = table.id))
     

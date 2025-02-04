@@ -6,6 +6,6 @@ router = Router()
 
 
 @router.callback_query(F.data == "delete_last_message")
-async def handle_action_is_cancel_message(callback: CallbackQuery, state: FSMContext):
+async def handle_delete_last_message(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()

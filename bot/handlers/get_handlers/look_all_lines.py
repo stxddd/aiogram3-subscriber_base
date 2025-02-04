@@ -8,23 +8,25 @@ from bot.templates.messages_templates import all_table_lines_message, table_has_
 from bot.templates.errors_templates import table_dose_not_exists_error
 router = Router()
 
+LOOK_ALL_CLIENTS_PATTERN = r"^look_all_table_data_(\d+)$"
 
-@router.callback_query(F.data.regexp(r"^look_all_table_data_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(LOOK_ALL_CLIENTS_PATTERN))
 async def handle_look_all_lines(callback: CallbackQuery):
     await callback.answer()
 
-    match = re.match(r"^look_all_table_data_(\d+)_(.+)$", callback.data)
+    match = re.match(LOOK_ALL_CLIENTS_PATTERN, callback.data)
     table_id = int(match.group(1))
-    table_name = match.group(2)
 
-    lines = await ClientDAO.find_all(table_id=table_id)
-    
-    table = await TableDAO.find_all(id=table_id)
-    
+    table = await TableDAO.find_one_or_none(id=table_id)
+
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
+    
+    table_name = table.name
 
-    if not lines:
+    clients = await ClientDAO.find_all(table_id=table_id)
+    
+    if not clients:
         return await callback.message.answer(table_has_no_lines_message(table_name))
     
-    return await callback.message.answer(all_table_lines_message(lines, table_name), parse_mode="HTML", reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
+    return await callback.message.answer(all_table_lines_message(clients, table_name), parse_mode="HTML", reply_markup = await get_actions_with_table_keyboard(table_id=table_id))

@@ -16,7 +16,8 @@ from bot.templates.errors_templates import (
     price_must_be_int_error,
     invalid_date_format_error,
     table_dose_not_exists_error,
-    exceeded_the_limit_on_the_line_error
+    exceeded_the_limit_on_the_line_error,
+    clients_dose_not_exists_error
 )
 from bot.templates.messages_templates import (
     data_added_message,
@@ -43,28 +44,26 @@ async def delete_message_safely(bot, chat_id, message_id):
     except:
         pass  
 
+ADD_DATA_PATTERN = r"^add_data_to_table_(\d+)$"
 
-@router.callback_query(F.data.regexp(r"^add_data_to_table_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(ADD_DATA_PATTERN))
 async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
-    match = re.match(r"^add_data_to_table_(\d+)_(.+)$", callback.data)
+    match = re.match(ADD_DATA_PATTERN, callback.data)
     table_id = int(match.group(1))
-    table_name = match.group(2)
-
-    table = await TableDAO.find_all(id=table_id)
     
+    table = await TableDAO.find_one_or_none(id=table_id)
+
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
 
-    lines = await ClientDAO.find_all(table_id = table_id)
+    table_name = table.name
+    
+    clients = await ClientDAO.find_all(table_id = table_id)
 
-    if len(lines) <= settings.MAX_CLIENT_LIMIT:
-        if not table:
-            return await callback.message.answer(table_dose_not_exists_error)
-
+    if len(clients) <= settings.MAX_CLIENT_LIMIT:
         message_sent = await callback.message.answer(sent_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
-
         await state.update_data(table_id=table_id, table_name=table_name, message_sent_id_name=message_sent.message_id)
         return await state.set_state(Form.waiting_for_name_data)
 
@@ -72,7 +71,7 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_name_data))
-async def handle_line_name(message: Message, state: FSMContext):
+async def handle_client_name(message: Message, state: FSMContext):
     name = message.text.strip()
 
     data = await state.get_data()
@@ -89,7 +88,7 @@ async def handle_line_name(message: Message, state: FSMContext):
     await state.set_state(Form.waiting_for_price_data)
 
 @router.message(StateFilter(Form.waiting_for_price_data))
-async def handle_line_price(message: Message, state: FSMContext):
+async def handle_client_price(message: Message, state: FSMContext):
     price = message.text.strip()
 
     if not is_valid_price(price):
@@ -106,7 +105,7 @@ async def handle_line_price(message: Message, state: FSMContext):
     await state.set_state(Form.waiting_for_date_data)
 
 @router.message(StateFilter(Form.waiting_for_date_data))
-async def handle_line_date(message: Message, state: FSMContext):
+async def handle_client_date(message: Message, state: FSMContext):
     date = message.text.strip()
 
     if not is_valid_date(date):
@@ -129,4 +128,4 @@ async def handle_line_date(message: Message, state: FSMContext):
         return await message.answer(adding_data_error)
     
     await delete_message_safely(message.bot, message.chat.id, data.get("message_sent_id_date"))
-    await message.answer(data_added_message(table_name, name, price, date), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
+    await message.answer(data_added_message(table_name, name, price, date), reply_markup = await get_actions_with_table_keyboard(table_id))

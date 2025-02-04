@@ -26,19 +26,21 @@ router = Router()
 class Form(StatesGroup):
     waiting_for_new_table_name_data = State()
 
+EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 
-@router.callback_query(F.data.regexp(r"^edit_name_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
 async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
-    match = re.match(r"^edit_name_(\d+)_(.+)$", callback.data)
 
+    match = re.match(EDIT_TABLE_NAME_PATTERN, callback.data)
     table_id = int(match.group(1))
-    table_name = match.group(2)
-
+    
     table = await TableDAO.find_one_or_none(id=table_id)
 
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
+
+    table_name = table.name
 
     message_sent = await callback.message.answer(enter_new_table_name_message(table_name), reply_markup=cancel_delete_last_keyboard)
 

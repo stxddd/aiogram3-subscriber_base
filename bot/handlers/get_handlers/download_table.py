@@ -11,27 +11,31 @@ from bot.database.tables.dao import TableDAO
 from bot.database.users.dao import UserDAO
 from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.templates.errors_templates import table_dose_not_exists_error, excel_table_can_not_create_error, exceeded_the_limit_on_the_table_download_error
-from bot.templates.messages_templates import table_name_message,table_has_no_lines_message
+from bot.templates.messages_templates import table_has_no_lines_message
 from bot.utils.excel.excel_generator import ExcelCRUD
 from bot.config import settings
 
 router = Router()
 
+DOWNLOAD_TABLE_PATTERN = r"^download_table_(\d+)$"
 
-@router.callback_query(F.data.regexp(r"^download_table_(\d+)_(.+)$"))
+@router.callback_query(F.data.regexp(DOWNLOAD_TABLE_PATTERN))
 async def handle_download_table(callback: CallbackQuery):
-    match = re.match(r"^download_table_(\d+)_(.+)$", callback.data)
     await callback.answer()
 
+    match = re.match(DOWNLOAD_TABLE_PATTERN, callback.data)
     table_id = int(match.group(1))
-    table_name = match.group(2)
-    tg_id = callback.from_user.id
 
     table = await TableDAO.find_one_or_none(id=table_id)
 
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
     
+    table_name = table.name
+    tg_id = callback.from_user.id
+
+    table = await TableDAO.find_one_or_none(id=table_id)
+
     clients = await ClientDAO.find_all(table_id=table_id)
 
     if not clients:
@@ -39,7 +43,6 @@ async def handle_download_table(callback: CallbackQuery):
 
     user = await UserDAO.find_one_or_none(tg_id=tg_id)
     user.reset_if_new_day()
-
 
     if user.downloads_today >= settings.DOWNLOAD_DAY_LIMIT:
         return await callback.message.answer(exceeded_the_limit_on_the_table_download_error)
@@ -61,6 +64,6 @@ async def handle_download_table(callback: CallbackQuery):
     if not file_path.exists():
         return await callback.message.answer(table_dose_not_exists_error)
     
-    await callback.message.answer_document(document=FSInputFile(file_path), reply_markup = await get_actions_with_table_keyboard(table_id, table_name))
+    await callback.message.answer_document(document=FSInputFile(file_path), reply_markup = await get_actions_with_table_keyboard(table_id=table_id))
 
     os.remove(file_path)
