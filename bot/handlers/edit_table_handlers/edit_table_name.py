@@ -9,11 +9,15 @@ from aiogram.types import CallbackQuery, Message
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import (name_so_long_error,
-                                            table_dose_not_exists_error,
-                                            table_name_not_changed_error)
+from bot.templates.errors_templates import (
+    name_so_long_error,
+    table_dose_not_exists_error,
+    table_name_not_changed_error,
+)
 from bot.templates.messages_templates import (
-    enter_new_table_name_message, table_name_changed_successfully_message)
+    enter_new_table_name_message,
+    table_name_changed_successfully_message,
+)
 from bot.utils.data_processing.validators import is_valid_name
 
 router = Router()

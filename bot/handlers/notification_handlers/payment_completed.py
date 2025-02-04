@@ -8,15 +8,20 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.database.tables.clients.dao import ClientDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import (client_dose_not_exists_error,
-                                            invalid_date_format_error)
+from bot.templates.errors_templates import (
+    client_dose_not_exists_error,
+    invalid_date_format_error,
+)
 from bot.templates.messages_templates import (
-    line_date_changed_successfully_message, line_date_not_changed_message,
-    payment_has_been_completed_message)
-from bot.utils.data_processing.date_converter import (convert_to_short_format,
-                                                      get_date_for_db)
-from bot.utils.data_processing.validators import (is_valid_date,
-                                                  is_valid_date_part)
+    line_date_changed_successfully_message,
+    line_date_not_changed_message,
+    payment_has_been_completed_message,
+)
+from bot.utils.data_processing.date_converter import (
+    convert_to_short_format,
+    get_date_for_db,
+)
+from bot.utils.data_processing.validators import is_valid_date, is_valid_date_part
 
 router = Router()
 
@@ -70,8 +75,6 @@ async def handle_line_date_to(message: Message, state: FSMContext):
         return await message.answer(client_dose_not_exists_error)
 
     current_date_to = current_client.date_to
-    
-
 
     date_to_validate = convert_to_short_format(
         f"{current_client.date_from}-{new_date_to}"
@@ -82,7 +85,9 @@ async def handle_line_date_to(message: Message, state: FSMContext):
             line_date_not_changed_message(current_date=current_date_to)
         )
 
-    updated_client = await ClientDAO.update(model_id=client_id, date_to=new_date_to, days_delay=0)
+    updated_client = await ClientDAO.update(
+        model_id=client_id, date_to=new_date_to, days_late=0
+    )
     if updated_client:
         return await message.answer(
             line_date_changed_successfully_message(

@@ -6,16 +6,20 @@ from aiogram.types import Message
 
 from bot.config import settings
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.table_keyboards import \
-    get_actions_with_table_keyboard
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
-    exceeded_the_limit_on_the_table_error, imposible_to_create_table_error,
-    name_so_long_error, table_already_exists_error)
+    exceeded_the_limit_on_the_table_error,
+    imposible_to_create_table_error,
+    name_so_long_error,
+    table_already_exists_error,
+)
 from bot.templates.keyboards_templates import create_table_text
-from bot.templates.messages_templates import (enter_table_name_message,
-                                              table_has_been_created_message)
+from bot.templates.messages_templates import (
+    enter_table_name_message,
+    table_has_been_created_message,
+)
 from bot.utils.data_processing.validators import is_valid_name
 
 router = Router()

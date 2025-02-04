@@ -6,12 +6,13 @@ from aiogram.types import CallbackQuery
 
 from bot.database.tables.dao import TableDAO
 from bot.handlers.post_handlers.add_data_to_table import delete_message_safely
-from bot.keyboards.inline.utils_keyboards import \
-    yes_or_not_delte_table_keyboard
+from bot.keyboards.inline.utils_keyboards import yes_or_not_delte_table_keyboard
 from bot.templates.errors_templates import table_dose_not_exists_error
 from bot.templates.messages_templates import (
-    are_you_sure_to_delete_table_message, table_are_deleted_message,
-    table_are_not_deleted_message)
+    are_you_sure_to_delete_table_message,
+    table_are_deleted_message,
+    table_are_not_deleted_message,
+)
 
 router = Router()
 

@@ -7,8 +7,7 @@ from aiogram.types import CallbackQuery
 from bot.database.tables.clients.dao import ClientDAO
 from bot.templates.errors_templates import client_dose_not_exists_error
 from bot.templates.messages_templates import payment_didnt_completed_message
-from bot.utils.data_processing.date_converter import (get_date_for_db,
-                                                      parse_db_date)
+from bot.utils.data_processing.date_converter import get_date_for_db, parse_db_date
 
 router = Router()
 

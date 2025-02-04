@@ -9,12 +9,16 @@ from aiogram.types import CallbackQuery, Message
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import (client_dose_not_exists_error,
-                                            price_must_be_int_error,
-                                            table_dose_not_exists_error)
+from bot.templates.errors_templates import (
+    client_dose_not_exists_error,
+    price_must_be_int_error,
+    table_dose_not_exists_error,
+)
 from bot.templates.messages_templates import (
-    enter_new_price_message, line_price_changed_successfully_message,
-    line_price_not_changed_message)
+    enter_new_price_message,
+    line_price_changed_successfully_message,
+    line_price_not_changed_message,
+)
 from bot.utils.data_processing.validators import is_valid_price
 
 router = Router()

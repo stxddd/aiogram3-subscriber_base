@@ -71,9 +71,12 @@ def one_line_message(line, table_name):
         f"💶 {hbold(line.price)}\n"
         f"{hbold('С:')} {hitalic(line.date_from)}\n"
         f"{hbold('До:')} {hitalic(line.date_to)}\n"
-        f"{'➖' * 12}\n"
-        "Что Вы хотите сделать?"
     )
+
+    if line.days_late is not None and line.days_late != 0:
+        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(line.days_late)}\n"
+
+    text += f"{'➖' * 12}\n" "Что Вы хотите сделать?"
 
     return text
 
@@ -86,9 +89,12 @@ def are_you_sure_to_delete_line_message(table_name, line):
         f"💶 {hbold(line.price)}\n"
         f"{hbold('С:')} {hitalic(line.date_from)}\n"
         f"{hbold('До:')} {hitalic(line.date_to)}\n"
-        f"{'➖' * 12}\n"
-        "❔Вы уверены, что хотите удалить её?"
     )
+
+    if line.days_late is not None and line.days_late != 0:
+        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(line.days_late)}\n"
+
+    text += f"{'➖' * 12}\n" "❔Вы уверены, что хотите удалить её?"
 
     return text
 
@@ -101,24 +107,30 @@ def line_are_not_deleted_message(table_name, line):
         f"💶 {hbold(line.price)}\n"
         f"{hbold('С:')} {hitalic(line.date_from)}\n"
         f"{hbold('До:')} {hitalic(line.date_to)}\n"
-        f"{'➖' * 12}\n"
-        "❌ Не может быть удалена"
     )
+
+    if line.days_late is not None and line.days_late != 0:
+        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(line.days_late)}\n"
+
+    text += f"{'➖' * 12}\n" "❌ Не может быть удалена"
 
     return text
 
 
 def line_are_deleted_message(table_name, line):
     text = (
-        f"Cтрока таблицы «{hitalic(table_name)}»\n"
+        f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
         f"👤 {hbold(line.name)}\n"
         f"💶 {hbold(line.price)}\n"
         f"{hbold('С:')} {hitalic(line.date_from)}\n"
         f"{hbold('До:')} {hitalic(line.date_to)}\n"
-        f"{'➖' * 12}\n"
-        "✅ Удалена"
     )
+
+    if line.days_late is not None and line.days_late != 0:
+        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(line.days_late)}\n"
+
+    text += f"{'➖' * 12}\n" "✅ Удален"
 
     return text
 
@@ -169,6 +181,7 @@ def all_table_lines_message(lines, table_name):
         f"💶 {hitalic(line.price)}\n"
         f"{hbold('С:')} {hitalic(line.date_from)}\n"
         f"{hbold('До:')} {hitalic(line.date_to)}\n"
+        f"{(f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(line.days_late)}\n" if line.days_late is not None and line.days_late != 0 else '')}"
         f"{'➖' * 12}"
         for line in lines
     )
@@ -209,5 +222,6 @@ def payment_has_been_completed_message(client_name, client_date_from, client_dat
 
 def payment_didnt_completed_message(client_name, days_late):
     return f"❌ Клиент {client_name} НЕ оплатил услуги. \n\n❔ Дней задержки: {days_late} \n\nПроверим завтра."
+
 
 anti_flood_message = "⛔ Вы слишком быстро отправляете сообщения! Подождите немного."

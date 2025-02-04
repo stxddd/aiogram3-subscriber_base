@@ -9,21 +9,29 @@ from aiogram.types import CallbackQuery, Message
 from bot.config import settings
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.table_keyboards import \
-    get_actions_with_table_keyboard
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply import main_keyboards
 from bot.templates.errors_templates import (
-    adding_data_error, exceeded_the_limit_on_the_line_error,
-    invalid_date_format_error, name_so_long_error, price_must_be_int_error,
-    table_dose_not_exists_error)
-from bot.templates.messages_templates import (data_added_message,
-                                              sent_date_message,
-                                              sent_name_message,
-                                              sent_price_message)
+    adding_data_error,
+    exceeded_the_limit_on_the_line_error,
+    invalid_date_format_error,
+    name_so_long_error,
+    price_must_be_int_error,
+    table_dose_not_exists_error,
+)
+from bot.templates.messages_templates import (
+    data_added_message,
+    sent_date_message,
+    sent_name_message,
+    sent_price_message,
+)
 from bot.utils.data_processing.date_converter import get_date_for_db
-from bot.utils.data_processing.validators import (is_valid_date, is_valid_name,
-                                                  is_valid_price)
+from bot.utils.data_processing.validators import (
+    is_valid_date,
+    is_valid_name,
+    is_valid_price,
+)
 
 router = Router()
 

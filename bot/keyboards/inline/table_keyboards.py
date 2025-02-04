@@ -2,14 +2,18 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.database.tables.dao import TableDAO
-from bot.templates.keyboards_templates import (add_data_text, cancel_text,
-                                               change_table_data_text,
-                                               change_table_name_text,
-                                               clients_for_some_period_text,
-                                               delete_table_text,
-                                               download_text, edit_text,
-                                               look_all_text,
-                                               table_statistic_text)
+from bot.templates.keyboards_templates import (
+    add_data_text,
+    cancel_text,
+    change_table_data_text,
+    change_table_name_text,
+    clients_for_some_period_text,
+    delete_table_text,
+    download_text,
+    edit_text,
+    look_all_text,
+    table_statistic_text,
+)
 
 
 async def get_my_tables_keyboard(user_tg_id: int):

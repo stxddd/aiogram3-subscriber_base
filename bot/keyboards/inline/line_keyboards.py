@@ -2,12 +2,14 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.database.tables.clients.dao import ClientDAO
-from bot.templates.keyboards_templates import (cancel_text,
-                                               change_date_from_text,
-                                               change_date_to_text,
-                                               change_name_text,
-                                               change_price_text,
-                                               delete_line_text)
+from bot.templates.keyboards_templates import (
+    cancel_text,
+    change_date_from_text,
+    change_date_to_text,
+    change_name_text,
+    change_price_text,
+    delete_line_text,
+)
 
 
 async def get_lines_for_edit(table_id: int):

@@ -5,8 +5,10 @@ from aiogram.types import CallbackQuery
 
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
-from bot.templates.errors_templates import (clients_dose_not_exists_error,
-                                            table_dose_not_exists_error)
+from bot.templates.errors_templates import (
+    clients_dose_not_exists_error,
+    table_dose_not_exists_error,
+)
 from bot.templates.messages_templates import table_base_info_message
 
 router = Router()

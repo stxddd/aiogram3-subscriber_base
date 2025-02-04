@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 
 from bot.database.database import Base
 
-
 class Client(Base):
     __tablename__ = "clients"
 

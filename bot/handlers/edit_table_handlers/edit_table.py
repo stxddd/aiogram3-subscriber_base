@@ -5,11 +5,9 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery
 
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.table_keyboards import \
-    get_edit_actions_with_table_keyboard
+from bot.keyboards.inline.table_keyboards import get_edit_actions_with_table_keyboard
 from bot.templates.errors_templates import table_dose_not_exists_error
-from bot.templates.messages_templates import \
-    select_an_action_for_the_table_message
+from bot.templates.messages_templates import select_an_action_for_the_table_message
 
 router = Router()
 

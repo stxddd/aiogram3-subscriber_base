@@ -9,16 +9,21 @@ from aiogram.types import CallbackQuery, Message
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
-from bot.templates.errors_templates import (client_dose_not_exists_error,
-                                            invalid_date_format_error,
-                                            table_dose_not_exists_error)
+from bot.templates.errors_templates import (
+    client_dose_not_exists_error,
+    invalid_date_format_error,
+    table_dose_not_exists_error,
+)
 from bot.templates.messages_templates import (
-    enter_new_date_from_message, line_date_changed_successfully_message,
-    line_date_not_changed_message)
-from bot.utils.data_processing.date_converter import (convert_to_short_format,
-                                                      get_date_for_db)
-from bot.utils.data_processing.validators import (is_valid_date,
-                                                  is_valid_date_part)
+    enter_new_date_from_message,
+    line_date_changed_successfully_message,
+    line_date_not_changed_message,
+)
+from bot.utils.data_processing.date_converter import (
+    convert_to_short_format,
+    get_date_for_db,
+)
+from bot.utils.data_processing.validators import is_valid_date, is_valid_date_part
 
 router = Router()
 

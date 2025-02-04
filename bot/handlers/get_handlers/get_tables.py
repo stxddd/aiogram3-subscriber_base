@@ -4,8 +4,10 @@ from aiogram.types import Message
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.inline.table_keyboards import get_my_tables_keyboard
 from bot.templates.keyboards_templates import my_tables_text
-from bot.templates.messages_templates import (our_tables_message,
-                                              table_are_missing_message)
+from bot.templates.messages_templates import (
+    our_tables_message,
+    table_are_missing_message,
+)
 
 router = Router()
 

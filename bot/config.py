@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_PASS: str
 
-    FLOOD_THRESHOLD: int 
-    
+    FLOOD_THRESHOLD: int
+
     MAX_TABLE_LIMIT: int
     MAX_CLIENT_LIMIT: int
     DOWNLOAD_DAY_LIMIT: int

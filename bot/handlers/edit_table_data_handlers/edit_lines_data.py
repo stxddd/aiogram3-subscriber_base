@@ -5,13 +5,19 @@ from aiogram.types import CallbackQuery
 
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.line_keyboards import (get_lines_data_unit_to_edit,
-                                                 get_lines_for_edit)
-from bot.templates.errors_templates import (client_dose_not_exists_error,
-                                            table_dose_not_exists_error)
-from bot.templates.messages_templates import (one_line_message,
-                                              pick_line_for_edit_message,
-                                              table_has_no_lines_message)
+from bot.keyboards.inline.line_keyboards import (
+    get_lines_data_unit_to_edit,
+    get_lines_for_edit,
+)
+from bot.templates.errors_templates import (
+    client_dose_not_exists_error,
+    table_dose_not_exists_error,
+)
+from bot.templates.messages_templates import (
+    one_line_message,
+    pick_line_for_edit_message,
+    table_has_no_lines_message,
+)
 
 router = Router()
 

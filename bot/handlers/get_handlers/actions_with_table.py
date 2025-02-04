@@ -5,8 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from bot.database.tables.dao import TableDAO
-from bot.keyboards.inline.table_keyboards import \
-    get_actions_with_table_keyboard
+from bot.keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.templates.errors_templates import table_dose_not_exists_error
 from bot.templates.messages_templates import table_name_message
 
