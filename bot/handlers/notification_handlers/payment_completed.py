@@ -7,14 +7,12 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
 from bot.database.tables.clients.dao import ClientDAO
-from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (client_dose_not_exists_error,
-                                            invalid_date_format_error,
-                                            table_dose_not_exists_error)
+                                            invalid_date_format_error)
 from bot.templates.messages_templates import (
-    enter_new_date_to_message, line_date_changed_successfully_message,
-    line_date_not_changed_message)
+    line_date_changed_successfully_message, line_date_not_changed_message,
+    payment_has_been_completed)
 from bot.utils.data_processing.date_converter import (convert_to_short_format,
                                                       get_date_for_db)
 from bot.utils.data_processing.validators import (is_valid_date,
@@ -22,40 +20,40 @@ from bot.utils.data_processing.validators import (is_valid_date,
 
 router = Router()
 
-EDIT_DATE_TO_PATTERN = r"^edit_data_date_to_(\d+)$"
+PAYMENT_COMPLETED_PATTERN = r"^payment_completed_(\d+)$"
 
 
 class Form(StatesGroup):
-    waiting_for_data_new_date_to = State()
+    waiting_for_new_date_to = State()
 
 
-@router.callback_query(F.data.regexp(EDIT_DATE_TO_PATTERN))
-async def handle_edit_data_date_to(callback: CallbackQuery, state: FSMContext):
+@router.callback_query(F.data.regexp(PAYMENT_COMPLETED_PATTERN))
+async def handle_base_table_info(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
-    match = re.match(EDIT_DATE_TO_PATTERN, callback.data)
+    match = re.match(PAYMENT_COMPLETED_PATTERN, callback.data)
     client_id = int(match.group(1))
 
-    current_client = await ClientDAO.find_by_id(client_id)
-    if not current_client:
+    client = await ClientDAO.find_one_or_none(id=client_id)
+
+    if not client:
         return await callback.message.answer(client_dose_not_exists_error)
 
-    table = await TableDAO.find_one_or_none(id=current_client.table_id)
-
-    if not table:
-        return await callback.message.answer(table_dose_not_exists_error)
-
-    table_name = table.name
-
-    await state.update_data(client_id=client_id, table_name=table_name)
-    await state.set_state(Form.waiting_for_data_new_date_to)
-
     await callback.message.answer(
-        enter_new_date_to_message(table_name=table_name, name=current_client.name)
+        payment_has_been_completed(
+            client_name=client.name,
+            client_date_from=client.date_from,
+            client_date_to=client.date_to,
+        )
+    )
+    await state.update_data(client_id=client_id)
+    await state.set_state(Form.waiting_for_new_date_to)
+    await callback.message.bot.delete_message(
+        callback.message.chat.id, callback.message.message_id
     )
 
 
-@router.message(StateFilter(Form.waiting_for_data_new_date_to))
+@router.message(StateFilter(Form.waiting_for_new_date_to))
 async def handle_line_date_to(message: Message, state: FSMContext):
     new_date_to = message.text.strip()
 

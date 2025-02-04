@@ -1,7 +1,9 @@
-from bot.database.dao.base import BaseDAO
-from bot.database.tables.models import Table
 from sqlalchemy import select
+
+from bot.database.dao.base import BaseDAO
 from bot.database.database import async_session_maker
+from bot.database.tables.models import Table
+
 
 class TableDAO(BaseDAO):
     model = Table
@@ -15,7 +17,7 @@ class TableDAO(BaseDAO):
                 existing_query = await session.execute(
                     select(cls.model)
                     .filter_by(name=data["name"], user_tg_id=result.user_tg_id)
-                    .filter(cls.model.id != model_id)  
+                    .filter(cls.model.id != model_id)
                 )
                 existing_object = existing_query.scalars().first()
                 if existing_object:

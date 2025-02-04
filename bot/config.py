@@ -13,7 +13,9 @@ class Settings(BaseSettings):
     MAX_TABLE_LIMIT: int
     MAX_CLIENT_LIMIT: int
     DOWNLOAD_DAY_LIMIT: int
-    
+
+    TIME_TO_RECEIVE_NOTIFICATIONS: int
+
     @property
     def DATABASE_URL(self) -> str:
         return (

@@ -49,7 +49,7 @@ class BaseDAO:
                 await session.commit()
                 return result
             return None
-        
+
     @classmethod
     async def delete_all(cls, **data):
         async with async_session_maker() as session:
@@ -66,7 +66,7 @@ class BaseDAO:
         async with async_session_maker() as session:
             query = await session.execute(select(cls.model).filter_by(id=model_id))
             result = query.scalars().first()
-            if result:                
+            if result:
                 for key, value in data.items():
                     setattr(result, key, value)
                 await session.commit()

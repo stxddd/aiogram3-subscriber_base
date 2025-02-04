@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
 
@@ -29,12 +30,14 @@ class ExcelCRUD:
 
             workbook.save(file_path)
             return True
-        
+
         except:
             return False
 
     @staticmethod
-    async def add_client_to_existing_excel(data, table_name: str, table_id: int, tg_id: int):
+    async def add_client_to_existing_excel(
+        data, table_name: str, table_id: int, tg_id: int
+    ):
         file_path = ExcelCRUD.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
         if file_path.exists():
@@ -50,14 +53,14 @@ class ExcelCRUD:
 
             return True
         return False
-    
+
     @staticmethod
     async def delete_excel_file(table_id: int, table_name: str, tg_id: int):
         try:
             file_path = ExcelCRUD.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
             if file_path.exists():
-                file_path.unlink() 
+                file_path.unlink()
                 return True
             else:
                 return False
@@ -69,18 +72,13 @@ class ExcelCRUD:
         file_path = cls.file_path / f"{table_name}_{table_id}_{tg_id}.xlsx"
 
         await cls.create_new_excel(
-            table_id=table_id,
-            table_name=table_name,
-            tg_id=tg_id
+            table_id=table_id, table_name=table_name, tg_id=tg_id
         )
 
         for client in clients:
             client_data = [client.name, client.price, client.date_from, client.date_to]
             await cls.add_client_to_existing_excel(
-                data=client_data,
-                table_name=table_name,
-                table_id=table_id,
-                tg_id=tg_id
+                data=client_data, table_name=table_name, table_id=table_id, tg_id=tg_id
             )
-        
+
         return file_path

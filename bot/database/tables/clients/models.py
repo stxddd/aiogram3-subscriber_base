@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from bot.database.database import Base
 
@@ -12,3 +12,4 @@ class Client(Base):
     price = Column(Integer, nullable=False)
     date_from = Column(String(20), nullable=False)
     date_to = Column(String(20), nullable=False)
+    days_late = Column(Integer, default=0)
