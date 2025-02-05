@@ -4,11 +4,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     TOKEN: str
 
-    DB_HOST: str
-    DB_PORT: int
-    DB_USER: str
-    DB_NAME: str
-    DB_PASS: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_DB: str
+    POSTGRES_PASSWORD: str
 
     FLOOD_THRESHOLD: int
 
@@ -21,8 +21,8 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         return (
-            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
 
     class Config:

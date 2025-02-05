@@ -68,7 +68,9 @@ def parse_date(date_str: str) -> date:
     }
     try:
         if re.fullmatch(r"\d{1,2}\.\d{2}\.\d{4}", date_str):
+            
             return datetime.strptime(date_str, "%d.%m.%Y").date()
+
         elif re.fullmatch(r"\d{1,2}[а-я]{3}\d{4}", date_str):
             day = re.match(r"\d{1,2}", date_str).group()
             month = re.search(r"[а-я]{3}", date_str).group()

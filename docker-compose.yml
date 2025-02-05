@@ -1,0 +1,22 @@
+services:
+  bot:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:17
+    env_file:
+      - .env  # Здесь мы используем .env файл
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
