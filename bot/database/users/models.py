@@ -14,7 +14,6 @@ class User(Base):
     last_download_date = Column(Date, default=date.today())
 
     def reset_if_new_day(self):
-        """Сбросить количество скачиваний в новый день"""
         if self.last_download_date != date.today():
             self.downloads_today = 0
             self.last_download_date = date.today()
