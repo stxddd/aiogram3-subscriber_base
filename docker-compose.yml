@@ -12,7 +12,7 @@ services:
   db:
     image: postgres:17
     env_file:
-      - .env  # Здесь мы используем .env файл
+      - .env
     ports:
       - "5432:5432"
     volumes:
