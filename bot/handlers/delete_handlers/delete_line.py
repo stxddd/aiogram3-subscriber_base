@@ -41,7 +41,7 @@ async def handle_add_line_to_table(callback: CallbackQuery):
     table_name = table.name
 
     return await callback.message.answer(
-        are_you_sure_to_delete_line_message(table_name=table_name, line=current_client),
+        are_you_sure_to_delete_line_message(table_name=table_name, client=current_client),
         reply_markup=await yes_or_not_delte_line_keyboard(client_id=client_id),
     )
 
@@ -68,9 +68,9 @@ async def handle_line_name(callback: CallbackQuery):
 
     if not delte_line:
         return await callback.message.answer(
-            line_are_not_deleted_message(table_name=table_name, line=current_client)
+            line_are_not_deleted_message(table_name=table_name, client=current_client)
         )
 
     return await callback.message.answer(
-        line_are_deleted_message(line=current_client, table_name=table_name)
+        line_are_deleted_message(client=current_client, table_name=table_name)
     )

@@ -9,19 +9,23 @@ from bot.templates.keyboards_templates import (
     change_name_text,
     change_price_text,
     delete_line_text,
+    get_lines_for_edit_text
 )
 
 
 async def get_lines_for_edit(table_id: int):
-    lines = await ClientDAO.find_all(table_id=table_id)
+    clients = await ClientDAO.find_all(table_id=table_id)
 
     keyboard = InlineKeyboardBuilder()
 
-    for line in lines:
+    for client in clients:
         keyboard.add(
             InlineKeyboardButton(
-                text=f"👤{line.name} 💶{line.price}\n⌚️{line.date_from} - {line.date_to}",
-                callback_data=f"get_line_to_edit_{line.id}",
+                text=get_lines_for_edit_text(client_name=client.name,
+                                             client_price=client.price, 
+                                             client_date_from=client.date_from, 
+                                             client_date_to=client.date_to),
+                callback_data=f"get_line_to_edit_{client.id}",
             )
         )
 

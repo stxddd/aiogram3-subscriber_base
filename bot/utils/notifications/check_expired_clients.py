@@ -10,15 +10,14 @@ from bot.database.tables.models import Table
 from bot.database.users.dao import UserDAO
 from bot.keyboards.inline.notification_keyboards import get_pay_info
 from bot.templates.messages_templates import client_date_to_expired
-from bot.utils.data_processing.date_converter import parse_db_date
 
 
 async def check_expired_clients(bot):
     while True:
         now = datetime.now().replace(
-            hour=settings.TIME_TO_RECEIVE_NOTIFICATIONS,
-            minute=00,
-            second=00,
+            hour=16,#settings.TIME_TO_RECEIVE_NOTIFICATIONS,
+            minute=46,
+            second=0,
             microsecond=0,
         )
         await asyncio.sleep((now - datetime.now()).total_seconds() % 86400)
@@ -36,9 +35,9 @@ async def check_expired_clients(bot):
                 clients = result.scalars().all()
 
                 for client in clients:
-                    client_date = parse_db_date(client.date_to)
-                    if client_date and client_date == today:
-                        await bot.send_message(
+                    client_date = client.date_to
+                    if client_date and client_date <= today:
+                        message = await bot.send_message(
                             user.tg_id,
                             client_date_to_expired(
                                 client_name=client.name, date_to=client.date_to
@@ -46,4 +45,7 @@ async def check_expired_clients(bot):
                             reply_markup=await get_pay_info(client_id=client.id),
                         )
 
+                        await bot.pin_chat_message(user.tg_id, message.message_id)
+
         await asyncio.sleep(86400)
+        

@@ -72,6 +72,6 @@ async def handle_edit_line(callback: CallbackQuery):
     table_name = table.name
 
     await callback.message.answer(
-        one_line_message(line=current_client, table_name=table_name),
+        one_line_message(client=current_client, table_name=table_name),
         reply_markup=await get_lines_data_unit_to_edit(client_id=client_id),
     )

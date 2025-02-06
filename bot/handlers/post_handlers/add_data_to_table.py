@@ -26,7 +26,7 @@ from bot.templates.messages_templates import (
     sent_name_message,
     sent_price_message,
 )
-from bot.utils.data_processing.date_converter import get_date_for_db
+
 from bot.utils.data_processing.validators import (
     is_valid_date,
     is_valid_name,
@@ -132,12 +132,10 @@ async def handle_client_price(message: Message, state: FSMContext):
 
 @router.message(StateFilter(Form.waiting_for_date_data))
 async def handle_client_date(message: Message, state: FSMContext):
-    date = message.text.strip()
+    date = is_valid_date(message.text.strip())
 
-    if not is_valid_date(date):
+    if not date:
         return await message.answer(invalid_date_format_error)
-
-    date = get_date_for_db(date).split("-")
 
     data = await state.get_data()
     name, price, table_id, table_name = (

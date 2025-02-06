@@ -1,3 +1,6 @@
+from bot.utils.data_processing.date_converter import format_date
+
+
 my_tables_text = "Мои таблицы"
 create_table_text = "Создать таблицу"
 
@@ -14,8 +17,8 @@ change_table_name_text = "Имя таблицы"
 change_table_data_text = "Содержимое"
 change_name_text = "Изменить имя клиента"
 change_price_text = "Изменить цену"
-change_date_to_text = "Изменить дату 'До'"
-change_date_from_text = "Изменить дату 'С'"
+change_date_to_text = "Изменить дату конца"
+change_date_from_text = "Изменить дату начала"
 table_statistic_text = "Статистика"
 clients_for_some_period_text = "Клиенты на опредленный период"
 
@@ -24,3 +27,5 @@ didnt_pay_text = "Не оплатил ❌"
 
 yes_text = "ДА"
 no_text = "НЕТ"
+
+def get_lines_for_edit_text(client_name, client_price, client_date_from, client_date_to): return f"👤{client_name} 💶{client_price}\n⌚️{format_date(client_date_from)} - {format_date(client_date_to)}"

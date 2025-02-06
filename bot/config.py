@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     TIME_TO_RECEIVE_NOTIFICATIONS: int
 
+    TZ: str
+
     @property
     def DATABASE_URL(self) -> str:
         return (

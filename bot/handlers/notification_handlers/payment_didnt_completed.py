@@ -7,7 +7,6 @@ from aiogram.types import CallbackQuery
 from bot.database.tables.clients.dao import ClientDAO
 from bot.templates.errors_templates import client_dose_not_exists_error
 from bot.templates.messages_templates import payment_didnt_completed_message
-from bot.utils.data_processing.date_converter import get_date_for_db, parse_db_date
 
 router = Router()
 
@@ -33,13 +32,7 @@ async def handle_base_table_info(callback: CallbackQuery):
     else:
         days_late += 1
 
-    new_date_to = get_date_for_db(
-        (parse_db_date(client.date_to) + timedelta(days=1)).strftime("%d.%m.%Y")
-    )
-
-    client = await ClientDAO.update(
-        model_id=client.id, days_late=days_late, date_to=new_date_to
-    )
+    client = await ClientDAO.update(model_id=client.id, days_late=days_late)
 
     if not client:
         return await callback.message.answer(client_dose_not_exists_error)

@@ -17,11 +17,9 @@ from bot.templates.messages_templates import (
     line_date_not_changed_message,
     payment_has_been_completed_message,
 )
-from bot.utils.data_processing.date_converter import (
-    convert_to_short_format,
-    get_date_for_db,
-)
-from bot.utils.data_processing.validators import is_valid_date, is_valid_date_part
+
+from bot.utils.data_processing.date_converter import parse_date
+from bot.utils.data_processing.validators import is_valid_date, is_correct_date_part
 
 router = Router()
 
@@ -62,40 +60,33 @@ async def handle_base_table_info(callback: CallbackQuery, state: FSMContext):
 async def handle_line_date_to(message: Message, state: FSMContext):
     new_date_to = message.text.strip()
 
-    if not is_valid_date_part(new_date_to):
+    if not is_correct_date_part(new_date_to):
         return await message.answer(invalid_date_format_error)
-
-    new_date_to = get_date_for_db(new_date_to)
 
     data = await state.get_data()
     client_id = data.get("client_id")
-
     current_client = await ClientDAO.find_by_id(client_id)
+
     if not current_client:
         return await message.answer(client_dose_not_exists_error)
 
+    date_to_validate = is_valid_date(
+        f"{current_client.date_from}.{(parse_date(new_date_to))}"
+    )
+
     current_date_to = current_client.date_to
+    if not date_to_validate:
+        return await message.answer(invalid_date_format_error)
 
-    date_to_validate = convert_to_short_format(
-        f"{current_client.date_from}-{new_date_to}"
-    )
-
-    if not date_to_validate or not is_valid_date(date_to_validate):
+    updated_client = await ClientDAO.update(model_id=client_id, date_to=date_to_validate[1], days_late = 0)
+    if not updated_client:
         return await message.answer(
-            line_date_not_changed_message(current_date=current_date_to)
+            line_date_not_changed_message(current_date=date_to_validate[1])
         )
-
-    updated_client = await ClientDAO.update(
-        model_id=client_id, date_to=new_date_to, days_late=0
-    )
-    if updated_client:
-        return await message.answer(
-            line_date_changed_successfully_message(
-                date=new_date_to, current_date=current_date_to
-            ),
-            reply_markup=main_keyboard,
-        )
-
+    
     return await message.answer(
-        line_date_not_changed_message(current_date=current_date_to)
+        line_date_changed_successfully_message(
+            date=date_to_validate[1], current_date=current_date_to
+        ),
+        reply_markup=main_keyboard,
     )
