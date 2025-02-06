@@ -5,7 +5,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from bot.database.tables.clients.dao import ClientDAO
-from bot.templates.errors_templates import client_dose_not_exists_error
+from bot.templates.errors_templates import client_does_not_exists_error
 from bot.templates.messages_templates import payment_didnt_completed_message
 
 router = Router()
@@ -23,7 +23,7 @@ async def handle_base_table_info(callback: CallbackQuery):
     client = await ClientDAO.find_one_or_none(id=client_id)
 
     if not client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     days_late = client.days_late
 
@@ -35,7 +35,7 @@ async def handle_base_table_info(callback: CallbackQuery):
     client = await ClientDAO.update(model_id=client.id, days_late=days_late)
 
     if not client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     await callback.message.answer(
         payment_didnt_completed_message(client_name=client.name, days_late=days_late)

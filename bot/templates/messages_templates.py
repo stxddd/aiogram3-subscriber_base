@@ -138,15 +138,15 @@ def line_are_deleted_message(table_name, client):
 
 
 def sent_name_message(table_name):
-    return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте имя клиента (до 32 символов)"
+    return f"❔Добавление данных\n{table_name_message(table_name)}\n\nОтправьте имя клиента (до 32 символов)"
 
 
 def sent_price_message(table_name):
-    return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nОтправьте цену услуги (целое число)"
+    return f"❔Добавление данных\n{table_name_message(table_name)}\n\nОтправьте цену услуги (целое число)"
 
 
 def sent_date_message(table_name):
-    return f"❔Добалвение данных\n{table_name_message(table_name)}\n\nВведите в одном из форматов:\n 1) ddmmmYYYY-ddmmmYYYY \n 2) dd.mm.yyyy-dd.mm.yyyy\n\nДаты должны быть корректны."
+    return f"❔Добавление данных\n{table_name_message(table_name)}\n\nВведите в одном из форматов:\n 1) ddmmmYYYY-ddmmmYYYY \n 2) dd.mm.yyyy-dd.mm.yyyy\n\nДаты должны быть корректны."
 
 
 def data_added_message(table_name, name, price, date):
@@ -158,7 +158,7 @@ def line_name_changed_successfully_message(name, current_name):
 
 
 def line_name_not_changed_message(current_name):
-    return f"❌ Ошибка при измении имени «{current_name}»"
+    return f"❌ Ошибка при изменении имени «{current_name}»"
 
 
 def line_price_changed_successfully_message(price, current_price):
@@ -166,7 +166,7 @@ def line_price_changed_successfully_message(price, current_price):
 
 
 def line_price_not_changed_message(current_price):
-    return f"❌ Ошибка при измении цены «{current_price}»"
+    return f"❌ Ошибка при изменении цены «{current_price}»"
 
 
 def line_date_changed_successfully_message(date, current_date):
@@ -174,10 +174,10 @@ def line_date_changed_successfully_message(date, current_date):
 
 
 def line_date_not_changed_message(current_date):
-    return f"❌ Ошибка при измении даты «{format_date(current_date)}»."
+    return f"❌ Ошибка при изменении даты «{format_date(current_date)}»."
 
 
-def all_table_lines_message(lines, table_name):
+def all_table_lines_message(clients, table_name):
     text = "\n".join(
         f"👤 {hitalic(client.name)}\n"
         f"💶 {hitalic(client.price)}\n"
@@ -185,9 +185,9 @@ def all_table_lines_message(lines, table_name):
         f"{hbold('До:')} {hitalic((format_date(client.date_to)))}\n"
         f"{(f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(client.days_late)}\n" if client.days_late is not None and client.days_late != 0 else '')}"
         f"{'➖' * 12}"
-        for client in lines
+        for client in clients
     )
-    return f"{hbold('Таблица:')} «{hitalic(table_name)}»\n{hbold('Клиентов:')} {hitalic(len(lines))}\n{'➖' * 12}\n{text}"
+    return f"{hbold('Таблица:')} «{hitalic(table_name)}»\n{hbold('Клиентов:')} {hitalic(len(clients))}\n{'➖' * 12}\n{text}"
 
 
 impossible_to_edit_line_message = "❌ Невозможно изменить эту строку"

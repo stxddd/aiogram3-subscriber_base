@@ -15,8 +15,8 @@ from bot.templates.messages_templates import client_date_to_expired
 async def check_expired_clients(bot):
     while True:
         now = datetime.now().replace(
-            hour=16,#settings.TIME_TO_RECEIVE_NOTIFICATIONS,
-            minute=46,
+            hour=settings.HOUR_TO_RECEIVE_NOTIFICATIONS,
+            minute=settings.MINUTE_TO_RECEIVE_NOTIFICATIONS,
             second=0,
             microsecond=0,
         )

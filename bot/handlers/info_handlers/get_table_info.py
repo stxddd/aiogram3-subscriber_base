@@ -6,7 +6,7 @@ from aiogram.types import CallbackQuery
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.templates.errors_templates import (
-    clients_dose_not_exists_error,
+    clients_does_not_exists_error,
     table_dose_not_exists_error,
 )
 from bot.templates.messages_templates import table_base_info_message
@@ -33,14 +33,14 @@ async def handle_base_table_info(callback: CallbackQuery):
     clients = await ClientDAO.find_all(table_id=table_id)
 
     if not clients:
-        return await callback.message.answer(clients_dose_not_exists_error)
+        return await callback.message.answer(clients_does_not_exists_error)
 
     clients_count = len(clients)
 
     all_prices = await ClientDAO.count_all_prices(table_id=table_id)
 
     if not all_prices:
-        return await callback.message.answer(clients_dose_not_exists_error)
+        return await callback.message.answer(clients_does_not_exists_error)
 
     await callback.message.answer(
         table_base_info_message(

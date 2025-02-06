@@ -10,7 +10,7 @@ from bot.keyboards.inline.line_keyboards import (
     get_lines_for_edit,
 )
 from bot.templates.errors_templates import (
-    client_dose_not_exists_error,
+    client_does_not_exists_error,
     table_dose_not_exists_error,
 )
 from bot.templates.messages_templates import (
@@ -39,9 +39,9 @@ async def handle_get_line_to_edit(callback: CallbackQuery):
 
     table_name = table.name
 
-    lines = await ClientDAO.find_all(table_id=table_id)
+    clients = await ClientDAO.find_all(table_id=table_id)
 
-    if not lines:
+    if not clients:
         return await callback.message.answer(
             table_has_no_lines_message(table_name=table_name)
         )
@@ -62,7 +62,7 @@ async def handle_edit_line(callback: CallbackQuery):
     current_client = await ClientDAO.find_by_id(client_id)
 
     if not current_client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     table = await TableDAO.find_one_or_none(id=current_client.table_id)
 

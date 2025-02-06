@@ -3,6 +3,8 @@ from pathlib import Path
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
 
+from bot.utils.data_processing.date_converter import format_date
+
 
 class ExcelCRUD:
     current_dir = Path(__file__).resolve().parent.parent.parent
@@ -76,7 +78,7 @@ class ExcelCRUD:
         )
 
         for client in clients:
-            client_data = [client.name, client.price, client.date_from, client.date_to]
+            client_data = [client.name, client.price, format_date(client.date_from), format_date(client.date_to)]
             await cls.add_client_to_existing_excel(
                 data=client_data, table_name=table_name, table_id=table_id, tg_id=tg_id
             )

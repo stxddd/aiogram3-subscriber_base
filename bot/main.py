@@ -22,7 +22,7 @@ from bot.handlers.edit_table_data_handlers.edit_data_name import (
 from bot.handlers.edit_table_data_handlers.edit_data_price import (
     router as edit_data_price_router,
 )
-from bot.handlers.edit_table_data_handlers.edit_lines_data import (
+from bot.handlers.edit_table_data_handlers.edit_clients_data import (
     router as edit_table_data_router,
 )
 from bot.handlers.edit_table_handlers.edit_table import router as edit_table_router
@@ -59,8 +59,8 @@ bot = Bot(token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMod
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-# dp.message.middleware(AntiFloodMiddleware())
-# dp.callback_query.middleware(AntiFloodMiddleware())
+dp.message.middleware(AntiFloodMiddleware())
+dp.callback_query.middleware(AntiFloodMiddleware())
 
 
 async def main():

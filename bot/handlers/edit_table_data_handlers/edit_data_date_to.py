@@ -10,7 +10,7 @@ from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
-    client_dose_not_exists_error,
+    client_does_not_exists_error,
     invalid_date_format_error,
     table_dose_not_exists_error,
 )
@@ -41,7 +41,7 @@ async def handle_edit_data_date_to(callback: CallbackQuery, state: FSMContext):
 
     current_client = await ClientDAO.find_by_id(client_id)
     if not current_client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     table = await TableDAO.find_one_or_none(id=current_client.table_id)
 
@@ -71,7 +71,7 @@ async def handle_line_date_to(message: Message, state: FSMContext):
     current_client = await ClientDAO.find_by_id(client_id)
 
     if not current_client:
-        return await message.answer(client_dose_not_exists_error)
+        return await message.answer(client_does_not_exists_error)
 
     date_to_validate = is_valid_date(
         f"{current_client.date_from}.{(parse_date(new_date_to))}"

@@ -7,7 +7,7 @@ from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.inline.utils_keyboards import yes_or_not_delte_line_keyboard
 from bot.templates.errors_templates import (
-    client_dose_not_exists_error,
+    client_does_not_exists_error,
     table_dose_not_exists_error,
 )
 from bot.templates.messages_templates import (
@@ -31,7 +31,7 @@ async def handle_add_line_to_table(callback: CallbackQuery):
 
     current_client = await ClientDAO.find_by_id(client_id)
     if not current_client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     table = await TableDAO.find_one_or_none(id=current_client.table_id)
 
@@ -55,7 +55,7 @@ async def handle_line_name(callback: CallbackQuery):
 
     current_client = await ClientDAO.find_by_id(client_id)
     if not current_client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     table = await TableDAO.find_one_or_none(id=current_client.table_id)
 

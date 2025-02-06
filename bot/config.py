@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     MAX_CLIENT_LIMIT: int
     DOWNLOAD_DAY_LIMIT: int
 
-    TIME_TO_RECEIVE_NOTIFICATIONS: int
+    HOUR_TO_RECEIVE_NOTIFICATIONS: int
+    MINUTE_TO_RECEIVE_NOTIFICATIONS: int
 
     TZ: str
 

@@ -9,7 +9,7 @@ from aiogram.types import CallbackQuery, Message
 from bot.database.tables.clients.dao import ClientDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
-    client_dose_not_exists_error,
+    client_does_not_exists_error,
     invalid_date_format_error,
 )
 from bot.templates.messages_templates import (
@@ -40,7 +40,7 @@ async def handle_base_table_info(callback: CallbackQuery, state: FSMContext):
     client = await ClientDAO.find_one_or_none(id=client_id)
 
     if not client:
-        return await callback.message.answer(client_dose_not_exists_error)
+        return await callback.message.answer(client_does_not_exists_error)
 
     await callback.message.answer(
         payment_has_been_completed_message(
@@ -68,7 +68,7 @@ async def handle_line_date_to(message: Message, state: FSMContext):
     current_client = await ClientDAO.find_by_id(client_id)
 
     if not current_client:
-        return await message.answer(client_dose_not_exists_error)
+        return await message.answer(client_does_not_exists_error)
 
     date_to_validate = is_valid_date(
         f"{current_client.date_from}.{(parse_date(new_date_to))}"

@@ -20,7 +20,7 @@ change_price_text = "Изменить цену"
 change_date_to_text = "Изменить дату конца"
 change_date_from_text = "Изменить дату начала"
 table_statistic_text = "Статистика"
-clients_for_some_period_text = "Клиенты на опредленный период"
+clients_for_some_period_text = "Клиенты на определённый период"
 
 paid_text = "Оплатил ✅"
 didnt_pay_text = "Не оплатил ❌"
