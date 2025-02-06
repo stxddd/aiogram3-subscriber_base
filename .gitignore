@@ -3,5 +3,4 @@ venv/
 __pycache__
 pyproject.toml
 .flake8
-bot/files
 todo.txt
