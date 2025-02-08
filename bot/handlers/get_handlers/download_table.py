@@ -16,7 +16,7 @@ from bot.templates.errors_templates import (
     excel_table_can_not_create_error,
     table_dose_not_exists_error,
 )
-from bot.templates.messages_templates import table_has_no_lines_message
+from bot.templates.messages_templates import table_has_no_clients_message
 from bot.utils.excel.excel_generator import ExcelCRUD
 
 router = Router()
@@ -41,11 +41,11 @@ async def handle_download_table(callback: CallbackQuery):
 
     table = await TableDAO.find_one_or_none(id=table_id)
 
-    clients = await ClientDAO.find_all(table_id=table_id)
+    clients = await ClientDAO.find_all_order_by(table_id=table_id)
 
     if not clients:
         return await callback.message.answer(
-            table_has_no_lines_message(table_name=table_name)
+            table_has_no_clients_message(table_name=table_name)
         )
 
     user = await UserDAO.find_one_or_none(tg_id=tg_id)

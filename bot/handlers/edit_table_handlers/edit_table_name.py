@@ -31,7 +31,7 @@ EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
-async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
+async def handle_add_client_to_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
     match = re.match(EDIT_TABLE_NAME_PATTERN, callback.data)

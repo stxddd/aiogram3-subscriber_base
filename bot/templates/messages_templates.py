@@ -32,14 +32,14 @@ def enter_new_table_name_message(table_name):
 
 
 def table_name_message(table_name) -> str:
-    return f"✅ Таблица: «{table_name}»"
+    return f"✅ Таблица «{table_name}»"
 
 
 def table_has_been_created_message(table_name):
-    return f"💾✅ Создана таблица: «{table_name}»"
+    return f"💾✅ Создана таблица «{table_name}»"
 
 
-def table_has_no_lines_message(table_name):
+def table_has_no_clients_message(table_name):
     return f"✅ Записей в таблице «{table_name}» нет."
 
 
@@ -47,7 +47,7 @@ def table_name_changed_successfully_message(table_name, current_table_name):
     return f"✅ Таблица «{current_table_name}» переименована.\n\n{current_table_name} > {table_name}"
 
 
-def table_has_no_lines_message(table_name):
+def table_has_no_clients_message(table_name):
     return f"❌ В таблице «{table_name}» нет данных!"
 
 
@@ -65,7 +65,7 @@ def enter_info_period_message(table_name):
     return f"{table_name_message(table_name)}\n\nУкажите период, в который хотите получить данные\n\ndmmmYYYY-dmmmYYY"
 
 
-def one_line_message(client, table_name):
+def one_client_message(client, table_name):
     text = (
         f"Выбрана строка таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
@@ -83,7 +83,7 @@ def one_line_message(client, table_name):
     return text
 
 
-def are_you_sure_to_delete_line_message(table_name, client):
+def are_you_sure_to_delete_client_message(table_name, client):
     text = (
         f"Выбрана строка таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
@@ -101,7 +101,7 @@ def are_you_sure_to_delete_line_message(table_name, client):
     return text
 
 
-def line_are_not_deleted_message(table_name, client):
+def client_are_not_deleted_message(table_name, client):
     text = (
         f"Cтрока таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
@@ -119,7 +119,7 @@ def line_are_not_deleted_message(table_name, client):
     return text
 
 
-def line_are_deleted_message(table_name, client):
+def client_are_deleted_message(table_name, client):
     text = (
         f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
@@ -153,31 +153,31 @@ def data_added_message(table_name, name, price, date):
     return f"💾✅ Данные добавлены в таблицу «{table_name}»\n\nКлиент: {name}\nЦена: {price}\nДаты: с {format_date(date[0])} по {format_date(date[1])}"
 
 
-def line_name_changed_successfully_message(name, current_name):
+def client_name_changed_successfully_message(name, current_name):
     return f"✅ Имя «{current_name}» изменено.\n\n{current_name} > {name}"
 
 
-def line_name_not_changed_message(current_name):
+def client_name_not_changed_message(current_name):
     return f"❌ Ошибка при изменении имени «{current_name}»"
 
 
-def line_price_changed_successfully_message(price, current_price):
+def client_price_changed_successfully_message(price, current_price):
     return f"✅ Цена «{current_price}» изменена.\n\n{current_price} > {price}"
 
 
-def line_price_not_changed_message(current_price):
+def client_price_not_changed_message(current_price):
     return f"❌ Ошибка при изменении цены «{current_price}»"
 
 
-def line_date_changed_successfully_message(date, current_date):
+def client_date_changed_successfully_message(date, current_date):
     return f"✅ Дата «{format_date(current_date)}» изменена.\n\n{format_date(current_date)} > {format_date(date)}"
 
 
-def line_date_not_changed_message(current_date):
+def client_date_not_changed_message(current_date):
     return f"❌ Ошибка при изменении даты «{format_date(current_date)}»."
 
 
-def all_table_lines_message(clients, table_name):
+def all_table_clients_message(clients, table_name):
     text = "\n".join(
         f"👤 {hitalic(client.name)}\n"
         f"💶 {hitalic(client.price)}\n"
@@ -190,8 +190,8 @@ def all_table_lines_message(clients, table_name):
     return f"{hbold('Таблица')} «{hitalic(table_name)}»\n{'➖' * 12}\n{text}"
 
 
-impossible_to_edit_line_message = "❌ Невозможно изменить эту строку"
-pick_line_for_edit_message = "Выберите строку, которую хотите изменить"
+impossible_to_edit_client_message = "❌ Невозможно изменить этого клиента"
+pick_client_for_edit_message = "Выберите клиента, которого хотите изменить"
 
 
 def enter_new_price_message(name, table_name):
@@ -204,13 +204,13 @@ def enter_new_name_message(name, table_name):
 
 def enter_new_date_to_message(name, table_name):
     return (
-        f'{table_name_message(table_name)}\nУкажите новую дату "до" для клиента {name}.'
+        f'{table_name_message(table_name)}\nУкажите новую дату конца для клиента {name}.'
     )
 
 
 def enter_new_date_from_message(name, table_name):
     return (
-        f'{table_name_message(table_name)}\nУкажите новую дату "c" для клиента {name}.'
+        f'{table_name_message(table_name)}\nУкажите новую дату начала для клиента {name}.'
     )
 
 

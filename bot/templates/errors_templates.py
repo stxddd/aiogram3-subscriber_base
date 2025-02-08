@@ -33,6 +33,6 @@ table_already_exists_error = (
 )
 price_must_be_int_error = "❌ Цена должна быть целым числом. Попробуйте снова."
 invalid_date_format_error = "❌ Неверная дата.\n\nВведите в одном из форматов:\n1) ddmmmYYYY-ddmmmYYYY \n2) dd.mm.yyyy-dd.mm.yyyy\n\nПроверьте, чтобы даты были корректны и введите заново."
-exceeded_the_limit_on_the_line_error = f"❌ У вас достигнут лимит клиентов в одной таблице. {clients_limit}/{clients_limit}"
+exceeded_the_limit_on_the_client_error = f"❌ У вас достигнут лимит клиентов в одной таблице. {clients_limit}/{clients_limit}"
 client_does_not_exists_error = "❌ Такого клиента не существует."
 clients_does_not_exists_error = "❌ Таблица пуста."

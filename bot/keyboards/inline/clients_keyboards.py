@@ -8,18 +8,18 @@ from bot.templates.keyboards_templates import (
     change_date_to_text,
     change_name_text,
     change_price_text,
-    delete_line_text,
-    get_lines_for_edit_text,
+    delete_client_text,
+    get_clients_for_edit_text,
     forward_text,
     back_text,
     page_num,
 )
 
 
-async def get_lines_for_edit(table_id: int, page: int = 1, per_page: int = 10):
-    clients = await ClientDAO.find_all(table_id=table_id)
+async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10):
+    clients = await ClientDAO.find_all_order_by(table_id=table_id)
     total_clients = len(clients)
-    total_pages = (total_clients + per_page - 1) // per_page  # Округление вверх
+    total_pages = (total_clients + per_page - 1) // per_page 
 
     start = (page - 1) * per_page
     end = start + per_page
@@ -27,20 +27,18 @@ async def get_lines_for_edit(table_id: int, page: int = 1, per_page: int = 10):
 
     keyboard = InlineKeyboardBuilder()
 
-    # Добавляем клиентов по одному в строку (столбец)
     for client in clients_page:
         keyboard.row(
             InlineKeyboardButton(
-                text=get_lines_for_edit_text(
+                text=get_clients_for_edit_text(
                     client_name=client.name,
                     client_days_late=client.days_late,
                     client_date_to=client.date_to,
                 ),
-                callback_data=f"get_line_to_edit_{client.id}",
+                callback_data=f"get_client_to_edit_{client.id}",
             )
         )
 
-    # Кнопки навигации (в одну линию)
     nav_buttons = []
     if page > 1:
         nav_buttons.append(
@@ -50,7 +48,6 @@ async def get_lines_for_edit(table_id: int, page: int = 1, per_page: int = 10):
             )
         )
     
-    # Добавляем текст с номером страницы
     nav_buttons.append(
         InlineKeyboardButton(
             text=page_num(page, total_pages),
@@ -79,36 +76,35 @@ async def get_lines_for_edit(table_id: int, page: int = 1, per_page: int = 10):
     return keyboard.as_markup()
 
 
-
-async def get_lines_data_unit_to_edit(client_id: int):
+async def get_clients_data_unit_to_edit(client_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=change_name_text, callback_data=f"edit_data_name_{client_id}"
+                    text=change_name_text, callback_data=f"edit_client_name_{client_id}"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text=change_price_text, callback_data=f"edit_data_price_{client_id}"
+                    text=change_price_text, callback_data=f"edit_client_price_{client_id}"
                 )
             ],
             [
                 InlineKeyboardButton(
                     text=change_date_to_text,
-                    callback_data=f"edit_data_date_to_{client_id}",
+                    callback_data=f"edit_client_date_to_{client_id}",
                 )
             ],
             [
                 InlineKeyboardButton(
                     text=change_date_from_text,
-                    callback_data=f"edit_data_date_from_{client_id}",
+                    callback_data=f"edit_client_date_from_{client_id}",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text=delete_line_text,
-                    callback_data=f"prepare_to_delete_line_{client_id}",
+                    text=delete_client_text,
+                    callback_data=f"prepare_to_delete_client_{client_id}",
                 )
             ],
             [

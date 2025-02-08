@@ -28,7 +28,6 @@ class ClientDAO(BaseDAO):
             query = select(cls.model).where(
                 cls.model.table_id == table_id
             ).order_by(
-                cls.model.days_late.desc(), 
                 cls.model.date_to.asc()     
             )
             result = await session.execute(query)

@@ -16,8 +16,8 @@ from bot.templates.errors_templates import (
 )
 from bot.templates.messages_templates import (
     enter_new_date_from_message,
-    line_date_changed_successfully_message,
-    line_date_not_changed_message,
+    client_date_changed_successfully_message,
+    client_date_not_changed_message,
 )
 
 from bot.utils.data_processing.date_converter import parse_date
@@ -25,7 +25,7 @@ from bot.utils.data_processing.validators import is_valid_date, is_correct_date_
 
 router = Router()
 
-EDIT_DATE_FROM_PATTERN = r"^edit_data_date_from_(\d+)$"
+EDIT_DATE_FROM_PATTERN = r"^edit_client_date_from_(\d+)$"
 
 
 class Form(StatesGroup):
@@ -33,7 +33,7 @@ class Form(StatesGroup):
 
 
 @router.callback_query(F.data.regexp(EDIT_DATE_FROM_PATTERN))
-async def handle_edit_data_date_from(callback: CallbackQuery, state: FSMContext):
+async def handle_edit_client_date_from(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
     match = re.match(EDIT_DATE_FROM_PATTERN, callback.data)
@@ -58,7 +58,7 @@ async def handle_edit_data_date_from(callback: CallbackQuery, state: FSMContext)
 
 
 @router.message(StateFilter(Form.waiting_for_data_new_date_from))
-async def handle_line_date_from(message: Message, state: FSMContext):
+async def handle_client_date_from(message: Message, state: FSMContext):
     new_date_from = message.text.strip()
 
     if not is_correct_date_part(new_date_from):
@@ -84,11 +84,11 @@ async def handle_line_date_from(message: Message, state: FSMContext):
 
     if not updated_client:
         return await message.answer(
-            line_date_not_changed_message(current_date=date_to_validate[0])
+            client_date_not_changed_message(current_date=date_to_validate[0])
         )
     
     return await message.answer(
-        line_date_changed_successfully_message(
+        client_date_changed_successfully_message(
             date=date_to_validate[0], current_date=current_date_from
         ),
         reply_markup=main_keyboard,

@@ -11,30 +11,30 @@ from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
     client_does_not_exists_error,
-    name_so_long_error,
+    price_must_be_int_error,
     table_dose_not_exists_error,
 )
 from bot.templates.messages_templates import (
-    enter_new_name_message,
-    line_name_changed_successfully_message,
-    line_name_not_changed_message,
+    enter_new_price_message,
+    client_price_changed_successfully_message,
+    client_price_not_changed_message,
 )
-from bot.utils.data_processing.validators import is_valid_name
+from bot.utils.data_processing.validators import is_valid_price
 
 router = Router()
 
-EDIT_NAME_PATTERN = r"^edit_data_name_(\d+)$"
+EDIT_PRICE_PATTERN = r"^edit_client_price_(\d+)$"
 
 
 class Form(StatesGroup):
-    waiting_for_data_new_name = State()
+    waiting_for_data_new_price = State()
 
 
-@router.callback_query(F.data.regexp(EDIT_NAME_PATTERN))
-async def handle_edit_data_name(callback: CallbackQuery, state: FSMContext):
+@router.callback_query(F.data.regexp(EDIT_PRICE_PATTERN))
+async def handle_edit_client_price(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
-    match = re.match(EDIT_NAME_PATTERN, callback.data)
+    match = re.match(EDIT_PRICE_PATTERN, callback.data)
     client_id = int(match.group(1))
 
     current_client = await ClientDAO.find_by_id(client_id)
@@ -48,40 +48,40 @@ async def handle_edit_data_name(callback: CallbackQuery, state: FSMContext):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
+
     await state.update_data(client_id=client_id, table_name=table_name)
 
     await callback.message.answer(
-        enter_new_name_message(table_name=table_name, name=current_client.name)
+        enter_new_price_message(name=current_client.name, table_name=table_name)
     )
-    await state.set_state(Form.waiting_for_data_new_name)
+    await state.set_state(Form.waiting_for_data_new_price)
 
 
-@router.message(StateFilter(Form.waiting_for_data_new_name))
-async def handle_new_line_name(message: Message, state: FSMContext):
-    new_name = message.text.strip()
+@router.message(StateFilter(Form.waiting_for_data_new_price))
+async def handle_new_client_price(message: Message, state: FSMContext):
+    if not is_valid_price(message.text.strip()):
+        return await message.answer(price_must_be_int_error)
 
-    if not is_valid_name(new_name):
-        return await message.answer(name_so_long_error)
+    new_price = int(message.text.strip())
 
     data = await state.get_data()
     client_id = data.get("client_id")
 
     current_client = await ClientDAO.find_by_id(client_id)
-
     if not current_client:
         return await message.answer(client_does_not_exists_error)
 
-    current_name = current_client.name
+    current_price = current_client.price
 
-    updated_line = await ClientDAO.update(model_id=client_id, name=new_name)
-    if updated_line:
+    updated_client = await ClientDAO.update(model_id=client_id, price=new_price)
+    if updated_client:
         return await message.answer(
-            line_name_changed_successfully_message(
-                name=new_name, current_name=current_name
+            client_price_changed_successfully_message(
+                price=new_price, current_price=current_price
             ),
             reply_markup=main_keyboard,
         )
 
     return await message.answer(
-        line_name_not_changed_message(current_name=current_name)
+        client_price_not_changed_message(current_price=current_price)
     )

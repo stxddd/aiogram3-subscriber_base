@@ -14,7 +14,7 @@ from bot.keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.reply import main_keyboards
 from bot.templates.errors_templates import (
     adding_data_error,
-    exceeded_the_limit_on_the_line_error,
+    exceeded_the_limit_on_the_client_error,
     invalid_date_format_error,
     name_so_long_error,
     price_must_be_int_error,
@@ -42,18 +42,11 @@ class Form(StatesGroup):
     waiting_for_date_data = State()
 
 
-async def delete_message_safely(bot, chat_id, message_id):
-    try:
-        await bot.delete_message(chat_id, message_id)
-    except:
-        pass
-
-
-ADD_DATA_PATTERN = r"^add_data_to_table_(\d+)$"
+ADD_DATA_PATTERN = r"^add_client_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(ADD_DATA_PATTERN))
-async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
+async def handle_add_client(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
     match = re.match(ADD_DATA_PATTERN, callback.data)
@@ -80,7 +73,7 @@ async def handle_add_line_to_table(callback: CallbackQuery, state: FSMContext):
         return await state.set_state(Form.waiting_for_name_data)
 
     return await callback.message.answer(
-        exceeded_the_limit_on_the_line_error, reply_markup=main_keyboards
+        exceeded_the_limit_on_the_client_error, reply_markup=main_keyboards
     )
 
 
@@ -94,15 +87,11 @@ async def handle_client_name(message: Message, state: FSMContext):
     if not is_valid_name(name):
         return await message.answer(name_so_long_error)
 
-    await delete_message_safely(
-        message.bot, message.chat.id, data.get("message_sent_id_name")
-    )
-
-    message_sent = await message.answer(
+    await message.answer(
         sent_price_message(table_name), reply_markup=cancel_delete_last_keyboard
     )
 
-    await state.update_data(name=name, message_sent_id_price=message_sent.message_id)
+    await state.update_data(name=name)
     await state.set_state(Form.waiting_for_price_data)
 
 
@@ -116,17 +105,11 @@ async def handle_client_price(message: Message, state: FSMContext):
     data = await state.get_data()
     table_name = data.get("table_name")
 
-    await delete_message_safely(
-        message.bot, message.chat.id, data.get("message_sent_id_price")
-    )
-
-    message_sent = await message.answer(
+    await message.answer(
         sent_date_message(table_name), reply_markup=cancel_delete_last_keyboard
     )
 
-    await state.update_data(
-        price=int(price), message_sent_id_date=message_sent.message_id
-    )
+    await state.update_data(price=int(price))
     await state.set_state(Form.waiting_for_date_data)
 
 
@@ -156,9 +139,6 @@ async def handle_client_date(message: Message, state: FSMContext):
     if not new_client:
         return await message.answer(adding_data_error)
 
-    await delete_message_safely(
-        message.bot, message.chat.id, data.get("message_sent_id_date")
-    )
     await message.answer(
         data_added_message(table_name, name, price, date),
         reply_markup=await get_actions_with_table_keyboard(table_id),

@@ -13,8 +13,8 @@ from bot.templates.errors_templates import (
     invalid_date_format_error,
 )
 from bot.templates.messages_templates import (
-    line_date_changed_successfully_message,
-    line_date_not_changed_message,
+    client_date_changed_successfully_message,
+    client_date_not_changed_message,
     payment_has_been_completed_message,
 )
 
@@ -57,7 +57,7 @@ async def handle_base_table_info(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_new_date_to))
-async def handle_line_date_to(message: Message, state: FSMContext):
+async def handle_client_date_to(message: Message, state: FSMContext):
     new_date_to = message.text.strip()
 
     if not is_correct_date_part(new_date_to):
@@ -81,11 +81,11 @@ async def handle_line_date_to(message: Message, state: FSMContext):
     updated_client = await ClientDAO.update(model_id=client_id, date_to=date_to_validate[1], days_late = 0)
     if not updated_client:
         return await message.answer(
-            line_date_not_changed_message(current_date=date_to_validate[1])
+            client_date_not_changed_message(current_date=date_to_validate[1])
         )
     
     return await message.answer(
-        line_date_changed_successfully_message(
+        client_date_changed_successfully_message(
             date=date_to_validate[1], current_date=current_date_to
         ),
         reply_markup=main_keyboard,

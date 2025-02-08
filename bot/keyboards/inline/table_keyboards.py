@@ -5,14 +5,10 @@ from bot.database.tables.dao import TableDAO
 from bot.templates.keyboards_templates import (
     add_data_text,
     cancel_text,
-    change_table_data_text,
     change_table_name_text,
-    clients_for_some_period_text,
     delete_table_text,
     download_text,
-    edit_text,
     look_all_text,
-    table_statistic_text,
 )
 
 
@@ -33,12 +29,12 @@ async def get_actions_with_table_keyboard(table_id: int):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=add_data_text, callback_data=f"add_data_to_table_{table_id}"
+                    text=add_data_text, callback_data=f"add_client_{table_id}"
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text=look_all_text, callback_data=f"look_all_table_data_{table_id}"
+                    text=look_all_text, callback_data=f"edit_client_{table_id}"
                 )
             ],
             [
@@ -48,13 +44,7 @@ async def get_actions_with_table_keyboard(table_id: int):
             ],
             [
                 InlineKeyboardButton(
-                    text=edit_text, callback_data=f"edit_table_{table_id}"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text=table_statistic_text,
-                    callback_data=f"get_table_info_{table_id}",
+                    text=change_table_name_text, callback_data=f"edit_name_{table_id}"
                 )
             ],
             [
@@ -77,25 +67,7 @@ async def get_edit_actions_with_table_keyboard(table_id: int):
             ],
             [
                 InlineKeyboardButton(
-                    text=change_table_data_text, callback_data=f"edit_data_{table_id}"
-                )
-            ],
-            [
-                InlineKeyboardButton(
                     text=cancel_text, callback_data=f"delete_last_message"
-                )
-            ],
-        ]
-    )
-
-
-async def get_table_info_action_keyboard(table_id: int):
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=clients_for_some_period_text,
-                    callback_data=f"get_clients_for_some_period_{table_id}",
                 )
             ],
         ]
