@@ -13,11 +13,12 @@ from bot.templates.errors_templates import (
     client_does_not_exists_error,
     price_must_be_int_error,
     table_dose_not_exists_error,
+    client_price_not_changed_message,
 )
 from bot.templates.messages_templates import (
     enter_new_price_message,
     client_price_changed_successfully_message,
-    client_price_not_changed_message,
+
 )
 from bot.utils.data_processing.validators import is_valid_price
 

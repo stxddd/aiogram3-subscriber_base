@@ -11,10 +11,10 @@ from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
     client_does_not_exists_error,
     invalid_date_format_error,
+    client_date_not_changed_message,
 )
 from bot.templates.messages_templates import (
     client_date_changed_successfully_message,
-    client_date_not_changed_message,
     payment_has_been_completed_message,
 )
 

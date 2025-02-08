@@ -13,11 +13,11 @@ from bot.templates.errors_templates import (
     client_does_not_exists_error,
     name_so_long_error,
     table_dose_not_exists_error,
+    client_name_not_changed_message,
 )
 from bot.templates.messages_templates import (
     enter_new_name_message,
     client_name_changed_successfully_message,
-    client_name_not_changed_message,
 )
 from bot.utils.data_processing.validators import is_valid_name
 

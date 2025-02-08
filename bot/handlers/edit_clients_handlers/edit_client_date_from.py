@@ -10,16 +10,15 @@ from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.errors_templates import (
+    client_date_not_changed_message,
     client_does_not_exists_error,
     invalid_date_format_error,
     table_dose_not_exists_error,
+    client_date_not_changed_message
 )
 from bot.templates.messages_templates import (
     enter_new_date_from_message,
-    client_date_changed_successfully_message,
-    client_date_not_changed_message,
 )
-
 from bot.utils.data_processing.date_converter import parse_date
 from bot.utils.data_processing.validators import is_valid_date, is_correct_date_part
 

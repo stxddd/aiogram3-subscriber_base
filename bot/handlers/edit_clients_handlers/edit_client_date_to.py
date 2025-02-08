@@ -13,11 +13,11 @@ from bot.templates.errors_templates import (
     client_does_not_exists_error,
     invalid_date_format_error,
     table_dose_not_exists_error,
+    client_date_not_changed_message,
 )
 from bot.templates.messages_templates import (
     enter_new_date_to_message,
     client_date_changed_successfully_message,
-    client_date_not_changed_message,
 )
 
 from bot.utils.data_processing.date_converter import parse_date
