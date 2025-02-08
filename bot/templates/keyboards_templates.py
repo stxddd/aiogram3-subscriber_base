@@ -28,4 +28,14 @@ didnt_pay_text = "Не оплатил ❌"
 yes_text = "ДА"
 no_text = "НЕТ"
 
-def get_lines_for_edit_text(client_name, client_price, client_date_from, client_date_to): return f"👤{client_name} 💶{client_price}\n⌚️{format_date(client_date_from)} - {format_date(client_date_to)}"
+forward_text = 'Вперед ➡'
+back_text = '⬅ Назад'
+
+def get_lines_for_edit_text(client_name, client_days_late, client_date_to):
+    line = f"👤 {client_name} | По {format_date(client_date_to)}"
+    if client_days_late != 0:
+        line += f" | ⚠ {client_days_late}"
+    return line
+
+
+def page_num(page, total_pages): return f"Страница {page}/{total_pages}"

@@ -11,6 +11,7 @@ from bot.templates.messages_templates import (
     all_table_lines_message,
     table_has_no_lines_message,
 )
+from bot.utils.data_processing.split_message import split_clients_messages
 
 router = Router()
 
@@ -31,13 +32,16 @@ async def handle_look_all_lines(callback: CallbackQuery):
 
     table_name = table.name
 
-    clients = await ClientDAO.find_all(table_id=table_id)
+    clients = await ClientDAO.find_all_order_by(table_id=table_id)
 
     if not clients:
         return await callback.message.answer(table_has_no_lines_message(table_name))
 
-    return await callback.message.answer(
-        all_table_lines_message(clients, table_name),
-        parse_mode="HTML",
-        reply_markup=await get_actions_with_table_keyboard(table_id=table_id),
-    )
+    messages = split_clients_messages(clients, table_name)
+
+    for message in messages:
+        if message == messages[-1]:
+            return await callback.message.answer(message, parse_mode="HTML",
+            reply_markup=await get_actions_with_table_keyboard(table_id=table_id))
+        await callback.message.answer(message, parse_mode="HTML")
+

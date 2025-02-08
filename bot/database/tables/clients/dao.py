@@ -22,3 +22,14 @@ class ClientDAO(BaseDAO):
             total_sum = result.scalar() or 0
             return total_sum
 
+    @classmethod
+    async def find_all_order_by(cls, table_id):
+        async with async_session_maker() as session:
+            query = select(cls.model).where(
+                cls.model.table_id == table_id
+            ).order_by(
+                cls.model.days_late.desc(), 
+                cls.model.date_to.asc()     
+            )
+            result = await session.execute(query)
+            return result.scalars().all() 

@@ -187,7 +187,7 @@ def all_table_lines_message(clients, table_name):
         f"{'➖' * 12}"
         for client in clients
     )
-    return f"{hbold('Таблица:')} «{hitalic(table_name)}»\n{hbold('Клиентов:')} {hitalic(len(clients))}\n{'➖' * 12}\n{text}"
+    return f"{hbold('Таблица')} «{hitalic(table_name)}»\n{'➖' * 12}\n{text}"
 
 
 impossible_to_edit_line_message = "❌ Невозможно изменить эту строку"

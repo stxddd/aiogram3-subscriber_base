@@ -19,7 +19,7 @@ class ExcelCRUD:
             sheet = workbook.active
             sheet.title = table_name
 
-            header_items = ["TG", "ЦЕНА", "ДАТА НАЧАЛА", "ДАТА КОНЦА"]
+            header_items = ["TG", "ЦЕНА", "ДАТА НАЧАЛА", "ДАТА КОНЦА", "ЗАДЕРЖКА"]
             for i, header in enumerate(header_items, start=1):
                 cell = sheet.cell(row=1, column=i, value=header)
                 cell.alignment = Alignment(horizontal="center")
@@ -29,6 +29,7 @@ class ExcelCRUD:
             sheet.column_dimensions["B"].width = 10
             sheet.column_dimensions["C"].width = 25
             sheet.column_dimensions["D"].width = 25
+            sheet.column_dimensions["E"].width = 15
 
             workbook.save(file_path)
             return True
@@ -78,7 +79,7 @@ class ExcelCRUD:
         )
 
         for client in clients:
-            client_data = [client.name, client.price, format_date(client.date_from), format_date(client.date_to)]
+            client_data = [client.name, client.price, format_date(client.date_from), format_date(client.date_to), client.days_late if client.days_late != 0 else '']
             await cls.add_client_to_existing_excel(
                 data=client_data, table_name=table_name, table_id=table_id, tg_id=tg_id
             )

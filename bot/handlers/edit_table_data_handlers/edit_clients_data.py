@@ -21,8 +21,21 @@ from bot.templates.messages_templates import (
 
 router = Router()
 
+EDIT_PAGE_PATTERN = r"^edit_page_(\d+)_(\d+)$"
 EDIT_DATA_PATTERN = r"^edit_data_(\d+)$"
 GET_LINE_TO_EDIT_PATTERN = r"^get_line_to_edit_(\d+)$"
+
+@router.callback_query(F.data.regexp(EDIT_PAGE_PATTERN))
+async def handle_pagination(callback: CallbackQuery):
+    await callback.answer()
+
+    match = re.match(EDIT_PAGE_PATTERN, callback.data)
+    table_id = int(match.group(1))
+    page = int(match.group(2))
+
+    await callback.message.edit_reply_markup(
+        reply_markup=await get_lines_for_edit(table_id=table_id, page=page)
+    )
 
 
 @router.callback_query(F.data.regexp(EDIT_DATA_PATTERN))
@@ -33,13 +46,11 @@ async def handle_get_line_to_edit(callback: CallbackQuery):
     table_id = int(match.group(1))
 
     table = await TableDAO.find_one_or_none(id=table_id)
-
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
-
-    clients = await ClientDAO.find_all(table_id=table_id)
+    clients = await ClientDAO.find_all_order_by(table_id=table_id)
 
     if not clients:
         return await callback.message.answer(
@@ -48,7 +59,7 @@ async def handle_get_line_to_edit(callback: CallbackQuery):
 
     await callback.message.answer(
         pick_line_for_edit_message,
-        reply_markup=await get_lines_for_edit(table_id=table_id),
+        reply_markup=await get_lines_for_edit(table_id=table_id, page=1),
     )
 
 
