@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import BigInteger, Column, Date, Integer
+from sqlalchemy import BigInteger, Boolean, Column, Date, Integer
 
 from bot.database.database import Base
 
@@ -10,6 +10,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     tg_id = Column(BigInteger, nullable=False, unique=True)
+    is_admin = Column(Boolean, default=False)
     downloads_today = Column(Integer, default=0)
     last_download_date = Column(Date, default=date.today())
 

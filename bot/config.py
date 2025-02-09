@@ -3,14 +3,13 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     TOKEN: str
-
+    ADMIN_IDS: str
+    
     POSTGRES_HOST: str
     POSTGRES_PORT: int
     POSTGRES_USER: str
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
-
-    FLOOD_THRESHOLD: int
 
     MAX_TABLE_LIMIT: int
     MAX_CLIENT_LIMIT: int
