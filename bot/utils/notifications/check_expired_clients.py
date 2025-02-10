@@ -8,8 +8,8 @@ from bot.database.database import async_session_maker
 from bot.database.tables.clients.models import Client
 from bot.database.tables.models import Table
 from bot.database.users.dao import UserDAO
-from bot.keyboards.inline.notification_keyboards import get_pay_info
-from bot.templates.messages_templates import client_date_to_expired
+from bot.keyboards.admin_keyboards.inline.notification_keyboards import get_pay_info_keyboard
+from bot.templates.admin_templates.messages_templates import client_date_to_expired
 
 
 async def check_expired_clients(bot):
@@ -36,13 +36,13 @@ async def check_expired_clients(bot):
 
                 for client in clients:
                     client_date = client.date_to
-                    if client_date and client_date <= today:
+                    if client_date and client_date < today:
                         message = await bot.send_message(
                             user.tg_id,
                             client_date_to_expired(
                                 client_name=client.name, date_to=client.date_to
                             ),
-                            reply_markup=await get_pay_info(client_id=client.id),
+                            reply_markup=await get_pay_info_keyboard(client_id=client.id),
                         )
 
                         await bot.pin_chat_message(user.tg_id, message.message_id)

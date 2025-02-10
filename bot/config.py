@@ -3,8 +3,12 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     TOKEN: str
-    ADMIN_IDS: str
+    ADMIN_TG_ID: int 
     
+    MARZBAN_URL: str
+    MARZBAN_USER: str
+    MARZBAN_PASS: str
+
     POSTGRES_HOST: str
     POSTGRES_PORT: int
     POSTGRES_USER: str
