@@ -13,7 +13,7 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     downloads_today = Column(Integer)
     last_download_date = Column(Date, default=date.today())
-    marzban_requests_today = Column(Integer, nullable=False, server_default="0")
+    marzban_requests_today = Column(Integer)
     last_marzban_request = Column(Date, default=date.today())
 
     def reset_if_new_day(self):
