@@ -7,17 +7,19 @@ from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
 from bot.templates.admin_templates.messages_templates import marzban_user_rejected_message
 from bot.templates.user_templates.message_templates import rejected_message
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
-ACCEPT_MARZBAN_PATTERN = r"^reject_marzban_(\d+)$"
+REJECT_MARZBAN_PATTERN = r"^reject_marzban_(\d+)$"
 
 
-@router.callback_query(F.data.regexp(ACCEPT_MARZBAN_PATTERN))
+@router.callback_query(F.data.regexp(REJECT_MARZBAN_PATTERN))
+@admin_required
 async def handle_reject_marzban_client(callback: CallbackQuery):
     await callback.answer()
 
-    match = re.match(ACCEPT_MARZBAN_PATTERN, callback.data)
+    match = re.match(REJECT_MARZBAN_PATTERN, callback.data)
     connection_id = int(match.group(1))
 
     connection = await ConnectionDAO.find_by_id(model_id=connection_id)
@@ -27,7 +29,7 @@ async def handle_reject_marzban_client(callback: CallbackQuery):
 
     await callback.message.bot.delete_message(callback.message.chat.id, callback.message.message_id)
     await callback.message.bot.send_message(
-        settings.ADMIN_TG_ID, marzban_user_rejected_message(username=connection.nickname, tg_id=connection.user_tg_id), 
+        settings.ADMIN_TG_ID, marzban_user_rejected_message(username=connection.tg_username, tg_id=connection.user_tg_id), 
     )
 
     return await callback.message.bot.send_message(connection.user_tg_id ,rejected_message)

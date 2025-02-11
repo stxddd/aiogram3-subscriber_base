@@ -8,6 +8,7 @@ from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.templates.admin_templates.errors_templates import table_dose_not_exists_error
 from bot.templates.admin_templates.messages_templates import table_name_message
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -15,6 +16,7 @@ ACTIONS_WITH_TABLE_PATTERN = r"^get_(\d+)_table$"
 
 
 @router.callback_query(F.data.regexp(ACTIONS_WITH_TABLE_PATTERN))
+@admin_required
 async def actions_with_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 

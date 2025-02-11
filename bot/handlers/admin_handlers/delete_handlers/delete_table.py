@@ -12,6 +12,7 @@ from bot.templates.admin_templates.messages_templates import (
     table_are_deleted_message,
     table_are_not_deleted_message,
 )
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 

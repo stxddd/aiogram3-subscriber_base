@@ -19,6 +19,7 @@ from bot.templates.admin_templates.messages_templates import (
     table_name_changed_successfully_message,
 )
 from bot.utils.data_processing.validators import is_valid_name
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -31,6 +32,7 @@ EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
+@admin_required
 async def handle_add_client_to_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -58,6 +60,7 @@ async def handle_add_client_to_table(callback: CallbackQuery, state: FSMContext)
 
 
 @router.message(StateFilter(Form.waiting_for_new_table_name_data))
+@admin_required
 async def handle_table_name(message: Message, state: FSMContext):
     new_table_name = message.text.strip()
 
@@ -70,14 +73,19 @@ async def handle_table_name(message: Message, state: FSMContext):
 
     current_table = await TableDAO.find_by_id(table_id)
 
-    if current_table:
-        updated_table = await TableDAO.update(model_id=table_id, name=new_table_name)
-        if updated_table:
-            return await message.answer(
-                table_name_changed_successfully_message(
-                    table_name=new_table_name, current_table_name=table_name
-                ),
-                reply_markup=main_keyboard,
-            )
+    if not current_table:
+        return message.answer(table_name_not_changed_error(table_name=table_name))
+    
+    updated_table = await TableDAO.update(model_id=table_id, name=new_table_name)
+    if not updated_table:
+        return message.answer(table_name_not_changed_error(table_name=table_name))
+    
+    await state.clear()
+    return await message.answer(
+        table_name_changed_successfully_message(
+            table_name=new_table_name, current_table_name=table_name
+        ),
+        reply_markup=main_keyboard,
+    )
 
-    return message.answer(table_name_not_changed_error(table_name=table_name))
+   

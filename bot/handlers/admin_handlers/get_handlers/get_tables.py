@@ -8,11 +8,13 @@ from bot.templates.admin_templates.messages_templates import (
     our_tables_message,
     table_are_missing_message,
 )
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
 
 @router.message(F.text == my_tables_text)
+@admin_required
 async def handle_get_tables(message: Message):
     tg_id = message.from_user.id
 

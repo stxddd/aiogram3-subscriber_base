@@ -17,10 +17,12 @@ from bot.templates.admin_templates.errors_templates import (
     client_date_not_changed_message
 )
 from bot.templates.admin_templates.messages_templates import (
+    client_date_changed_successfully_message,
     enter_new_date_from_message,
 )
 from bot.utils.data_processing.date_converter import parse_date
 from bot.utils.data_processing.validators import is_valid_date, is_correct_date_part
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -32,6 +34,7 @@ class Form(StatesGroup):
 
 
 @router.callback_query(F.data.regexp(EDIT_DATE_FROM_PATTERN))
+@admin_required
 async def handle_edit_client_date_from(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -57,6 +60,7 @@ async def handle_edit_client_date_from(callback: CallbackQuery, state: FSMContex
 
 
 @router.message(StateFilter(Form.waiting_for_data_new_date_from))
+@admin_required
 async def handle_client_date_from(message: Message, state: FSMContext):
     new_date_from = message.text.strip()
 

@@ -18,6 +18,7 @@ from bot.templates.admin_templates.errors_templates import (
 )
 from bot.templates.admin_templates.messages_templates import table_has_no_clients_message
 from bot.utils.excel.excel_generator import ExcelCRUD
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -25,6 +26,7 @@ DOWNLOAD_TABLE_PATTERN = r"^download_table_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(DOWNLOAD_TABLE_PATTERN))
+@admin_required
 async def handle_download_table(callback: CallbackQuery):
     await callback.answer()
 

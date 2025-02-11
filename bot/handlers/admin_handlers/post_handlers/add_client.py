@@ -32,6 +32,7 @@ from bot.utils.data_processing.validators import (
     is_valid_name,
     is_valid_price,
 )
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -46,6 +47,7 @@ ADD_DATA_PATTERN = r"^add_client_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(ADD_DATA_PATTERN))
+@admin_required
 async def handle_add_client(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -78,6 +80,7 @@ async def handle_add_client(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_name_data))
+@admin_required
 async def handle_client_name(message: Message, state: FSMContext):
     name = message.text.strip()
 
@@ -96,6 +99,7 @@ async def handle_client_name(message: Message, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_price_data))
+@admin_required
 async def handle_client_price(message: Message, state: FSMContext):
     price = message.text.strip()
 
@@ -114,6 +118,7 @@ async def handle_client_price(message: Message, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_date_data))
+@admin_required
 async def handle_client_date(message: Message, state: FSMContext):
     date = is_valid_date(message.text.strip())
 

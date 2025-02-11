@@ -1,8 +1,8 @@
 from bot.utils.data_processing.date_converter import format_date
 
 
-my_tables_text = "Мои таблицы"
-create_table_text = "Создать таблицу"
+my_tables_text = "🪧Мои таблицы"
+create_table_text = "➕ Создать таблицу"
 
 back_text = "Назад"
 cancel_text = "Отмена"

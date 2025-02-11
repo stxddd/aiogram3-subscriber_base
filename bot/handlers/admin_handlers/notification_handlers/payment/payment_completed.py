@@ -20,6 +20,7 @@ from bot.templates.admin_templates.messages_templates import (
 
 from bot.utils.data_processing.date_converter import parse_date
 from bot.utils.data_processing.validators import is_valid_date, is_correct_date_part
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -31,6 +32,7 @@ class Form(StatesGroup):
 
 
 @router.callback_query(F.data.regexp(PAYMENT_COMPLETED_PATTERN))
+@admin_required
 async def handle_payment_completed(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -57,6 +59,7 @@ async def handle_payment_completed(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_new_date_to))
+@admin_required
 async def handle_client_date_to(message: Message, state: FSMContext):
     new_date_to = message.text.strip()
 

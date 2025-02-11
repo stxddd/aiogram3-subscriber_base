@@ -6,12 +6,16 @@ from aiogram.types import CallbackQuery
 
 from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
+from bot.handlers.user_handlers.instruction_handlers.get_instructions import get_instruction
 from bot.utils.marzban.marzban_manager import create_user, get_user
 from bot.templates.admin_templates.errors_templates import(
     marzban_user_add_error,
     marzban_link_get_error
 )
 from bot.templates.admin_templates.messages_templates import marzban_user_added_message
+from bot.keyboards.user_keyboards.reply.main_keyboards import main_keyboard as user_main_keyboard
+from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard as admin_main_keyboard
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -19,6 +23,7 @@ ACCEPT_MARZBAN_PATTERN = r"^accept_marzban_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(ACCEPT_MARZBAN_PATTERN))
+@admin_required
 async def handle_accept_marzban_client(callback: CallbackQuery):
     await callback.answer()
 
@@ -56,8 +61,16 @@ async def handle_accept_marzban_client(callback: CallbackQuery):
     await callback.message.bot.delete_message(callback.message.chat.id, callback.message.message_id)
     await callback.message.bot.send_message(
         settings.ADMIN_TG_ID,
-        marzban_user_added_message(username=connection.nickname, tg_id=connection.user_tg_id), 
+        marzban_user_added_message(username=connection.tg_username, tg_id=connection.user_tg_id), 
     )
 
-    await callback.message.bot.send_message(connection.user_tg_id ,f"...")
-    return await callback.message.bot.send_message(connection.user_tg_id ,f"{link}")
+    await callback.message.bot.send_message(
+        connection.user_tg_id, 
+        get_instruction(user_os=connection.os)
+    )
+    
+    return await callback.message.bot.send_message(
+        connection.user_tg_id,
+        link,
+        reply_markup = user_main_keyboard if connection.user_tg_id != settings.ADMIN_TG_ID else admin_main_keyboard
+    )

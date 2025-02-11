@@ -15,6 +15,7 @@ from bot.templates.admin_templates.messages_templates import (
     client_are_deleted_message,
     client_are_not_deleted_message,
 )
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -23,6 +24,7 @@ DELETE_CLIENT_PATTERN = r"^delete_client_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(PREPARE_TO_DELETE_CLIENT_PATTERN))
+@admin_required
 async def handle_add_client_to_table(callback: CallbackQuery):
     await callback.answer()
 
@@ -47,6 +49,7 @@ async def handle_add_client_to_table(callback: CallbackQuery):
 
 
 @router.callback_query(F.data.regexp(DELETE_CLIENT_PATTERN))
+@admin_required
 async def handle_client_name(callback: CallbackQuery):
     await callback.answer()
 

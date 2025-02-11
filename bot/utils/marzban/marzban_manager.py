@@ -38,7 +38,7 @@ async def get_user(username: str):
             await api.close()
             return None
     except:
-        return False           
+        return None           
        
  
  

@@ -21,6 +21,7 @@ from bot.templates.admin_templates.messages_templates import (
 
 )
 from bot.utils.data_processing.validators import is_valid_price
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -32,6 +33,7 @@ class Form(StatesGroup):
 
 
 @router.callback_query(F.data.regexp(EDIT_PRICE_PATTERN))
+@admin_required
 async def handle_edit_client_price(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -59,6 +61,7 @@ async def handle_edit_client_price(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_data_new_price))
+@admin_required
 async def handle_new_client_price(message: Message, state: FSMContext):
     if not is_valid_price(message.text.strip()):
         return await message.answer(price_must_be_int_error)

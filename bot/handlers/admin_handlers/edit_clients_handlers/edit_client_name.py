@@ -20,6 +20,7 @@ from bot.templates.admin_templates.messages_templates import (
     client_name_changed_successfully_message,
 )
 from bot.utils.data_processing.validators import is_valid_name
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -31,6 +32,7 @@ class Form(StatesGroup):
 
 
 @router.callback_query(F.data.regexp(EDIT_NAME_PATTERN))
+@admin_required
 async def handle_edit_client_name(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -57,6 +59,7 @@ async def handle_edit_client_name(callback: CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_data_new_name))
+@admin_required
 async def handle_new_client_name(message: Message, state: FSMContext):
     new_name = message.text.strip()
 

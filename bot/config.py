@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     MARZBAN_URL: str
     MARZBAN_USER: str
     MARZBAN_PASS: str
-
+    MARZBAN_REQUEST_DAY_LIMIT: int
+    
     POSTGRES_HOST: str
     POSTGRES_PORT: int
     POSTGRES_USER: str

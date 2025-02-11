@@ -21,6 +21,7 @@ from bot.templates.admin_templates.messages_templates import (
     table_has_been_created_message,
 )
 from bot.utils.data_processing.validators import is_valid_name
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -34,6 +35,7 @@ async def is_not_uniqe_table(name: str, tg_id: int) -> bool:
 
 
 @router.message(F.text == create_table_text)
+@admin_required
 async def handle_create_table(message: Message, state: FSMContext):
     all_tables = await TableDAO.find_all(user_tg_id=message.from_user.id)
 
@@ -49,6 +51,7 @@ async def handle_create_table(message: Message, state: FSMContext):
 
 
 @router.message(StateFilter(Form.waiting_for_table_name))
+@admin_required
 async def handle_table_name(message: Message):
     table_name = message.text.strip()
 

@@ -37,7 +37,7 @@ class BaseDAO:
                 return result.mappings().first()
 
         except Exception as error:
-            return error
+            return None
 
     @classmethod
     async def delete(cls, **data):

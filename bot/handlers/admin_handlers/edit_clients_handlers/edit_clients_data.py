@@ -18,6 +18,7 @@ from bot.templates.admin_templates.messages_templates import (
     table_base_info_message,
     table_has_no_clients_message,
 )
+from bot.decorators.admin_required import admin_required
 
 router = Router()
 
@@ -26,6 +27,7 @@ EDIT_CLIENT_PATTERN = r"^edit_client_(\d+)$"
 GET_CLIENT_TO_EDIT_PATTERN = r"^get_client_to_edit_(\d+)$"
 
 @router.callback_query(F.data.regexp(EDIT_PAGE_PATTERN))
+@admin_required
 async def handle_pagination(callback: CallbackQuery):
     await callback.answer()
 
@@ -39,6 +41,7 @@ async def handle_pagination(callback: CallbackQuery):
 
 
 @router.callback_query(F.data.regexp(EDIT_CLIENT_PATTERN))
+@admin_required
 async def handle_get_client_to_edit(callback: CallbackQuery):
     await callback.answer()
 
@@ -71,6 +74,7 @@ async def handle_get_client_to_edit(callback: CallbackQuery):
 
 
 @router.callback_query(F.data.regexp(GET_CLIENT_TO_EDIT_PATTERN))
+@admin_required
 async def handle_edit_client(callback: CallbackQuery):
     await callback.answer()
 
