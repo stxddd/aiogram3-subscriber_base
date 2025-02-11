@@ -36,7 +36,7 @@ async def check_expired_clients(bot):
 
                 for client in clients:
                     client_date = client.date_to
-                    if client_date and client_date <= today:
+                    if client_date and client_date < today:
                         message = await bot.send_message(
                             user.tg_id,
                             client_date_to_expired(
