@@ -11,9 +11,9 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     tg_id = Column(BigInteger, nullable=False, unique=True)
     is_admin = Column(Boolean, default=False)
-    downloads_today = Column(Integer, nullable=False, default=0)
+    downloads_today = Column(Integer, default=0)
     last_download_date = Column(Date, default=date.today())
-    marzban_requests_today = Column(Integer, nullable=False, default=0)
+    marzban_requests_today = Column(Integer, default=0)
     last_marzban_request = Column(Date, default=date.today())
 
     def reset_if_new_day(self):
