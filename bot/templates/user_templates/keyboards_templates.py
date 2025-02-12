@@ -4,5 +4,5 @@ mac_os_text = "Mac"
 ios_os_text = "IOS"
 android_tv_os_text = "AndroidTV" 
 
-get_new_connection_text = '➕Добавить устройство'
-get_instruction_text = '📘Инструкции для подключения'
+get_new_connection_text = "➕ Добавить устройство"
+get_instruction_text = "📘 Инструкции для подключения"

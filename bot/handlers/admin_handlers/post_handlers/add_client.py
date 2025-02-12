@@ -143,6 +143,8 @@ async def handle_client_date(message: Message, state: FSMContext):
 
     if not new_client:
         return await message.answer(adding_data_error)
+    
+    await state.clear()
 
     await message.answer(
         data_added_message(table_name, name, price, date),

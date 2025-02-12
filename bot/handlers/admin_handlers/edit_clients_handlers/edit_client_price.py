@@ -86,6 +86,7 @@ async def handle_new_client_price(message: Message, state: FSMContext):
             reply_markup=main_keyboard,
         )
 
+    await state.clear()
     return await message.answer(
         client_price_not_changed_message(current_price=current_price)
     )

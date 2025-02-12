@@ -89,7 +89,7 @@ async def handle_client_date_to(message: Message, state: FSMContext):
         return await message.answer(
             client_date_not_changed_message(current_date=date_to_validate[1])
         )
-    
+    await state.clear()
     return await message.answer(
         client_date_changed_successfully_message(
             date=date_to_validate[1], current_date=current_date_to

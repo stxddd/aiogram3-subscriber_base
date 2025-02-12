@@ -20,7 +20,6 @@ ADD_CONNECTION_PATTERN = '_add_connection'
 
 @router.message(F.text == get_new_connection_text)
 async def handle_os_selection(message: Message):
-
     user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
     if user.marzban_requests_today > settings.MARZBAN_REQUEST_DAY_LIMIT:
         return await message.answer(marzban_day_limit_message)

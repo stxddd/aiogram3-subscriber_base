@@ -52,7 +52,7 @@ async def handle_create_table(message: Message, state: FSMContext):
 
 @router.message(StateFilter(Form.waiting_for_table_name))
 @admin_required
-async def handle_table_name(message: Message):
+async def handle_table_name(message: Message, state: FSMContext):
     table_name = message.text.strip()
 
     if not is_valid_name(table_name):
@@ -66,6 +66,8 @@ async def handle_table_name(message: Message):
 
     if not table:
         return await message.answer(imposible_to_create_table_error)
+
+    await state.clear()
 
     return await message.answer(
         table_has_been_created_message(table_name),

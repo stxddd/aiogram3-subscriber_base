@@ -85,6 +85,7 @@ async def handle_new_client_name(message: Message, state: FSMContext):
             reply_markup=main_keyboard,
         )
 
+    await state.clear()
     return await message.answer(
         client_name_not_changed_message(current_name=current_name)
     )
