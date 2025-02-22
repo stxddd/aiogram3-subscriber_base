@@ -29,4 +29,4 @@ volumes:
   postgres_data:
 
 networks:
-  bot_network
+  bot_network:
