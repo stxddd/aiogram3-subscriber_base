@@ -19,13 +19,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  marzban:
-    image: gozargah/marzban:latest
-    container_name: marzban_marzban_1
-    networks:
-      - my_network
-    ports:
-      - "8001:8000"
 
 volumes:
   postgres_data:
