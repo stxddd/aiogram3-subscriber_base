@@ -17,6 +17,7 @@ REJECT_MARZBAN_PATTERN = r"^reject_marzban_(\d+)$"
 @router.callback_query(F.data.regexp(REJECT_MARZBAN_PATTERN))
 @admin_required
 async def handle_reject_marzban_client(callback: CallbackQuery):
+    "Отклоняет запрос на подключение, удаляет заготовленное соединение"
     await callback.answer()
 
     match = re.match(REJECT_MARZBAN_PATTERN, callback.data)
@@ -29,7 +30,7 @@ async def handle_reject_marzban_client(callback: CallbackQuery):
 
     await callback.message.bot.delete_message(callback.message.chat.id, callback.message.message_id)
     await callback.message.bot.send_message(
-        settings.ADMIN_TG_ID, marzban_user_rejected_message(username=connection.tg_username, tg_id=connection.user_tg_id), 
+        settings.ADMIN_TG_ID, marzban_user_rejected_message(username=connection.tg_username), 
     )
 
-    return await callback.message.bot.send_message(connection.user_tg_id ,rejected_message)
+    return await callback.message.bot.send_message(connection.tg_id ,rejected_message)

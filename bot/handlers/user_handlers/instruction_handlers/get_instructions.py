@@ -24,15 +24,15 @@ from bot.templates.user_templates.message_templates import (
 router = Router()
 
 def get_instruction(user_os: str):
-    if user_os == android_os_text: 
+    if user_os in android_os_text: 
         return android_instruction_message
-    elif user_os == android_tv_os_text:
+    elif user_os in android_tv_os_text:
         return androidTV_instruction_message
-    elif user_os == ios_os_text:
+    elif user_os in ios_os_text:
         return ios_instruction_message
-    elif user_os == mac_os_text:
+    elif user_os in mac_os_text:
         return mac_instruction_message
-    elif user_os == windows_os_text:
+    elif user_os in windows_os_text:
         return windows_instruction_message
     return incorrect_os_message
 
@@ -44,6 +44,7 @@ ADD_CONNECTION_PATTERN = '_get_instruction'
 
 @router.callback_query(lambda c: c.data.endswith(ADD_CONNECTION_PATTERN))
 async def handle_get_instruction(callback: CallbackQuery):
+    "Отправляет инструкцию по выбранной ОС"
     await callback.answer()
 
     user_os = callback.data.split("_")[0] 

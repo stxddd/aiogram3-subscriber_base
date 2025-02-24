@@ -55,72 +55,48 @@ def table_base_info_message(table_name, clients_count, all_prices):
     return f"{table_name_message(table_name)}\n\nКлиентов: {clients_count}\nОбщий доход: {all_prices}"
 
 
-def one_client_message(client, table_name):
+def one_client_message(client, table_name, connections):
     text = (
         f"Выбран клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)}\n"
-        f"💶 {hbold(client.price)}\n"
-        f"{hbold('С:')} {hitalic((format_date(client.date_from)))}\n"
-        f"{hbold('До:')} {hitalic((format_date(client.date_to)))}\n"
+        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
     )
-
-    if client.days_late is not None and client.days_late != 0:
-        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(client.days_late)}\n"
 
     text += f"{'➖' * 12}\n" "Выберите действие"
 
     return text
 
 
-def are_you_sure_to_delete_client_message(table_name, client):
+def are_you_sure_to_delete_client_message(table_name, client, connections):
     text = (
         f"Выбран клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)}\n"
-        f"💶 {hbold(client.price)}\n"
-        f"{hbold('С:')} {hitalic((format_date(client.date_from)))}\n"
-        f"{hbold('До:')} {hitalic((format_date(client.date_to)))}\n"
+        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
     )
 
-    if client.days_late is not None and client.days_late != 0:
-        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(client.days_late)}\n"
-
-    text += f"{'➖' * 12}\n" "❔Вы уверены, что хотите удалить её?"
+    text += f"{'➖' * 12}\n" "❔Вы уверены, что хотите удалить его?"
 
     return text
 
 
-def client_are_not_deleted_message(table_name, client):
+def client_are_not_deleted_message(table_name, client, connections):
     text = (
         f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)}\n"
-        f"💶 {hbold(client.price)}\n"
-        f"{hbold('С:')} {hitalic((format_date(client.date_from)))}\n"
-        f"{hbold('До:')} {hitalic((format_date(client.date_to)))}\n"
+        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
     )
-
-    if client.days_late is not None and client.days_late != 0:
-        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(client.days_late)}\n"
 
     text += f"{'➖' * 12}\n" "❌ Не может быть удалён"
 
     return text
 
 
-def client_are_deleted_message(table_name, client):
+def client_are_deleted_message(table_name, client, connections):
     text = (
         f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)}\n"
-        f"💶 {hbold(client.price)}\n"
-        f"{hbold('С:')} {hitalic((format_date(client.date_from)))}\n"
-        f"{hbold('До:')} {hitalic((format_date(client.date_to)))}\n"
+        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
     )
-
-    if client.days_late is not None and client.days_late != 0:
-        text += f"{hbold('⚠ ЗАДЕРЖКА:')} {hitalic(client.days_late)}\n"
 
     text += f"{'➖' * 12}\n" "✅ Удален"
 
@@ -195,8 +171,10 @@ def payment_didnt_completed_message(client_name, days_late):
 
 anti_flood_message = "⛔ Вы слишком быстро отправляете сообщения! Подождите немного."
 
-def request_to_connect_message(username, tg_id): return f"✅ Новая заявка на подключение к серверу\n\n{username} | {tg_id}"
+def request_to_connect_message(username, date_to): return f"✅ Новая заявка на подключение к серверу\n\n{username} | По: {format_date(date_to)}"
 
-def marzban_user_added_message(username, tg_id): return f"✅ Новый клиент успешно подключен к серверу.\n\n{username} | {tg_id}"
+def marzban_user_added_message(username, date_to): return f"✅ Клиент {username} успешно подключен.\n\nПо: {format_date(date_to)}"
 
-def marzban_user_rejected_message(username, tg_id): return f"❌ Клиенту отказано в доступе.\n\n{username} | {tg_id}"
+def marzban_user_rejected_message(username): return f"❌ Клиенту {username} отказано в доступе."
+
+def pick_table_for_client_message(username): return f'✅ Выберите таблицу, для клиента @{username}'

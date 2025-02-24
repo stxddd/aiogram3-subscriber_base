@@ -25,7 +25,7 @@ async def get_pay_info_keyboard(client_id: int):
         ]
     )
 
-async def get_marzban_accec_keyboard(connection_id: int):
+async def get_marzban_access_keyboard(connection_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [

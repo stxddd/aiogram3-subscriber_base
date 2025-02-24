@@ -18,6 +18,7 @@ ACTIONS_WITH_TABLE_PATTERN = r"^get_(\d+)_table$"
 @router.callback_query(F.data.regexp(ACTIONS_WITH_TABLE_PATTERN))
 @admin_required
 async def actions_with_table(callback: CallbackQuery, state: FSMContext):
+    "Возвращает клавиатуру с действиями над таблицей"
     await callback.answer()
 
     match = re.match(ACTIONS_WITH_TABLE_PATTERN, callback.data)

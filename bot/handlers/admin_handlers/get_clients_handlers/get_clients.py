@@ -3,6 +3,7 @@ import re
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
+from bot.database.connections.dao import ConnectionDAO
 from bot.database.tables.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.clients_keyboards import (
@@ -42,7 +43,7 @@ async def handle_pagination(callback: CallbackQuery):
 
 @router.callback_query(F.data.regexp(EDIT_CLIENT_PATTERN))
 @admin_required
-async def handle_get_client_to_edit(callback: CallbackQuery):
+async def handle_get_clients(callback: CallbackQuery):
     await callback.answer()
 
     match = re.match(EDIT_CLIENT_PATTERN, callback.data)
@@ -53,7 +54,7 @@ async def handle_get_client_to_edit(callback: CallbackQuery):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
-    clients = await ClientDAO.find_all_order_by(table_id=table_id)
+    clients = await ClientDAO.find_all(table_id=table_id)
 
     if not clients:
         return await callback.message.answer(
@@ -62,26 +63,21 @@ async def handle_get_client_to_edit(callback: CallbackQuery):
 
     clients_count = len(clients)
 
-    all_prices = await ClientDAO.count_all_prices(table_id=table_id)
-
-    if not all_prices:
-        return await callback.message.answer(client_does_not_exists_error)
-
     await callback.message.answer(
-        table_base_info_message(table_name=table_name, clients_count=clients_count, all_prices=all_prices),
+        table_base_info_message(table_name=table_name, clients_count=clients_count, all_prices=0),
         reply_markup=await get_clients_for_edit(table_id=table_id, page=1),
     )
 
 
 @router.callback_query(F.data.regexp(GET_CLIENT_TO_EDIT_PATTERN))
 @admin_required
-async def handle_edit_client(callback: CallbackQuery):
+async def handle_get_client(callback: CallbackQuery):
     await callback.answer()
 
     match = re.match(GET_CLIENT_TO_EDIT_PATTERN, callback.data)
     client_id = int(match.group(1))
 
-    current_client = await ClientDAO.find_by_id(client_id)
+    current_client = await ClientDAO.find_by_id(model_id=client_id)
 
     if not current_client:
         return await callback.message.answer(client_does_not_exists_error)
@@ -92,8 +88,10 @@ async def handle_edit_client(callback: CallbackQuery):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
+    
+    connections = await ConnectionDAO.find_all(tg_id=current_client.tg_id)
 
     await callback.message.answer(
-        one_client_message(client=current_client, table_name=table_name),
+        one_client_message(client=current_client, table_name=table_name, connections = connections),
         reply_markup=await get_clients_data_unit_to_edit(client_id=client_id),
     )

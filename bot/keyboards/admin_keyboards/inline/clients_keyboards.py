@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from bot.database.connections.dao import ConnectionDAO
 from bot.database.tables.clients.dao import ClientDAO
 from bot.templates.admin_templates.keyboards_templates import (
     cancel_text,
@@ -17,7 +18,7 @@ from bot.templates.admin_templates.keyboards_templates import (
 
 
 async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10):
-    clients = await ClientDAO.find_all_order_by(table_id=table_id)
+    clients = await ClientDAO.find_all(table_id=table_id)
     total_clients = len(clients)
     total_pages = (total_clients + per_page - 1) // per_page 
 
@@ -28,12 +29,12 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
     keyboard = InlineKeyboardBuilder()
 
     for client in clients_page:
+        connections = await ConnectionDAO.find_all(tg_id=client.tg_id)
         keyboard.row(
             InlineKeyboardButton(
                 text=get_clients_for_edit_text(
                     client_name=client.name,
-                    client_days_late=client.days_late,
-                    client_date_to=client.date_to,
+                    connections_count = len(connections)
                 ),
                 callback_data=f"get_client_to_edit_{client.id}",
             )
@@ -79,28 +80,29 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
 async def get_clients_data_unit_to_edit(client_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=change_name_text, callback_data=f"edit_client_name_{client_id}"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text=change_price_text, callback_data=f"edit_client_price_{client_id}"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text=change_date_to_text,
-                    callback_data=f"edit_client_date_to_{client_id}",
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    text=change_date_from_text,
-                    callback_data=f"edit_client_date_from_{client_id}",
-                )
-            ],
+            # [
+            #     InlineKeyboardButton(
+            #         text=change_name_text, callback_data=f"edit_client_name_{client_id}"
+            #     )
+            # ],
+            # [
+            #     InlineKeyboardButton(
+            #         text=change_price_text, callback_data=f"edit_client_price_{client_id}"
+            #     )
+            # ],
+            # [
+            #     InlineKeyboardButton(
+            #         text=change_date_to_text,
+            #         callback_data=f"edit_client_date_to_{client_id}",
+            #     )
+            # ],
+            # [
+            #     InlineKeyboardButton(
+            #         text=change_date_from_text,
+            #         callback_data=f"edit_client_date_from_{client_id}",
+            #     )
+            # ],
+            
             [
                 InlineKeyboardButton(
                     text=delete_client_text,

@@ -33,7 +33,8 @@ EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 
 @router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
 @admin_required
-async def handle_add_client_to_table(callback: CallbackQuery, state: FSMContext):
+async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
+    """Ловит команду на изменение имени таблицы, уточняет новое имя."""
     await callback.answer()
 
     match = re.match(EDIT_TABLE_NAME_PATTERN, callback.data)
@@ -62,6 +63,7 @@ async def handle_add_client_to_table(callback: CallbackQuery, state: FSMContext)
 @router.message(StateFilter(Form.waiting_for_new_table_name_data))
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
+    """Переименовывает таблицу"""
     new_table_name = message.text.strip()
 
     if not is_valid_name(new_table_name):

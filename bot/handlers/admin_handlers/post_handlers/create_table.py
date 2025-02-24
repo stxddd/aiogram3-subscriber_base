@@ -37,6 +37,7 @@ async def is_not_uniqe_table(name: str, tg_id: int) -> bool:
 @router.message(F.text == create_table_text)
 @admin_required
 async def handle_create_table(message: Message, state: FSMContext):
+    """Ловит команду на создание таблицы, уточняет ее имя."""
     all_tables = await TableDAO.find_all(user_tg_id=message.from_user.id)
 
     if len(all_tables) < settings.MAX_TABLE_LIMIT:
@@ -53,6 +54,7 @@ async def handle_create_table(message: Message, state: FSMContext):
 @router.message(StateFilter(Form.waiting_for_table_name))
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
+    "Ловит имя и создает таблицу"
     table_name = message.text.strip()
 
     if not is_valid_name(table_name):

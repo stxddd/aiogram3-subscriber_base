@@ -10,25 +10,14 @@ from bot.config import settings
 from bot.handlers.base_handlers.start import router as base_commands_router
 from bot.handlers.admin_handlers.delete_handlers.delete_client import router as delete_client_router
 from bot.handlers.admin_handlers.delete_handlers.delete_table import router as delete_table_router
-from bot.handlers.admin_handlers.edit_clients_handlers.edit_client_date_from import (
-    router as edit_client_date_from_router,
-)
-from bot.handlers.admin_handlers.edit_clients_handlers.edit_client_date_to import (
-    router as edit_client_date_to_router,
-)
-from bot.handlers.admin_handlers.edit_clients_handlers.edit_client_name import (
-    router as edit_client_name_router,
-)
-from bot.handlers.admin_handlers.edit_clients_handlers.edit_client_price import (
-    router as edit_client_price_router,
-)
-from bot.handlers.admin_handlers.edit_clients_handlers.edit_clients_data import (
-    router as edit_clients_datarouter,
+
+from bot.handlers.admin_handlers.get_clients_handlers.get_clients import (
+    router as edit_clients_data_router,
 )
 from bot.handlers.admin_handlers.edit_table_handlers.edit_table_name import (
     router as edit_table_name_router,
 )
-from bot.handlers.admin_handlers.get_handlers.actions_with_table import (
+from bot.handlers.admin_handlers.get_handlers.get_actions_about_table import (
     router as get_exel_table_by_id_router,
 )
 from bot.handlers.admin_handlers.get_handlers.download_table import router as download_table_router
@@ -39,9 +28,7 @@ from bot.handlers.admin_handlers.notification_handlers.payment.payment_completed
 from bot.handlers.admin_handlers.notification_handlers.payment.payment_didnt_completed import (
     router as payment_didnt_completed_router,
 )
-from bot.handlers.admin_handlers.post_handlers.add_client import (
-    router as add_client_router,
-)
+
 from bot.handlers.admin_handlers.post_handlers.create_table import router as create_table_router
 from bot.handlers.base_handlers.delete_last_message import (
     router as delete_last_message_router,
@@ -69,15 +56,10 @@ async def main():
         get_tables_router,
         create_table_router,
         
-        add_client_router,
         edit_table_name_router,
         delete_table_router,
 
-        edit_clients_datarouter,
-        edit_client_name_router,
-        edit_client_price_router,
-        edit_client_date_from_router,
-        edit_client_date_to_router,
+        edit_clients_data_router,
         delete_client_router,
 
         get_exel_table_by_id_router,

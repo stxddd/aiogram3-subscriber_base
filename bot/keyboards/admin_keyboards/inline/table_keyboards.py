@@ -27,11 +27,11 @@ async def get_my_tables_keyboard(user_tg_id: int):
 async def get_actions_with_table_keyboard(table_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=add_data_text, callback_data=f"add_client_{table_id}"
-                )
-            ],
+            # [
+            #     InlineKeyboardButton(
+            #         text=add_data_text, callback_data=f"add_client_{table_id}"
+            #     )
+            # ],
             [
                 InlineKeyboardButton(
                     text=look_all_text, callback_data=f"edit_client_{table_id}"
@@ -72,3 +72,15 @@ async def get_edit_actions_with_table_keyboard(table_id: int):
             ],
         ]
     )
+
+
+async def get_my_tables_for_marzban_keyboard(user_tg_id: int):
+    tables = await TableDAO.find_all(user_tg_id=user_tg_id)
+    keyboard = InlineKeyboardBuilder()
+
+    for table in tables:
+        keyboard.add(
+            InlineKeyboardButton(text=table.name, callback_data=f"get_{table.id}_for_marzban_client")
+        )
+
+    return keyboard.adjust(1).as_markup()

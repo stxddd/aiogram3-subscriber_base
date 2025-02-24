@@ -16,6 +16,7 @@ router = Router()
 @router.message(F.text == my_tables_text)
 @admin_required
 async def handle_get_tables(message: Message):
+    "Возвращает клавиатуру со всеми таблицы"
     tg_id = message.from_user.id
 
     tables = await TableDAO.find_all(user_tg_id=tg_id)

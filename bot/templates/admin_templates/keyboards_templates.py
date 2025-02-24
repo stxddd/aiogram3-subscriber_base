@@ -1,8 +1,8 @@
-from bot.utils.data_processing.date_converter import format_date
 
 
-my_tables_text = "🪧 Мои таблицы"
-create_table_text = "➕ Создать таблицу"
+
+my_tables_text = "🪧 Базы"
+create_table_text = "➕ Добавить базу"
 
 back_text = "Назад"
 cancel_text = "Отмена"
@@ -29,11 +29,8 @@ no_text = "НЕТ"
 forward_text = 'Вперед ➡'
 back_text = '⬅ Назад'
 
-def get_clients_for_edit_text(client_name, client_days_late, client_date_to):
-    client = f"👤 {client_name} | По {format_date(client_date_to)}"
-    if client_days_late != 0:
-        client += f" | ⚠ {client_days_late}"
-    return client
+def get_clients_for_edit_text(client_name, connections_count):
+    return f"👤 {client_name} | 📡 {connections_count}"
 
 
 def page_num(page, total_pages): return f"Страница {page}/{total_pages}"

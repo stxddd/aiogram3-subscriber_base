@@ -28,6 +28,7 @@ DOWNLOAD_TABLE_PATTERN = r"^download_table_(\d+)$"
 @router.callback_query(F.data.regexp(DOWNLOAD_TABLE_PATTERN))
 @admin_required
 async def handle_download_table(callback: CallbackQuery):
+    "Скачивает таблицу в формате excel"
     await callback.answer()
 
     match = re.match(DOWNLOAD_TABLE_PATTERN, callback.data)
