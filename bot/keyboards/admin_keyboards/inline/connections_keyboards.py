@@ -2,37 +2,34 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.database.connections.dao import ConnectionDAO
-from bot.database.clients.dao import ClientDAO
 from bot.templates.admin_templates.keyboards_templates import (
     cancel_text,
-    delete_client_text,
-    get_clients_for_edit_text,
+    connection_line_text,
     forward_text,
     back_text,
     page_num,
+    get_marzban_link_text
 )
 
 
-async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10):
-    clients = await ClientDAO.find_all(table_id=table_id)
-    total_clients = len(clients)
-    total_pages = (total_clients + per_page - 1) // per_page 
+
+async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int = 3):
+    connections = await ConnectionDAO.find_all(client_id=client_id)
+    total_connections = len(connections)
+    total_pages = (total_connections + per_page - 1) // per_page 
 
     start = (page - 1) * per_page
     end = start + per_page
-    clients_page = clients[start:end]
+    connection_page = connections[start:end]
 
     keyboard = InlineKeyboardBuilder()
 
-    for client in clients_page:
-        connections = await ConnectionDAO.find_all(client_id=client.id)
+    for connection in connection_page:
+        
         keyboard.row(
             InlineKeyboardButton(
-                text=get_clients_for_edit_text(
-                    client_name=client.username,
-                    connections_count = len(connections)
-                ),
-                callback_data=f"get_client_to_edit_{client.id}",
+                text=connection_line_text(connection),
+                callback_data=f"get_connection_to_edit_{connection.id}",
             )
         )
 
@@ -41,7 +38,7 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
         nav_buttons.append(
             InlineKeyboardButton(
                 text=back_text,
-                callback_data=f"edit_client_page_{table_id}_{page - 1}"
+                callback_data=f"edit_connections_page_{client_id}_{page - 1}"
             )
         )
     
@@ -56,7 +53,7 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
         nav_buttons.append(
             InlineKeyboardButton(
                 text=forward_text,
-                callback_data=f"edit_client_page_{table_id}_{page + 1}"
+                callback_data=f"edit_connections_page_{client_id}_{page + 1}"
             )
         )
 
@@ -72,13 +69,13 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
 
     return keyboard.as_markup()
 
-async def get_clients_data_unit_to_edit(client_id: int):
+async def get_connection_info_keyboard(connection_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=delete_client_text,
-                    callback_data=f"prepare_to_delete_client_{client_id}",
+                    text=get_marzban_link_text,
+                    callback_data=f"get_marzban_link_{connection_id}",
                 )
             ],
             [

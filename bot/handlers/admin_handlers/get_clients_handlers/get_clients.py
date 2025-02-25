@@ -10,6 +10,7 @@ from bot.keyboards.admin_keyboards.inline.clients_keyboards import (
     get_clients_data_unit_to_edit,
     get_clients_for_edit,
 )
+from bot.keyboards.admin_keyboards.inline.connections_keyboards import get_connections_to_edit
 from bot.templates.admin_templates.errors_templates import (
     client_does_not_exists_error,
     table_dose_not_exists_error,
@@ -54,7 +55,6 @@ async def handle_get_clients(callback: CallbackQuery):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
-    
     clients = await ClientDAO.find_all(table_id=table_id)
 
     if not clients:
@@ -94,5 +94,5 @@ async def handle_get_client(callback: CallbackQuery):
 
     await callback.message.answer(
         one_client_message(client=current_client, table_name=table_name, connections = connections),
-        reply_markup=await get_clients_data_unit_to_edit(client_id=client_id),
+        reply_markup=await get_connections_to_edit(client_id=client_id),
     )

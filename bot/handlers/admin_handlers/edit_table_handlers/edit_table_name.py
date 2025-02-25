@@ -34,7 +34,7 @@ EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 @router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
 @admin_required
 async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
-    """Ловит команду на изменение имени таблицы, уточняет новое имя."""
+    """Ловит команду на изменение имени Базы, уточняет новое имя."""
     await callback.answer()
 
     match = re.match(EDIT_TABLE_NAME_PATTERN, callback.data)

@@ -41,7 +41,7 @@ async def is_not_uniqe_table(name: str, user_id: int) -> bool:
 @router.message(F.text == create_table_text)
 @admin_required
 async def handle_create_table(message: Message, state: FSMContext):
-    """Ловит команду на создание таблицы, уточняет ее имя."""
+    """Ловит команду на создание Базы, уточняет ее имя."""
     
     user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
     

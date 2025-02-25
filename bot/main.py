@@ -40,6 +40,8 @@ from bot.handlers.admin_handlers.notification_handlers.marzban.reject_marzban_cl
 from bot.handlers.user_handlers.marzban_handlers.get_marzban_request import router as handle_add_client_router
 from bot.handlers.user_handlers.instruction_handlers.get_instructions import router as get_instructions_router
 
+from bot.handlers.admin_handlers.get_clients_handlers.get_connections import router as get_connections_router
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -60,6 +62,7 @@ async def main():
         delete_table_router,
 
         edit_clients_data_router,
+        get_connections_router,
         delete_client_router,
 
         get_exel_table_by_id_router,

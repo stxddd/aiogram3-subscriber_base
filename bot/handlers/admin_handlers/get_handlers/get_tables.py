@@ -18,7 +18,7 @@ router = Router()
 @router.message(F.text == my_tables_text)
 @admin_required
 async def handle_get_tables(message: Message):
-    "Возвращает клавиатуру со всеми таблицы"
+    "Возвращает клавиатуру со всеми Базы"
 
     user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
     if not user:
