@@ -59,10 +59,10 @@ def one_client_message(client, table_name, connections):
     text = (
         f"Выбран клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
+        f"👤 {hbold(client.username)} \n📡 {len(connections)}\n"
     )
 
-    text += f"{'➖' * 12}\n" "Выберите действие"
+    text += f"{'➖' * 12}\n" "Список его подключений:"
 
     return text
 
@@ -71,7 +71,7 @@ def are_you_sure_to_delete_client_message(table_name, client, connections):
     text = (
         f"Выбран клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
+        f"👤 {hbold(client.username)} \n📡 {len(connections)}\n"
     )
 
     text += f"{'➖' * 12}\n" "❔Вы уверены, что хотите удалить его?"
@@ -83,7 +83,7 @@ def client_are_not_deleted_message(table_name, client, connections):
     text = (
         f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
+        f"👤 {hbold(client.username)} \n📡{len(connections)}\n"
     )
 
     text += f"{'➖' * 12}\n" "❌ Не может быть удалён"
@@ -95,7 +95,7 @@ def client_are_deleted_message(table_name, client, connections):
     text = (
         f"Клиент таблицы «{hitalic(table_name)}»\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.name)} \n📡{len(connections)}\n"
+        f"👤 {hbold(client.username)} \n📡{len(connections)}\n"
     )
 
     text += f"{'➖' * 12}\n" "✅ Удален"

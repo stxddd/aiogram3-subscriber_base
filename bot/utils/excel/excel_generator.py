@@ -79,7 +79,7 @@ class ExcelCRUD:
         )
 
         for client in clients:
-            client_data = [client.name, client.price, format_date(client.date_from), format_date(client.date_to), client.days_late if client.days_late != 0 else '']
+            client_data = [client.username, client.price, format_date(client.date_from), format_date(client.date_to), client.days_late if client.days_late != 0 else '']
             await cls.add_client_to_existing_excel(
                 data=client_data, table_name=table_name, table_id=table_id, tg_id=tg_id
             )

@@ -16,7 +16,7 @@ class TableDAO(BaseDAO):
             if result:
                 existing_query = await session.execute(
                     select(cls.model)
-                    .filter_by(name=data["name"], user_tg_id=result.user_tg_id)
+                    .filter_by(name=data["name"], user_id=result.user_id)
                     .filter(cls.model.id != model_id)
                 )
                 existing_object = existing_query.scalars().first()

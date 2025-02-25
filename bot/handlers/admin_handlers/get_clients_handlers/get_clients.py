@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from bot.database.connections.dao import ConnectionDAO
-from bot.database.tables.clients.dao import ClientDAO
+from bot.database.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.clients_keyboards import (
     get_clients_data_unit_to_edit,
@@ -54,6 +54,7 @@ async def handle_get_clients(callback: CallbackQuery):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
+    
     clients = await ClientDAO.find_all(table_id=table_id)
 
     if not clients:
@@ -89,7 +90,7 @@ async def handle_get_client(callback: CallbackQuery):
 
     table_name = table.name
     
-    connections = await ConnectionDAO.find_all(tg_id=current_client.tg_id)
+    connections = await ConnectionDAO.find_all(client_id=current_client.id)
 
     await callback.message.answer(
         one_client_message(client=current_client, table_name=table_name, connections = connections),

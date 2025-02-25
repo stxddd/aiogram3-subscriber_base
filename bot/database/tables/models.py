@@ -7,5 +7,5 @@ class Table(Base):
     __tablename__ = "tables"
 
     id = Column(Integer, primary_key=True)
-    user_tg_id = Column(ForeignKey("users.tg_id", ondelete="CASCADE"))
+    user_id = Column(ForeignKey("users.id", ondelete="CASCADE"))
     name = Column(String(32), nullable=False)

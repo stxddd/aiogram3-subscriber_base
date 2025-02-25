@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message
 
-from bot.database.tables.clients.dao import ClientDAO
+from bot.database.clients.dao import ClientDAO
 from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.admin_templates.errors_templates import (
     client_does_not_exists_error,
@@ -46,7 +46,7 @@ async def handle_payment_completed(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.answer(
         payment_has_been_completed_message(
-            client_name=client.name,
+            client_name=client.username,
             client_date_from=client.date_from,
             client_date_to=client.date_to,
         )

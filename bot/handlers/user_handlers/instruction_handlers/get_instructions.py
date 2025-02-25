@@ -50,5 +50,3 @@ async def handle_get_instruction(callback: CallbackQuery):
     user_os = callback.data.split("_")[0] 
     return await callback.message.answer(get_instruction(user_os=user_os), reply_markup=main_keyboard)
     
-
-    

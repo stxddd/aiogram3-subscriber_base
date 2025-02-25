@@ -6,6 +6,7 @@ from aiogram.types import Message
 
 from bot.config import settings
 from bot.database.tables.dao import TableDAO
+from bot.database.users.dao import UserDAO
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.admin_keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
 from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard
@@ -20,6 +21,9 @@ from bot.templates.admin_templates.messages_templates import (
     enter_table_name_message,
     table_has_been_created_message,
 )
+from bot.templates.user_templates.errors_templates import (
+    auth_error,
+)
 from bot.utils.data_processing.validators import is_valid_name
 from bot.decorators.admin_required import admin_required
 
@@ -30,15 +34,21 @@ class Form(StatesGroup):
     waiting_for_table_name = State()
 
 
-async def is_not_uniqe_table(name: str, tg_id: int) -> bool:
-    return await TableDAO.find_all(name=name, user_tg_id=tg_id)
+async def is_not_uniqe_table(name: str, user_id: int) -> bool:
+    return await TableDAO.find_all(name=name, user_id=user_id)
 
 
 @router.message(F.text == create_table_text)
 @admin_required
 async def handle_create_table(message: Message, state: FSMContext):
     """Ловит команду на создание таблицы, уточняет ее имя."""
-    all_tables = await TableDAO.find_all(user_tg_id=message.from_user.id)
+    
+    user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
+    
+    if not user:
+        return await message.answer(auth_error)
+    
+    all_tables = await TableDAO.find_all(user_id=user.id)
 
     if len(all_tables) < settings.MAX_TABLE_LIMIT:
         await state.set_state(Form.waiting_for_table_name)
@@ -55,15 +65,20 @@ async def handle_create_table(message: Message, state: FSMContext):
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
     "Ловит имя и создает таблицу"
+    
     table_name = message.text.strip()
+    user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
 
+    if not user:
+        return await message.answer(auth_error)
+    
     if not is_valid_name(table_name):
         return await message.answer(name_so_long_error)
 
-    if await is_not_uniqe_table(table_name, message.from_user.id):
+    if await is_not_uniqe_table(table_name,user.id):
         return await message.answer(table_already_exists_error)
 
-    new_table = await TableDAO.add(user_tg_id=message.from_user.id, name=table_name)
+    new_table = await TableDAO.add(user_id=user.id, name=table_name)
     table = await TableDAO.find_by_id(model_id=new_table["id"])
 
     if not table:

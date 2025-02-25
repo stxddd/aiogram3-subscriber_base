@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from bot.database.connections.dao import ConnectionDAO
-from bot.database.tables.clients.dao import ClientDAO
+from bot.database.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.utils_keyboards import yes_or_not_delte_client_keyboard
 from bot.templates.admin_templates.errors_templates import (
@@ -43,7 +43,7 @@ async def handle_prepare_to_delete_client(callback: CallbackQuery):
 
     table_name = table.name
 
-    connections = await ConnectionDAO.find_all(tg_id=current_client.tg_id)
+    connections = await ConnectionDAO.find_all(client_id=current_client.id)
     
     return await callback.message.answer(
         are_you_sure_to_delete_client_message(table_name=table_name, client=current_client, connections=connections),
@@ -64,7 +64,7 @@ async def handle_delete_clietn(callback: CallbackQuery):
     if not current_client:
         return await callback.message.answer(client_does_not_exists_error)
     
-    connections = await ConnectionDAO.find_all(tg_id=current_client.tg_id)
+    connections = await ConnectionDAO.find_all(client_id=current_client.id)
     for connection in connections:
         await ConnectionDAO.delete(id=connection.id)
 
@@ -74,10 +74,9 @@ async def handle_delete_clietn(callback: CallbackQuery):
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
-    connections = await ConnectionDAO.find_all(tg_id=current_client.tg_id)
+    connections = await ConnectionDAO.find_all(client_id=current_client.id)
     delte_client = await ClientDAO.delete(id=client_id)
 
-    
     if not delte_client:
         return await callback.message.answer(
             client_are_not_deleted_message(table_name=table_name, client=current_client)

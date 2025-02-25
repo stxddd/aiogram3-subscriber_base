@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from aiogram import Router, F
@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 
 from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
-from bot.database.tables.clients.dao import ClientDAO
+from bot.database.clients.dao import ClientDAO
 from bot.database.users.dao import UserDAO
 from bot.keyboards.admin_keyboards.inline.notification_keyboards import get_marzban_access_keyboard
 from bot.templates.user_templates.message_templates import wait_for_admin_message, marzban_day_limit_message
@@ -26,6 +26,7 @@ ADD_CONNECTION_OS_PATTERN = '_add_connection_os'
 @router.message(F.text == get_new_connection_text)
 async def handle_new_connection_selection(message: Message):
     "Ловит команду на добавление нового подключения, отправляет сообщение с выбором периода"
+    
     user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)
     if user.marzban_requests_today > settings.MARZBAN_REQUEST_DAY_LIMIT:
         return await message.answer(marzban_day_limit_message)
@@ -36,6 +37,7 @@ async def handle_new_connection_selection(message: Message):
 @router.callback_query(lambda c: c.data.endswith(ADD_CONNECTION_DATE_PATTERN))
 async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
     "Ловит выбор периода, сохраняет в state, отправляет сообщение с выбором ОС"
+    
     await callback.answer()
     months = callback.data.split("_")[0]
     price = callback.data.split("_")[1]
@@ -50,9 +52,9 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
     
     await callback.answer()
     
-    user_tg_id = callback.from_user.id
+    tg_id = callback.from_user.id
 
-    user = await UserDAO.find_one_or_none(tg_id = user_tg_id)
+    user = await UserDAO.find_one_or_none(tg_id = tg_id)
 
     if user.marzban_requests_today > settings.MARZBAN_REQUEST_DAY_LIMIT:
         return await callback.message.answer(marzban_day_limit_message)
@@ -69,19 +71,26 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
         last_marzban_request_date = datetime.now()
     )
 
+    client = await ClientDAO.find_one_or_none(tg_id = tg_id)
+    
+    if not client:
+        new_client = await ClientDAO.add(
+            username = callback.from_user.username if callback.from_user.username else '-',
+            tg_id = tg_id
+        )
+        if not new_client:
+            return await callback.message.answer(added_connection_error)
+        client = await ClientDAO.find_one_or_none(tg_id = tg_id)
+        
     user_os = callback.data.split("_")[0]  
     username = callback.from_user.username or callback.from_user.id
 
     added_connection = await ConnectionDAO.add(
-        tg_id = user_tg_id,
-        os = user_os,
-        tg_username = username,
+        client_id = client.id,
         date_to = date_to,
-        price = price
-    )
-
-    if not added_connection:        
-        return await callback.message.answer(added_connection_error)
+        price = price,
+        os_name = user_os
+    )    
     
     await callback.message.delete()
     await callback.message.answer(wait_for_admin_message)
@@ -91,13 +100,3 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
         request_to_connect_message(username = username, date_to = date_to), 
         reply_markup=await get_marzban_access_keyboard(connection_id=added_connection.id)
     )
-
-
-
-
-    
-
-
-
-
-

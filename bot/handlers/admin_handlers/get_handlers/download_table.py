@@ -7,7 +7,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery, FSInputFile
 
 from bot.config import settings
-from bot.database.tables.clients.dao import ClientDAO
+from bot.database.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.database.users.dao import UserDAO
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_actions_with_table_keyboard

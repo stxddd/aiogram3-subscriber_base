@@ -4,7 +4,7 @@ from sqlalchemy import desc, cast, Date
 
 from bot.database.dao.base import BaseDAO
 from bot.database.database import async_session_maker
-from bot.database.tables.clients.models import Client
+from bot.database.clients.models import Client
 
 
 class ClientDAO(BaseDAO):

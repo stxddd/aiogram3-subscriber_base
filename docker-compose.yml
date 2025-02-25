@@ -10,8 +10,6 @@ services:
     restart: always
     ports:
       - "5000:5000"
-    networks:
-      - bot_network
 
   db:
     image: postgres:17
@@ -21,13 +19,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - bot_network
-
 
 volumes:
   postgres_data:
-
-networks:
-  bot_network:
-    driver: bridge

@@ -3,7 +3,6 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.database.tables.dao import TableDAO
 from bot.templates.admin_templates.keyboards_templates import (
-    add_data_text,
     cancel_text,
     change_table_name_text,
     delete_table_text,
@@ -12,8 +11,8 @@ from bot.templates.admin_templates.keyboards_templates import (
 )
 
 
-async def get_my_tables_keyboard(user_tg_id: int):
-    tables = await TableDAO.find_all(user_tg_id=user_tg_id)
+async def get_my_tables_keyboard(user_id: int):
+    tables = await TableDAO.find_all(user_id=user_id)
     keyboard = InlineKeyboardBuilder()
 
     for table in tables:
@@ -27,11 +26,6 @@ async def get_my_tables_keyboard(user_tg_id: int):
 async def get_actions_with_table_keyboard(table_id: int):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            # [
-            #     InlineKeyboardButton(
-            #         text=add_data_text, callback_data=f"add_client_{table_id}"
-            #     )
-            # ],
             [
                 InlineKeyboardButton(
                     text=look_all_text, callback_data=f"edit_client_{table_id}"
@@ -74,8 +68,8 @@ async def get_edit_actions_with_table_keyboard(table_id: int):
     )
 
 
-async def get_my_tables_for_marzban_keyboard(user_tg_id: int):
-    tables = await TableDAO.find_all(user_tg_id=user_tg_id)
+async def get_my_tables_for_marzban_keyboard(user_id: int):
+    tables = await TableDAO.find_all(user_id=user_id)
     keyboard = InlineKeyboardBuilder()
 
     for table in tables:

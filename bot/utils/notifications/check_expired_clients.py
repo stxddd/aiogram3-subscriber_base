@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from bot.config import settings
 from bot.database.database import async_session_maker
-from bot.database.tables.clients.models import Client
+from bot.database.clients.models import Client
 from bot.database.tables.models import Table
 from bot.database.users.dao import UserDAO
 from bot.keyboards.admin_keyboards.inline.notification_keyboards import get_pay_info_keyboard
@@ -29,7 +29,7 @@ async def check_expired_clients(bot):
                 query = (
                     select(Client, Table)
                     .join(Table, Client.table_id == Table.id)
-                    .where(Table.user_tg_id == user.tg_id)
+                    .where(Table.user_id == user.id)
                 )
                 result = await session.execute(query)
                 clients = result.scalars().all()
@@ -40,7 +40,7 @@ async def check_expired_clients(bot):
                         message = await bot.send_message(
                             user.tg_id,
                             client_date_to_expired(
-                                client_name=client.name, date_to=client.date_to
+                                client_name=client.username, date_to=client.date_to
                             ),
                             reply_markup=await get_pay_info_keyboard(client_id=client.id),
                         )
