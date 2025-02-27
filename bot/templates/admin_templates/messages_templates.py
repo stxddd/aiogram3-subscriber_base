@@ -84,6 +84,9 @@ def client_are_deleted_message(table_name, client, connections):
 
     return text
 
+def table_base_info_message(table_name, clients_count, all_prices):
+    return f"{table_name_message(table_name)}\n\nКлиентов: {clients_count}\nОбщий доход: {all_prices}"
+
 
 def client_date_to_expired(client_name, date_to):
     return f"⚠ {client_name} | {format_date(date_to)} необходимо внести оплату!"
@@ -113,4 +116,4 @@ def client_info_message(username, connections_count): return f'👤 {username} |
 
 def connection_info_message(connection, client_username): return f'👤 {client_username}\n\n{connection.os_name} | {connection.price} | {format_date(connection.date_to)}'
 
-def admin_link_message(connection, username): return f'🔗 Ссылка для подключения @{username}:\n\n {connection.marzban_link}\n\n{connection.price}₽\n{format_date(connection.date_to)}'
+def link_message(connection, username): return f'🔗 Ссылка для подключения @{username}:\n\n `{connection.marzban_link}`\n\n{connection.price}₽\n{format_date(connection.date_to)}'

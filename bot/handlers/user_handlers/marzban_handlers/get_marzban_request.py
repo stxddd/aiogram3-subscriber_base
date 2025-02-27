@@ -1,5 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from random import randint
 
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message
@@ -60,7 +61,7 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
         return await callback.message.answer(marzban_day_limit_message)
     
     data = await state.get_data()
-    date_to = datetime.now() + relativedelta(months=int(data.get('months')))
+    date_to = datetime.now() + relativedelta(months=int(data.get('months')), days=1)
     price = int(data.get('price'))
         
     marzban_requests_today = user.marzban_requests_today + 1 
@@ -85,11 +86,14 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
     user_os = callback.data.split("_")[0]  
     username = callback.from_user.username or callback.from_user.id
 
+    connection_name = f"{user_os}_{username}_{randint(10000,99999)}"
+    
     added_connection = await ConnectionDAO.add(
         client_id = client.id,
         date_to = date_to,
         price = price,
-        os_name = user_os
+        os_name = user_os,
+        name = connection_name
     )    
     
     await callback.message.delete()

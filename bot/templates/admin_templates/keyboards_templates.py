@@ -1,6 +1,9 @@
 
 
 
+from bot.utils.data_processing.date_converter import format_date
+
+
 my_tables_text = "🪧 Базы"
 create_table_text = "➕ Добавить базу"
 
@@ -33,7 +36,7 @@ def page_num(page, total_pages): return f"Страница {page}/{total_pages}"
 accept_text = "✅ Принять"
 reject_text = "❌ Отклонить"
 
-get_marzban_link_text = 'Линк'
+get_marzban_link_text = '🔗 Ключ'
 
 def connection_line_text(connection):
-    return f"📡 {connection.os_name} | {connection.date_to} | {connection.price}"
+    return f"📡 {connection.os_name} | {format_date(connection.date_to)} | {connection.price}"

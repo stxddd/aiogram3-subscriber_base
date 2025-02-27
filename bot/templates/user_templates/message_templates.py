@@ -1,4 +1,7 @@
 
+from bot.utils.data_processing.date_converter import format_date
+
+
 welcome_message = "Привет 🤖\n\n✅ Выбери, что хочешь сделать."
 
 enter_os_message = "Выбери свою операционную систему."
@@ -58,3 +61,5 @@ androidTV_instruction_message = "\n".join((f'⚙️ Инструкиця для 
 incorrect_os_message = '❌ Нет данных о такой ОС.'
 
 enter_period_message = '⚙️ Выберите период подписки.'
+
+def you_are_successfully_connected_message(date_to): return f'✅ Вы успешно подключены до {format_date(date_to)}'

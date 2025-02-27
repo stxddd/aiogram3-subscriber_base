@@ -22,9 +22,9 @@ from bot.handlers.admin_handlers.get_handlers.get_actions_about_table import (
 )
 from bot.handlers.admin_handlers.get_handlers.download_table import router as download_table_router
 from bot.handlers.admin_handlers.get_handlers.get_tables import router as get_tables_router
-from bot.handlers.admin_handlers.notification_handlers.payment.payment_completed import (
-    router as payment_completed_router,
-)
+# from bot.handlers.admin_handlers.notification_handlers.payment.payment_completed import (
+#     router as payment_completed_router,
+# )
 from bot.handlers.admin_handlers.notification_handlers.payment.payment_didnt_completed import (
     router as payment_didnt_completed_router,
 )
@@ -68,7 +68,7 @@ async def main():
         get_exel_table_by_id_router,
         download_table_router,
         
-        payment_completed_router,
+        #payment_completed_router,
         payment_didnt_completed_router,
         accept_marzban_client_router,
         reject_marzban_client_router,

@@ -1,19 +1,24 @@
 from random import randint
+from datetime import date, datetime
 
 from marzban import MarzbanAPI, UserCreate, ProxySettings
 
 from bot.config import settings
 
-async def create_user(username: str):
+async def create_user(username: str, date_to: date):
 
     api = MarzbanAPI(base_url=settings.MARZBAN_URL)
     token = await api.get_token(username=settings.MARZBAN_USER, password=settings.MARZBAN_PASS)
+    
+    date_to_datetime = datetime.combine(date_to, datetime.min.time())
 
     try:
         new_user = UserCreate(
             username=username, 
             proxies={"vless": ProxySettings(flow="xtls-rprx-vision")},
-            inbounds={'vless': ['VLESS TCP REALITY']}
+            inbounds={'vless': ['VLESS TCP REALITY']},
+            expire=int(date_to_datetime.timestamp())
+            
         )
         added_user = await api.add_user(user=new_user, token=token.access_token)
         await api.close()
@@ -22,8 +27,7 @@ async def create_user(username: str):
         await api.close()
         return None
    
-        
-
+   
 async def get_user(username: str):
     try:
         api = MarzbanAPI(base_url=settings.MARZBAN_URL)

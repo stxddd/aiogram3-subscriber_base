@@ -1,5 +1,5 @@
 import re
-from random import randint
+
 
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
@@ -11,6 +11,7 @@ from bot.database.clients.dao import ClientDAO
 from bot.database.users.dao import UserDAO
 from bot.handlers.user_handlers.instruction_handlers.get_instructions import get_instruction
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_my_tables_for_marzban_keyboard
+from bot.templates.user_templates.message_templates import you_are_successfully_connected_message
 from bot.utils.marzban.marzban_manager import create_user, get_user
 from bot.templates.admin_templates.errors_templates import(
     marzban_user_add_error,
@@ -82,17 +83,18 @@ async def handle_accept_marzban_client(callback: CallbackQuery, state: FSMContex
             table_id = table_id
         )  
 
-    new_username = f"{connection.os_name}_{client.tg_id}_{randint(10000,99999)}" 
+    connection_name = connection.name
 
     new_marzban_user = await create_user(
-        username = new_username
+        username = connection_name,
+        date_to=connection.date_to
     )
 
     if not new_marzban_user:
         return await callback.message.answer(marzban_user_add_error) 
 
     marzban_user = await get_user(
-        username = new_username
+        username = connection_name
     )
 
     if not marzban_user:
@@ -102,7 +104,7 @@ async def handle_accept_marzban_client(callback: CallbackQuery, state: FSMContex
 
     updated_connection = await ConnectionDAO.update(
         model_id = connection.id,
-        marzban_link = link
+        marzban_link = link,
     )
 
     if not updated_connection:
@@ -120,9 +122,13 @@ async def handle_accept_marzban_client(callback: CallbackQuery, state: FSMContex
         get_instruction(user_os=connection.os_name)
     )
     
-    return await callback.message.bot.send_message(
+    await callback.message.bot.send_message(
         client.tg_id,
-        link,
-        reply_markup = user_main_keyboard if client.tg_id != settings.ADMIN_TG_ID else admin_main_keyboard
+        f'`{link}`',
+        reply_markup = user_main_keyboard if client.tg_id != settings.ADMIN_TG_ID else admin_main_keyboard, parse_mode="MARKDOWN"
     )
 
+    return await callback.bot.send_message(
+        client.tg_id,
+        you_are_successfully_connected_message(date_to=connection.date_to)
+    )
