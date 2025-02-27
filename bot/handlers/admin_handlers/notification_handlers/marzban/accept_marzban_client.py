@@ -33,7 +33,7 @@ GET_TABLE_FOR_CLIENT = r"get_(\d+)_for_marzban_client"
 @router.callback_query(F.data.regexp(ACCEPT_MARZBAN_PATTERN))
 @admin_required
 async def handle_get_table_for_marzban_client(callback: CallbackQuery, state: FSMContext):
-    "Обрабатывет новый запрос на подклбчевние, спрашивает в какую таблицу добавить пользователя"
+    "Обрабатывет новый запрос на подклбчевние, спрашивает в какую базу добавить пользователя"
     await callback.answer()
     
     user = await UserDAO.find_one_or_none(tg_id = callback.from_user.id)
@@ -62,7 +62,7 @@ async def handle_get_table_for_marzban_client(callback: CallbackQuery, state: FS
 @router.callback_query(F.data.regexp(GET_TABLE_FOR_CLIENT))
 @admin_required
 async def handle_accept_marzban_client(callback: CallbackQuery, state: FSMContext):
-    "Добавляет пользователя в таблицу, отправляет ему ключ на подключение"
+    "Добавляет пользователя в базу, отправляет ему ключ на подключение"
     await callback.answer()
     data = await state.get_data()
 

@@ -20,20 +20,14 @@ from bot.handlers.admin_handlers.edit_table_handlers.edit_table_name import (
 from bot.handlers.admin_handlers.get_handlers.get_actions_about_table import (
     router as get_exel_table_by_id_router,
 )
-from bot.handlers.admin_handlers.get_handlers.download_table import router as download_table_router
+
 from bot.handlers.admin_handlers.get_handlers.get_tables import router as get_tables_router
-# from bot.handlers.admin_handlers.notification_handlers.payment.payment_completed import (
-#     router as payment_completed_router,
-# )
-from bot.handlers.admin_handlers.notification_handlers.payment.payment_didnt_completed import (
-    router as payment_didnt_completed_router,
-)
 
 from bot.handlers.admin_handlers.post_handlers.create_table import router as create_table_router
 from bot.handlers.base_handlers.delete_last_message import (
     router as delete_last_message_router,
 )
-from bot.utils.notifications.check_expired_clients import check_expired_clients
+
 from bot.handlers.admin_handlers.notification_handlers.marzban.accept_marzban_client import router as accept_marzban_client_router
 from bot.handlers.admin_handlers.notification_handlers.marzban.reject_marzban_client import router as reject_marzban_client_router
 
@@ -67,10 +61,7 @@ async def main():
         delete_client_router,
 
         get_exel_table_by_id_router,
-        download_table_router,
         
-        #payment_completed_router,
-        payment_didnt_completed_router,
         accept_marzban_client_router,
         reject_marzban_client_router,
         send_notification_for_clients_router,
@@ -79,8 +70,6 @@ async def main():
         get_instructions_router
     )
 
-
-    asyncio.create_task(check_expired_clients(bot))
     await dp.start_polling(bot)
 
 

@@ -65,6 +65,9 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
 
     keyboard.row(
         InlineKeyboardButton(
+                    text=delete_client_text,
+                    callback_data=f"prepare_to_delete_client_{client.id}",
+        ),        InlineKeyboardButton(
             text=cancel_text,
             callback_data="delete_last_message"
         )

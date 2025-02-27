@@ -14,7 +14,7 @@ download_text = "Скачать"
 
 look_all_text = "Посмотреть"
 delete_client_text = "Удалить клиента"
-delete_table_text = "Удалить таблицу"
+delete_table_text = "Удалить базу"
 change_table_name_text = "Переименовать"
 
 
@@ -37,6 +37,7 @@ accept_text = "✅ Принять"
 reject_text = "❌ Отклонить"
 
 get_marzban_link_text = '🔗 Ключ'
+extend_text = '🔄 Продлить'
 
 def connection_line_text(connection):
     return f"📡 {connection.os_name} | {format_date(connection.date_to)} | {connection.price}"

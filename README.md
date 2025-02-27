@@ -1,16 +1,10 @@
 # **Project Overview**  
 **Aiogram + PostgreSQL (asyncpg + alembic)**  
 
-🤖 This bot is designed to automate client database management. With constant access to your databases, the bot will notify you when a client needs to top up their balance.
-
+🤖 This bot (extension of the basic subscriber-base, which has full integration with the Marzban API) is capable of automatically connecting clients to a tunneled connection via your server for a certain period of time, on which Marzban has been installed. The administrator have access to all users and can distribute newsletters. Each individual user can't establish their own connections, subject to approval by the administrator.
 ---
 
-## **Installation Instructions**  
-
-Start by cloning the project:  
-```bash
-git clone https://github.com/stxddd/aiogram3-subscriber_base.git
-```
+## **Installation**  
 
 Set the following environment variables:
 
@@ -29,12 +23,12 @@ POSTGRES_USER
 POSTGRES_DB
 POSTGRES_PASSWORD
 
-MAX_TABLE_LIMIT
-MAX_CLIENT_LIMIT
-DOWNLOAD_DAY_LIMIT
+ONE_MONTH_PRICE
+THREE_MONTH_PRICE
+SIX_MONTH_PRICE
+ONE_YEAR_PRICE
 
-HOUR_TO_RECEIVE_NOTIFICATIONS
-MINUTE_TO_RECEIVE_NOTIFICATIONS
+CODE_KEY_FOR_DELETE
 
 TZ=Europe/Moscow
 ```

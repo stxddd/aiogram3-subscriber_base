@@ -63,7 +63,7 @@ async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
 @router.message(StateFilter(Form.waiting_for_new_table_name_data))
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
-    """Переименовывает таблицу"""
+    """Переименовывает базу"""
     new_table_name = message.text.strip()
 
     if not is_valid_name(new_table_name):

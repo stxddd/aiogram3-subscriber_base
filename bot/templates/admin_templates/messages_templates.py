@@ -6,13 +6,13 @@ admin_welcome_message = "Привет!🤖 \n\n✅ Данный Бот помо�
 action_is_cancel_text = "❌ Действие отменено."
 
 enter_table_name_message = "❔Введите название Базы (до 32 символов)."
-pick_table_for_download_message = "❔Выберите таблицу, которую хотите скачать."
+pick_table_for_download_message = "❔Выберите базу, которую хотите скачать."
 our_tables_message = "✅ Ваши Базы"
-table_are_missing_message = "❌ В настоящие время у Вас нет таблиц."
+table_are_missing_message = "❌ В настоящие время у Вас нет баз."
 
 
 def are_you_sure_to_delete_table_message(table_name):
-    return f"❔ Вы уверены, что хотите удалить таблицу «{table_name}»?"
+    return f"❔ Вы уверены, что хотите удалить базу «{table_name}»?"
 
 
 def table_are_deleted_message(table_name):
@@ -20,7 +20,7 @@ def table_are_deleted_message(table_name):
 
 
 def table_are_not_deleted_message(table_name):
-    return f"❌ Невозможно удалить таблицу «{table_name}»!"
+    return f"❌ Невозможно удалить базу «{table_name}»!"
 
 def enter_new_table_name_message(table_name):
     return f"❔ Введите новое имя для Базы «{table_name}» (до 32 символов)"
@@ -108,7 +108,7 @@ def marzban_user_added_message(username, date_to): return f"✅ Клиент {us
 
 def marzban_user_rejected_message(username): return f"❌ Клиенту {username} отказано в доступе."
 
-def pick_table_for_client_message(username): return f'✅ Выберите таблицу, для клиента @{username}'
+def pick_table_for_client_message(username): return f'✅ Выберите базу, для клиента @{username}'
 
 client_dose_not_have_connections_message ='❌ У клиента нет подключений'
 
@@ -119,3 +119,11 @@ def connection_info_message(connection, client_username): return f'👤 {client_
 def link_message(connection, username): return f'🔗 Ссылка для подключения @{username}:\n\n `{connection.marzban_link}`\n\n{connection.price}₽\n{format_date(connection.date_to)}'
 
 enter_message_for_mailing_message = "❔ Введите текст сообщения для рассылки."
+
+def enter_code_for_delete_table(table_name):
+    return f"❔ Введите код для удаления базы «{table_name}»"
+
+def enter_code_for_delete_client(client_name):
+    return f"❔ Введите код для удаления @{client_name}"
+
+incorrect_code_message = "❌ Неверный код!"

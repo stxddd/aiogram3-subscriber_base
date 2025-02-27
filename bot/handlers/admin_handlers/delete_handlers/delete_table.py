@@ -2,25 +2,37 @@ import re
 
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
+from aiogram.filters.state import StateFilter
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.utils_keyboards import yes_or_not_delte_table_keyboard
 from bot.templates.admin_templates.errors_templates import table_dose_not_exists_error
 from bot.templates.admin_templates.messages_templates import (
     are_you_sure_to_delete_table_message,
+    enter_code_for_delete_table,
     table_are_deleted_message,
     table_are_not_deleted_message,
+    incorrect_code_message
 )
 from bot.decorators.admin_required import admin_required
+from bot.keyboards.admin_keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
+from bot.config import settings
 
 router = Router()
 
+
+class Form(StatesGroup):
+    enter_secret_code_for_delete_table = State()
+
 PREPARE_TO_DELTE_TABLE_PATTERN = r"^prepare_to_delete_table_(\d+)$"
-DELTE_TABLE_PATTERN = r"^delete_table_(\d+)$"
+DELETE_TABLE_PATTERN = r"^delete_table_(\d+)$"
 
 
 @router.callback_query(F.data.regexp(PREPARE_TO_DELTE_TABLE_PATTERN))
+@admin_required
 async def handle_prepate_to_delete_table(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
 
@@ -40,23 +52,45 @@ async def handle_prepate_to_delete_table(callback: CallbackQuery, state: FSMCont
     )
 
 
-@router.callback_query(F.data.regexp(DELTE_TABLE_PATTERN))
-async def handle_delete_table(callback: CallbackQuery, state: FSMContext):
-    await callback.answer()
 
-    match = re.match(DELTE_TABLE_PATTERN, callback.data)
+
+@router.callback_query(F.data.regexp(DELETE_TABLE_PATTERN))
+@admin_required
+async def handle_delete_table(callback: CallbackQuery, state: FSMContext):
+    
+    await callback.answer()
+    match = re.match(DELETE_TABLE_PATTERN, callback.data)
     table_id = int(match.group(1))
 
+    await state.update_data(table_id=table_id)
+    
     table = await TableDAO.find_one_or_none(id=table_id)
 
     if not table:
         return await callback.message.answer(table_dose_not_exists_error)
 
     table_name = table.name
+    
+    await state.set_state(Form.enter_secret_code_for_delete_table)
+    return await callback.message.answer(enter_code_for_delete_table(table_name = table_name), reply_markup=cancel_delete_last_keyboard)
 
-    delte_table = await TableDAO.delete(id=table_id)
 
-    if not delte_table:
-        return await callback.message.answer(table_are_not_deleted_message(table_name))
+@router.message(StateFilter(Form.enter_secret_code_for_delete_table))
+async def handle_delete_secret_key(message: Message, state: FSMContext):
+    code = message.text
+    
+    if code != settings.CODE_KEY_FOR_DELETE:
+        return await message.answer(incorrect_code_message)
+    else:
+        data = await state.get_data()
+        table_id = data.get("table_id")
+        
+        table = await TableDAO.find_one_or_none(id=table_id)
+        table_name = table.name
+        
+        delete_table = await TableDAO.delete(id=table_id)
 
-    return await callback.message.answer(table_are_deleted_message(table_name))
+        if not delete_table:
+            return await message.answer(table_are_not_deleted_message(table_name))
+
+        return await message.answer(table_are_deleted_message(table_name))

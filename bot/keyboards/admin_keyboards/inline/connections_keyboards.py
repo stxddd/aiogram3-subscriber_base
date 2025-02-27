@@ -8,7 +8,8 @@ from bot.templates.admin_templates.keyboards_templates import (
     forward_text,
     back_text,
     page_num,
-    get_marzban_link_text
+    get_marzban_link_text,
+    extend_text
 )
 
 
@@ -76,6 +77,12 @@ async def get_connection_info_keyboard(connection_id: int):
                 InlineKeyboardButton(
                     text=get_marzban_link_text,
                     callback_data=f"get_marzban_link_{connection_id}",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=extend_text,
+                    callback_data=f"extend_marzban_link_{connection_id}",
                 )
             ],
             [

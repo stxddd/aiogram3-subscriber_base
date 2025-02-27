@@ -16,14 +16,14 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
 
-    MAX_TABLE_LIMIT: int
-    MAX_CLIENT_LIMIT: int
-    DOWNLOAD_DAY_LIMIT: int
-
-    HOUR_TO_RECEIVE_NOTIFICATIONS: int
-    MINUTE_TO_RECEIVE_NOTIFICATIONS: int
-
     TZ: str
+
+    ONE_MONTH_PRICE: int
+    THREE_MONTH_PRICE: int
+    SIX_MONTH_PRICE: int
+    ONE_YEAR_PRICE: int
+    
+    CODE_KEY_FOR_DELETE: str
 
     @property
     def DATABASE_URL(self) -> str:

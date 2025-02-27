@@ -4,14 +4,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
-from bot.config import settings
 from bot.database.tables.dao import TableDAO
 from bot.database.users.dao import UserDAO
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_actions_with_table_keyboard
 from bot.keyboards.admin_keyboards.inline.utils_keyboards import cancel_delete_last_keyboard
-from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard
+
 from bot.templates.admin_templates.errors_templates import (
-    exceeded_the_limit_on_the_table_error,
     imposible_to_create_table_error,
     name_so_long_error,
     table_already_exists_error,
@@ -47,24 +45,18 @@ async def handle_create_table(message: Message, state: FSMContext):
     
     if not user:
         return await message.answer(auth_error)
-    
-    all_tables = await TableDAO.find_all(user_id=user.id)
 
-    if len(all_tables) < settings.MAX_TABLE_LIMIT:
-        await state.set_state(Form.waiting_for_table_name)
-        return await message.answer(
-            enter_table_name_message, reply_markup=cancel_delete_last_keyboard
-        )
-
+    await state.set_state(Form.waiting_for_table_name)
     return await message.answer(
-        exceeded_the_limit_on_the_table_error, reply_markup=main_keyboard
+        enter_table_name_message, reply_markup=cancel_delete_last_keyboard
     )
+
 
 
 @router.message(StateFilter(Form.waiting_for_table_name))
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
-    "Ловит имя и создает таблицу"
+    "Ловит имя и создает базу"
     
     table_name = message.text.strip()
     user = await UserDAO.find_one_or_none(tg_id = message.from_user.id)

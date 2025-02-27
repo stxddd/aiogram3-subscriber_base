@@ -11,6 +11,7 @@ from bot.templates.user_templates.keyboards_templates import(
     six_month_text,
     twelve_month_text,
 ) 
+from bot.config import settings
 
 enter_os_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -26,10 +27,10 @@ enter_os_keyboard = InlineKeyboardMarkup(
 
 enter_period_keyboard= InlineKeyboardMarkup(
     inline_keyboard=[
-        [(InlineKeyboardButton(text=one_month_text, callback_data='1_150_connection_period'))],
-        [(InlineKeyboardButton(text=three_month_text, callback_data='3_400_connection_period'))],
-        [(InlineKeyboardButton(text=six_month_text, callback_data='6_750_connection_period'))],
-        [(InlineKeyboardButton(text=twelve_month_text, callback_data='12_1300_connection_period'))],
+        [(InlineKeyboardButton(text=one_month_text, callback_data=f'1_{settings.ONE_MONTH_PRICE}_connection_period'))],
+        [(InlineKeyboardButton(text=three_month_text, callback_data=f'3_{settings.THREE_MONTH_PRICE}_connection_period'))],
+        [(InlineKeyboardButton(text=six_month_text, callback_data=f'6_{settings.SIX_MONTH_PRICE}_connection_period'))],
+        [(InlineKeyboardButton(text=twelve_month_text, callback_data=f'12_{settings.ONE_YEAR_PRICE}_connection_period'))],
     ],
     resize_keyboard=True,
 )

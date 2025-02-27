@@ -1,3 +1,5 @@
+from bot.config import settings
+
 windows_os_text = "🖥 Windows"
 android_os_text = "📱Android"
 mac_os_text = "💻 MacOS"
@@ -9,7 +11,8 @@ get_instruction_text = "📘 Инструкции"
 renew_subscribtion_text = "💶 Продлить"
 my_connections_text = "🏠 Мои подключения"
 
-one_month_text = "1 мес. - 150₽"
-three_month_text = "3 мес. - 400₽"
-six_month_text = "🔥6 мес. - 750₽"
-twelve_month_text = "12 мес. - 1300₽"
+one_month_text = f"1 мес. - {settings.ONE_YEAR_PRICE}₽"
+three_month_text = f"3 мес. - {settings.THREE_MONTH_PRICE}₽"
+six_month_text = f"6 мес. - {settings.SIX_MONTH_PRICE}₽🔥"
+twelve_month_text = f"12 мес. - {settings.ONE_YEAR_PRICE}₽"
+
