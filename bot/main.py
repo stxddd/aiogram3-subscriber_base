@@ -41,6 +41,7 @@ from bot.handlers.user_handlers.marzban_handlers.get_marzban_request import rout
 from bot.handlers.user_handlers.instruction_handlers.get_instructions import router as get_instructions_router
 
 from bot.handlers.admin_handlers.get_clients_handlers.get_connections import router as get_connections_router
+from bot.handlers.admin_handlers.notification_handlers.mailing.send_notification_for_clients import router as send_notification_for_clients_router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -72,6 +73,7 @@ async def main():
         payment_didnt_completed_router,
         accept_marzban_client_router,
         reject_marzban_client_router,
+        send_notification_for_clients_router,
 
         handle_add_client_router,
         get_instructions_router
