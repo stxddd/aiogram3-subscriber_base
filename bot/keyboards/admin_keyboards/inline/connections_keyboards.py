@@ -9,7 +9,8 @@ from bot.templates.admin_templates.keyboards_templates import (
     back_text,
     page_num,
     get_marzban_link_text,
-    extend_text
+    extend_text,
+    delete_client_text
 )
 
 
@@ -61,6 +62,12 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
     if nav_buttons:
         keyboard.row(*nav_buttons) 
 
+    keyboard.row(
+        InlineKeyboardButton(
+            text=delete_client_text,
+            callback_data=f"prepare_to_delete_client_{client_id}",
+        )
+    )
     keyboard.row(
         InlineKeyboardButton(
             text=cancel_text,

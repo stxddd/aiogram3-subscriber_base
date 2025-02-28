@@ -119,6 +119,9 @@ def connection_info_message(connection, client_username): return f'👤 {client_
 def link_message(connection, username): return f'🔗 Ссылка для подключения @{username}:\n\n `{connection.marzban_link}`\n\n{connection.price}₽\n{format_date(connection.date_to)}'
 
 enter_message_for_mailing_message = "❔ Введите текст сообщения для рассылки."
+enter_query_text_message = "❔ Введите Username или TgID для поиска клиента."
+clients_by_query_are_missing_message = "❌ Клиентов по такому запросу нет."
+def clients_by_query_message(query, length): return f"✅ Клиентов по запросу {query}: {length}"
 
 def enter_code_for_delete_table(table_name):
     return f"❔ Введите код для удаления базы «{table_name}»"

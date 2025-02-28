@@ -79,6 +79,8 @@ async def handle_delete_table(callback: CallbackQuery, state: FSMContext):
 async def handle_delete_secret_key(message: Message, state: FSMContext):
     code = message.text
     
+    await state.clear()
+    
     if code != settings.CODE_KEY_FOR_DELETE:
         return await message.answer(incorrect_code_message)
     else:

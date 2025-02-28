@@ -36,7 +36,7 @@ async def actions_with_table(callback: CallbackQuery, state: FSMContext):
         table_name_message(table_name),
         reply_markup=await get_actions_with_table_keyboard(table_id=table_id),
     )
-
+    
     await state.update_data(
         table_id=table_id,
         table_name=table_name,

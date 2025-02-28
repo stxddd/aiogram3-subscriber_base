@@ -43,3 +43,4 @@ def connection_line_text(connection):
     return f"📡 {connection.os_name} | {format_date(connection.date_to)} | {connection.price}"
 
 mailing_text = "📧 Рассылка"
+searching_text = "🔍 Поиск"

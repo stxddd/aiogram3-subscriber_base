@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.sql import func
 from sqlalchemy import desc, cast, Date
+from sqlalchemy import cast, String
 
 from bot.database.dao.base import BaseDAO
 from bot.database.database import async_session_maker
@@ -10,16 +11,13 @@ from bot.database.clients.models import Client
 class ClientDAO(BaseDAO):
     model = Client
 
-    from sqlalchemy.future import select
-
-    # @classmethod
-    # async def count_all_prices(cls, table_id):
-    #     async with async_session_maker() as session:
-    #         query = select(func.sum(cls.model.price)).where(
-    #             cls.model.table_id == table_id
-    #         )
-    #         result = await session.execute(query)
-    #         total_sum = result.scalar() or 0
-    #         return total_sum
-
-
+    @classmethod
+    async def search_all(cls, query: str):
+        async with async_session_maker() as session:
+            stmt = select(cls.model).where(
+                cls.model.username.ilike(f"%{query}%") | 
+                cast(cls.model.tg_id, String).ilike(f"%{query}%")
+            )
+            
+            result = await session.execute(stmt)
+            return result.scalars().all()

@@ -13,8 +13,8 @@ from bot.templates.admin_templates.keyboards_templates import (
 )
 
 
-async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10):
-    clients = await ClientDAO.find_all(table_id=table_id)
+async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
+    
     total_clients = len(clients)
     total_pages = (total_clients + per_page - 1) // per_page 
 
@@ -65,9 +65,6 @@ async def get_clients_for_edit(table_id: int, page: int = 1, per_page: int = 10)
 
     keyboard.row(
         InlineKeyboardButton(
-                    text=delete_client_text,
-                    callback_data=f"prepare_to_delete_client_{client.id}",
-        ),        InlineKeyboardButton(
             text=cancel_text,
             callback_data="delete_last_message"
         )

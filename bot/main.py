@@ -11,19 +11,19 @@ from bot.handlers.base_handlers.start import router as base_commands_router
 from bot.handlers.admin_handlers.delete_handlers.delete_client import router as delete_client_router
 from bot.handlers.admin_handlers.delete_handlers.delete_table import router as delete_table_router
 
-from bot.handlers.admin_handlers.get_clients_handlers.get_clients import (
+from bot.handlers.admin_handlers.get_handlers.get_clients_handlers.get_clients import (
     router as edit_clients_data_router,
 )
-from bot.handlers.admin_handlers.edit_table_handlers.edit_table_name import (
+from bot.handlers.admin_handlers.edit_handlers.edit_table_name import (
     router as edit_table_name_router,
 )
-from bot.handlers.admin_handlers.get_handlers.get_actions_about_table import (
+from bot.handlers.admin_handlers.get_handlers.get_table_handlers.get_actions_about_table import (
     router as get_exel_table_by_id_router,
 )
 
-from bot.handlers.admin_handlers.get_handlers.get_tables import router as get_tables_router
+from bot.handlers.admin_handlers.get_handlers.get_table_handlers.get_tables import router as get_tables_router
 
-from bot.handlers.admin_handlers.post_handlers.create_table import router as create_table_router
+from bot.handlers.admin_handlers.create_handlers.create_table import router as create_table_router
 from bot.handlers.base_handlers.delete_last_message import (
     router as delete_last_message_router,
 )
@@ -34,8 +34,9 @@ from bot.handlers.admin_handlers.notification_handlers.marzban.reject_marzban_cl
 from bot.handlers.user_handlers.marzban_handlers.get_marzban_request import router as handle_add_client_router
 from bot.handlers.user_handlers.instruction_handlers.get_instructions import router as get_instructions_router
 
-from bot.handlers.admin_handlers.get_clients_handlers.get_connections import router as get_connections_router
+from bot.handlers.admin_handlers.get_handlers.get_clients_handlers.get_connections import router as get_connections_router
 from bot.handlers.admin_handlers.notification_handlers.mailing.send_notification_for_clients import router as send_notification_for_clients_router
+from bot.handlers.admin_handlers.search_handlers.search_client import router as search_client_router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -67,7 +68,9 @@ async def main():
         send_notification_for_clients_router,
 
         handle_add_client_router,
-        get_instructions_router
+        get_instructions_router,
+        
+        search_client_router,
     )
 
     await dp.start_polling(bot)

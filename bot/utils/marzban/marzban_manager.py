@@ -1,3 +1,4 @@
+import asyncio
 from random import randint
 from datetime import date, datetime
 
@@ -43,11 +44,6 @@ async def get_user(username: str):
             return None
     except:
         return None           
-       
- 
- 
-
-   
 
 
     

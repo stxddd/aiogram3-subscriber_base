@@ -36,9 +36,11 @@ async def handle_pagination(callback: CallbackQuery):
     match = re.match(EDIT_PAGE_PATTERN, callback.data)
     table_id = int(match.group(1))
     page = int(match.group(2))
+    
+    clients = await ClientDAO.find_all(table_id=table_id)
 
     await callback.message.edit_reply_markup(
-        reply_markup=await get_clients_for_edit(table_id=table_id, page=page)
+        reply_markup=await get_clients_for_edit(clients=clients, page=page)
     )
 
 
@@ -66,7 +68,7 @@ async def handle_get_clients(callback: CallbackQuery):
 
     await callback.message.answer(
         table_base_info_message(table_name=table_name, clients_count=clients_count, all_prices=0),
-        reply_markup=await get_clients_for_edit(table_id=table_id, page=1),
+        reply_markup=await get_clients_for_edit(clients = clients, page=1),
     )
 
 

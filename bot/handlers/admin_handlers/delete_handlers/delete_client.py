@@ -87,6 +87,8 @@ async def handle_delete_client(callback: CallbackQuery, state: FSMContext):
 async def handle_delete_secret_key(message: Message, state: FSMContext):
     code = message.text
     
+    await state.clear()
+    
     if code != settings.CODE_KEY_FOR_DELETE:
         return await message.answer(incorrect_code_message)
     else:
@@ -110,5 +112,5 @@ async def handle_delete_secret_key(message: Message, state: FSMContext):
 
         if not delete_client:
             return await message.answer(client_are_not_deleted_message(table_name=table_name, client=current_client))
-
+        
         return await message.answer(client_are_deleted_message(client=current_client, table_name=table_name, connections=connections))
