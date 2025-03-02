@@ -10,25 +10,61 @@ from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
 from bot.database.users.dao import UserDAO
 from bot.handlers.user_handlers.instruction_handlers.get_instructions import get_instruction
+from bot.keyboards.admin_keyboards.inline.notification_keyboards import get_marzban_access_keyboard
 from bot.keyboards.admin_keyboards.inline.table_keyboards import get_my_tables_for_marzban_keyboard
-from bot.templates.user_templates.message_templates import you_are_successfully_connected_message
+from bot.templates.user_templates.message_templates import you_are_successfully_connected_message, wait_for_admin_message
 from bot.utils.marzban.marzban_manager import create_user, get_user
 from bot.templates.admin_templates.errors_templates import(
     marzban_user_add_error,
     marzban_link_get_error
 )
 from bot.templates.admin_templates.errors_templates import adding_data_error
-from bot.templates.admin_templates.messages_templates import marzban_user_added_message, pick_table_for_client_message
+from bot.templates.admin_templates.messages_templates import marzban_user_added_message, pick_table_for_client_message, request_to_connect_message
 from bot.keyboards.user_keyboards.reply.main_keyboards import main_keyboard as user_main_keyboard
 from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard as admin_main_keyboard
 from bot.templates.user_templates.errors_templates import auth_error
 from bot.decorators.admin_required import admin_required
+from bot.templates.admin_templates.errors_templates import (
+    connection_dose_not_exists_error,
+    client_does_not_exists_error
+)
 
 router = Router()
 
 ACCEPT_MARZBAN_PATTERN = r"^accept_marzban_(\d+)$"
 GET_TABLE_FOR_CLIENT = r"get_(\d+)_for_marzban_client"
 
+CONNECT_PAYMENT_CHECK_COMPLETED = r"accept_connect_payment_check_completed_(\d+)_(\d+)"
+
+router = Router()
+
+@router.callback_query(F.data.regexp(CONNECT_PAYMENT_CHECK_COMPLETED))
+async def handle_payment_check_completed(callback: CallbackQuery):
+    await callback.answer()
+    
+    match = re.match(CONNECT_PAYMENT_CHECK_COMPLETED, callback.data)
+    connection_id = int(match.group(1))
+    key = int(match.group(2))
+
+    connection = await ConnectionDAO.find_by_id(model_id=connection_id)
+    if not connection:
+        return await callback.message.answer(connection_dose_not_exists_error)
+    
+    client = await ClientDAO.find_one_or_none(id = connection.client_id)
+    if not client:
+         return await callback.message.answer(client_does_not_exists_error)
+    
+    await callback.message.bot.send_message(
+        client.tg_id,
+        wait_for_admin_message
+    )
+    
+    return await callback.message.bot.send_message(
+        settings.ADMIN_TG_ID,
+        request_to_connect_message(username=client.username, connection=connection, key = key),
+        reply_markup=await get_marzban_access_keyboard(connection_id=connection_id)
+    )
+    
 
 @router.callback_query(F.data.regexp(ACCEPT_MARZBAN_PATTERN))
 @admin_required
@@ -56,8 +92,6 @@ async def handle_get_table_for_marzban_client(callback: CallbackQuery, state: FS
         reply_markup=await get_my_tables_for_marzban_keyboard(user_id = user.id),
     )
     
-    
-
 
 @router.callback_query(F.data.regexp(GET_TABLE_FOR_CLIENT))
 @admin_required

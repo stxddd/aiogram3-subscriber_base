@@ -1,22 +1,18 @@
-
-
-
 from bot.utils.data_processing.date_converter import format_date
-
 
 my_tables_text = "🪧 Базы"
 create_table_text = "➕ Добавить базу"
+mailing_text = "📧 Рассылка"
+searching_text = "🔍 Поиск"
 
-back_text = "Назад"
 cancel_text = "Отмена"
 
-download_text = "Скачать"
+download_text = "Получить"
 
-look_all_text = "Посмотреть"
+look_all_text = "Клиенты"
 delete_client_text = "Удалить клиента"
 delete_table_text = "Удалить базу"
 change_table_name_text = "Переименовать"
-
 
 paid_text = "Оплатил ✅"
 didnt_pay_text = "Не оплатил ❌"
@@ -39,8 +35,7 @@ reject_text = "❌ Отклонить"
 get_marzban_link_text = '🔗 Ключ'
 extend_text = '🔄 Продлить'
 
+send_text = '📧 Отправить'
+
 def connection_line_text(connection):
     return f"📡 {connection.os_name} | {format_date(connection.date_to)} | {connection.price}"
-
-mailing_text = "📧 Рассылка"
-searching_text = "🔍 Поиск"

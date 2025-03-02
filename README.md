@@ -1,8 +1,8 @@
 # **Project Overview**  
 **Aiogram + PostgreSQL (asyncpg + alembic)**  
 
----
 🤖 This bot (extension of the basic subscriber-base, which has full integration with the Marzban API) is capable of automatically connecting clients to a tunneled connection via your server for a certain period of time, on which Marzban has been installed. The administrator have access to all users and can distribute newsletters. Each individual user can't establish their own connections, subject to approval by the administrator.
+
 ---
 
 ## **Installation**  
@@ -29,7 +29,7 @@ THREE_MONTH_PRICE
 SIX_MONTH_PRICE
 ONE_YEAR_PRICE
 
-CODE_KEY_FOR_DELETE
+KEY_FOR_DELETE
 
 TZ=Europe/Moscow
 ```

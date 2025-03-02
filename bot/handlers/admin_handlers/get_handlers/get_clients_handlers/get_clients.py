@@ -7,7 +7,6 @@ from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
 from bot.database.tables.dao import TableDAO
 from bot.keyboards.admin_keyboards.inline.clients_keyboards import (
-    get_clients_data_unit_to_edit,
     get_clients_for_edit,
 )
 from bot.keyboards.admin_keyboards.inline.connections_keyboards import get_connections_to_edit
@@ -27,6 +26,7 @@ router = Router()
 EDIT_PAGE_PATTERN = r"^edit_page_(\d+)_(\d+)$"
 EDIT_CLIENT_PATTERN = r"^edit_client_(\d+)$"
 GET_CLIENT_TO_EDIT_PATTERN = r"^get_client_to_edit_(\d+)$"
+
 
 @router.callback_query(F.data.regexp(EDIT_PAGE_PATTERN))
 @admin_required
@@ -63,11 +63,9 @@ async def handle_get_clients(callback: CallbackQuery):
         return await callback.message.answer(
             table_has_no_clients_message(table_name=table_name)
         )
-
-    clients_count = len(clients)
-
+        
     await callback.message.answer(
-        table_base_info_message(table_name=table_name, clients_count=clients_count, all_prices=0),
+        table_base_info_message(table_name=table_name, clients_count=len(clients)),
         reply_markup=await get_clients_for_edit(clients = clients, page=1),
     )
 
@@ -92,7 +90,7 @@ async def handle_get_client(callback: CallbackQuery):
 
     table_name = table.name
     
-    connections = await ConnectionDAO.find_all(client_id=current_client.id)
+    connections = await ConnectionDAO.find_all_with_marzban_link(client_id=current_client.id)
 
     await callback.message.answer(
         one_client_message(client=current_client, table_name=table_name, connections = connections),

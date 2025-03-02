@@ -10,30 +10,28 @@ from bot.templates.admin_templates.keyboards_templates import (
     page_num,
     get_marzban_link_text,
     extend_text,
-    delete_client_text
 )
 
 
-
 async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int = 3):
-    connections = await ConnectionDAO.find_all(client_id=client_id)
+    connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client_id)
+    
     total_connections = len(connections)
     total_pages = (total_connections + per_page - 1) // per_page 
-
     start = (page - 1) * per_page
     end = start + per_page
     connection_page = connections[start:end]
-
+    
     keyboard = InlineKeyboardBuilder()
 
     for connection in connection_page:
-        
-        keyboard.row(
-            InlineKeyboardButton(
-                text=connection_line_text(connection),
-                callback_data=f"get_connection_to_edit_{connection.id}",
+        if connection.marzban_link:
+            keyboard.row(
+                InlineKeyboardButton(
+                    text=connection_line_text(connection),
+                    callback_data=f"get_connection_to_edit_{connection.id}",
+                )
             )
-        )
 
     nav_buttons = []
     if page > 1:
@@ -64,18 +62,13 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
 
     keyboard.row(
         InlineKeyboardButton(
-            text=delete_client_text,
-            callback_data=f"prepare_to_delete_client_{client_id}",
-        )
-    )
-    keyboard.row(
-        InlineKeyboardButton(
             text=cancel_text,
             callback_data="delete_last_message"
         )
     )
 
     return keyboard.as_markup()
+
 
 async def get_connection_info_keyboard(connection_id: int):
     return InlineKeyboardMarkup(

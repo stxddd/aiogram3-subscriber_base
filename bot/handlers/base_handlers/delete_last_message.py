@@ -4,8 +4,9 @@ from aiogram.types import CallbackQuery
 
 router = Router()
 
+DELETE_LAST_MESSAGE_PATTERN = "delete_last_message"
 
-@router.callback_query(F.data == "delete_last_message")
+@router.callback_query(F.data == DELETE_LAST_MESSAGE_PATTERN)
 async def handle_delete_last_message(callback: CallbackQuery, state: FSMContext):
     "Удаляет последнее сообщение и очищает state"
     await state.clear()

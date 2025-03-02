@@ -34,3 +34,13 @@ enter_period_keyboard= InlineKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+
+enter_extend_period_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [(InlineKeyboardButton(text=one_month_text, callback_data=f'1_{settings.ONE_MONTH_PRICE}_connection_period_extend'))],
+        [(InlineKeyboardButton(text=three_month_text, callback_data=f'3_{settings.THREE_MONTH_PRICE}_connection_period_extend'))],
+        [(InlineKeyboardButton(text=six_month_text, callback_data=f'6_{settings.SIX_MONTH_PRICE}_connection_period_extend'))],
+        [(InlineKeyboardButton(text=twelve_month_text, callback_data=f'12_{settings.ONE_YEAR_PRICE}_connection_period_extend'))],
+    ],
+    resize_keyboard=True,
+)

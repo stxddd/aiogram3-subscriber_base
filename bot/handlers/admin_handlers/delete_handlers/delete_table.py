@@ -57,7 +57,6 @@ async def handle_prepate_to_delete_table(callback: CallbackQuery, state: FSMCont
 @router.callback_query(F.data.regexp(DELETE_TABLE_PATTERN))
 @admin_required
 async def handle_delete_table(callback: CallbackQuery, state: FSMContext):
-    
     await callback.answer()
     match = re.match(DELETE_TABLE_PATTERN, callback.data)
     table_id = int(match.group(1))
@@ -79,10 +78,8 @@ async def handle_delete_table(callback: CallbackQuery, state: FSMContext):
 async def handle_delete_secret_key(message: Message, state: FSMContext):
     code = message.text
     
-    await state.clear()
-    
-    if code != settings.CODE_KEY_FOR_DELETE:
-        return await message.answer(incorrect_code_message)
+    if code != settings.KEY_FOR_DELETE:
+        await message.answer(incorrect_code_message)
     else:
         data = await state.get_data()
         table_id = data.get("table_id")
@@ -93,6 +90,6 @@ async def handle_delete_secret_key(message: Message, state: FSMContext):
         delete_table = await TableDAO.delete(id=table_id)
 
         if not delete_table:
-            return await message.answer(table_are_not_deleted_message(table_name))
+            await message.answer(table_are_not_deleted_message(table_name))
 
-        return await message.answer(table_are_deleted_message(table_name))
+        await message.answer(table_are_deleted_message(table_name))

@@ -2,7 +2,7 @@ from aiogram.utils.markdown import hbold, hitalic
 
 from bot.utils.data_processing.date_converter import format_date
 
-admin_welcome_message = "Привет!🤖 \n\n✅ Данный Бот поможет содержать базу клиентов Вашего прокси-сервера."
+admin_welcome_message = "Привет!🤖 \n\n✅ Данный Бот поможет содержать базу клиентов Вашего сервера."
 action_is_cancel_text = "❌ Действие отменено."
 
 enter_table_name_message = "❔Введите название Базы (до 32 символов)."
@@ -37,6 +37,10 @@ def table_name_changed_successfully_message(table_name, current_table_name):
 def table_has_no_clients_message(table_name):
     return f"❌ В базе «{table_name}» нет данных!"
 
+def table_base_info_message(table_name, clients_count):
+    return f"{table_name_message(table_name)}\n\nКлиентов: {clients_count}"
+
+
 def one_client_message(client, table_name, connections):
     text = (
         f"Выбран клиент Базы «{hitalic(table_name)}»\n"
@@ -44,7 +48,7 @@ def one_client_message(client, table_name, connections):
         f"👤 {hbold(client.username)} \n📡 {len(connections)}\n"
     )
 
-    text += f"{'➖' * 12}\n" "Список его подключений:"
+    text += f"{'➖' * 12}\n" 
 
     return text
 
@@ -84,10 +88,6 @@ def client_are_deleted_message(table_name, client, connections):
 
     return text
 
-def table_base_info_message(table_name, clients_count, all_prices):
-    return f"{table_name_message(table_name)}\n\nКлиентов: {clients_count}\nОбщий доход: {all_prices}"
-
-
 def client_date_to_expired(client_name, date_to):
     return f"⚠ {client_name} | {format_date(date_to)} необходимо внести оплату!"
 
@@ -102,7 +102,7 @@ def payment_didnt_completed_message(client_name, days_late):
 
 anti_flood_message = "⛔ Вы слишком быстро отправляете сообщения! Подождите немного."
 
-def request_to_connect_message(username, date_to): return f"✅ Новая заявка на подключение к серверу\n\n{username} | По: {format_date(date_to)}"
+def request_to_connect_message(username, connection, key): return f"✅ Новая заявка на подключение к серверу\n\n@{username} | {format_date(connection.date_to)} | {connection.price}\n\nКод: {key}"
 
 def marzban_user_added_message(username, date_to): return f"✅ Клиент {username} успешно подключен.\n\nПо: {format_date(date_to)}"
 
@@ -110,7 +110,7 @@ def marzban_user_rejected_message(username): return f"❌ Клиенту {userna
 
 def pick_table_for_client_message(username): return f'✅ Выберите базу, для клиента @{username}'
 
-client_dose_not_have_connections_message ='❌ У клиента нет подключений'
+def client_dose_not_have_connections_message(username): return f'❌ У клиента @{username} нет подключений'
 
 def client_info_message(username, connections_count): return f'👤 {username} | 📡 {connections_count}'
 
@@ -130,3 +130,13 @@ def enter_code_for_delete_client(client_name):
     return f"❔ Введите код для удаления @{client_name}"
 
 incorrect_code_message = "❌ Неверный код!"
+
+def are_you_sure_to_send_mailing_message(message): return f"❔ Вы уверены, что хотите отправить сообщение?\n\n{message}"
+
+def client_wants_to_extend_message(username, connection, new_date_to, old_price, new_price, key): return f'⚠ Клиент @{username} хочет продлить\n\n {connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(connection.date_to)}\n\nДо {format_date(new_date_to)} \n\nКод: {key}\n\nПродолжить?'
+
+def successful_extension_message(username, connection, new_date_to, old_date_to, old_price, new_price): return f"✅ Вы успешно продлили подключение @{username}\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
+
+def successful_extension_admin_message(connection, username, new_date_to, old_date_to, old_price, new_price):return f"✅ Подключение @{username} продленно.\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
+
+def connection_successfuly_created(username, connection): return f'✅ Клиент @{username} успешно подключен\n\n{connection.os_name} | {connection.date_to} | {connection.price}'

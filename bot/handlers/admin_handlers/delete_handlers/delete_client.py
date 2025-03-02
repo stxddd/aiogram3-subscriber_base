@@ -51,7 +51,7 @@ async def handle_prepare_to_delete_client(callback: CallbackQuery, state: FSMCon
 
     table_name = table.name
 
-    connections = await ConnectionDAO.find_all(client_id=current_client.id)
+    connections = await ConnectionDAO.find_all_with_marzban_link(client_id=current_client.id)
     
     await state.update_data(client_id=client_id)
     
@@ -87,17 +87,15 @@ async def handle_delete_client(callback: CallbackQuery, state: FSMContext):
 async def handle_delete_secret_key(message: Message, state: FSMContext):
     code = message.text
     
-    await state.clear()
-    
-    if code != settings.CODE_KEY_FOR_DELETE:
-        return await message.answer(incorrect_code_message)
+    if code != settings.KEY_FOR_DELETE:
+        await message.answer(incorrect_code_message)
     else:
         data = await state.get_data()
         client_id = data.get("client_id")
         
         current_client = await ClientDAO.find_by_id(client_id)
         if not current_client:
-            return await message.answer(client_does_not_exists_error)
+            await message.answer(client_does_not_exists_error)
         
         connections = await ConnectionDAO.find_all(client_id=current_client.id)
         for connection in connections:
@@ -105,12 +103,13 @@ async def handle_delete_secret_key(message: Message, state: FSMContext):
 
         table = await TableDAO.find_one_or_none(id=current_client.table_id)
         if not table:
-            return await message.answer(table_dose_not_exists_error)
+            await message.answer(table_dose_not_exists_error)
 
         table_name = table.name
         delete_client = await ClientDAO.delete(id=client_id)
 
         if not delete_client:
-            return await message.answer(client_are_not_deleted_message(table_name=table_name, client=current_client))
+            await message.answer(client_are_not_deleted_message(table_name=table_name, client=current_client))
         
-        return await message.answer(client_are_deleted_message(client=current_client, table_name=table_name, connections=connections))
+        await message.answer(client_are_deleted_message(client=current_client, table_name=table_name, connections=connections))
+        

@@ -43,4 +43,3 @@ async def handle_send_mailing(message: Message, state: FSMContext):
         return await message.answer(clients_by_query_are_missing_message)
     
     return await message.answer(clients_by_query_message(query=query, length=len(clients)), reply_markup=await get_clients_for_edit(clients))
-

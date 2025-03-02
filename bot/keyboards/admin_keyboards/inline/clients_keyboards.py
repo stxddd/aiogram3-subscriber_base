@@ -2,7 +2,6 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.database.connections.dao import ConnectionDAO
-from bot.database.clients.dao import ClientDAO
 from bot.templates.admin_templates.keyboards_templates import (
     cancel_text,
     delete_client_text,
@@ -25,10 +24,10 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
     keyboard = InlineKeyboardBuilder()
 
     for client in clients_page:
-        connections = await ConnectionDAO.find_all(client_id=client.id)
+        connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client.id)
         keyboard.row(
             InlineKeyboardButton(
-                text=get_clients_for_edit_text(
+                text= get_clients_for_edit_text(
                     client_name=client.username,
                     connections_count = len(connections)
                 ),
@@ -41,7 +40,7 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
         nav_buttons.append(
             InlineKeyboardButton(
                 text=back_text,
-                callback_data=f"edit_client_page_{table_id}_{page - 1}"
+                callback_data=f"edit_client_page_{client.table_id}_{page - 1}"
             )
         )
     
@@ -56,7 +55,7 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
         nav_buttons.append(
             InlineKeyboardButton(
                 text=forward_text,
-                callback_data=f"edit_client_page_{table_id}_{page + 1}"
+                callback_data=f"edit_client_page_{client.table_id}_{page + 1}"
             )
         )
 
@@ -71,6 +70,7 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
     )
 
     return keyboard.as_markup()
+
 
 async def get_clients_data_unit_to_edit(client_id: int):
     return InlineKeyboardMarkup(

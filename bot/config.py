@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     TOKEN: str
     ADMIN_TG_ID: int 
+    ADMIN_USERNAME: str
     
     MARZBAN_URL: str
     MARZBAN_USER: str
@@ -17,13 +18,18 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
 
     TZ: str
+    
+    HOUR_TO_RECEIVE_NOTIFICATIONS: str
+    MINUTE_TO_RECEIVE_NOTIFICATIONS: str
 
     ONE_MONTH_PRICE: int
     THREE_MONTH_PRICE: int
     SIX_MONTH_PRICE: int
     ONE_YEAR_PRICE: int
     
-    CODE_KEY_FOR_DELETE: str
+    KEY_FOR_DELETE: str
+    
+    PAYMENT_LINK: str
 
     @property
     def DATABASE_URL(self) -> str:

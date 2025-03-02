@@ -10,11 +10,10 @@ from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
 from bot.database.users.dao import UserDAO
-from bot.keyboards.admin_keyboards.inline.notification_keyboards import get_marzban_access_keyboard
-from bot.templates.user_templates.message_templates import wait_for_admin_message, marzban_day_limit_message
+from bot.keyboards.user_keyboards.inline.payment_keyboards import get_check_pay_connect_keyboard
+from bot.templates.user_templates.message_templates import marzban_day_limit_message, wait_for_payment_message
 from bot.templates.user_templates.errors_templates import added_connection_error
 from bot.templates.user_templates.keyboards_templates import get_new_connection_text
-from bot.templates.admin_templates.messages_templates import request_to_connect_message
 from bot.keyboards.user_keyboards.inline.marzban_user_info_keyboards import enter_os_keyboard,enter_period_keyboard
 from bot.templates.user_templates.message_templates import enter_os_message, enter_period_message
 
@@ -49,7 +48,7 @@ async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(lambda c: c.data.endswith(ADD_CONNECTION_OS_PATTERN))
 async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
-    "Ловит выбор ОС, сохраняет в state, отправляет запрос на добавление подключения"
+    "Ловит выбор ОС, сохраняет в state, отправляет запрос на оплату"
     
     await callback.answer()
     
@@ -96,11 +95,13 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
         name = connection_name
     )    
     
+    connection = await ConnectionDAO.find_by_id(added_connection.id)
+    
     await callback.message.delete()
-    await callback.message.answer(wait_for_admin_message)
-
-    return await callback.message.bot.send_message(
-        settings.ADMIN_TG_ID, 
-        request_to_connect_message(username = username, date_to = date_to), 
-        reply_markup=await get_marzban_access_keyboard(connection_id=added_connection.id)
+    
+    key = randint(1000,9999)
+    
+    await callback.message.answer(
+        wait_for_payment_message(connection = connection, price = price, key = key),
+        reply_markup= await get_check_pay_connect_keyboard(connection_id = connection.id, key = key)    
     )

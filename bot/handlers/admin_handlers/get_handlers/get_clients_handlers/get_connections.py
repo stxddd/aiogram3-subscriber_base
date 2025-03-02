@@ -29,11 +29,10 @@ router = Router()
 EDIT_CONNECTION_PAGE_PATTERN = r"^edit_connections_page_(\d+)_(\d+)$"
 EDIT_CONNECTION_PATTERN = r"^get_connection_(\d+)$"
 GET_CONNECTION_TO_EDIT_PATTERN = r"^get_connection_to_edit_(\d+)$"
-
 GET_CONNECTION_LINK_PATTERN = r"^get_marzban_link_(\d+)$"
 
+
 @router.callback_query(F.data.regexp(EDIT_CONNECTION_PAGE_PATTERN))
-@admin_required
 async def handle_pagination(callback: CallbackQuery):
     await callback.answer()
 
@@ -45,9 +44,9 @@ async def handle_pagination(callback: CallbackQuery):
         reply_markup=await get_connections_to_edit(client_id=client_id, page=page)
     )
 
+
 @router.message(F.text == my_connections_text)
 @router.callback_query(F.data.regexp(EDIT_CONNECTION_PATTERN))
-@admin_required
 async def handle_get_clients(message: Message):
 
     client = await ClientDAO.find_one_or_none(tg_id=message.from_user.id)
@@ -57,7 +56,7 @@ async def handle_get_clients(message: Message):
 
     client_username = client.username
     
-    connections = await ConnectionDAO.find_all(client_id=client.id)
+    connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client.id)
 
     if not connections:
         return await message.answer(
@@ -73,7 +72,6 @@ async def handle_get_clients(message: Message):
 
 
 @router.callback_query(F.data.regexp(GET_CONNECTION_TO_EDIT_PATTERN))
-@admin_required
 async def handle_get_connection_to_edit(callback: CallbackQuery):
     await callback.answer()
 
@@ -97,7 +95,6 @@ async def handle_get_connection_to_edit(callback: CallbackQuery):
 
 
 @router.callback_query(F.data.regexp(GET_CONNECTION_LINK_PATTERN))
-@admin_required
 async def handle_get_link(callback: CallbackQuery):
     await callback.answer()
     

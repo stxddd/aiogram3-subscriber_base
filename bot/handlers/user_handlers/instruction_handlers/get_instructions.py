@@ -5,7 +5,6 @@ from bot.database.users.dao import UserDAO
 from bot.templates.user_templates.keyboards_templates import get_instruction_text
 from bot.templates.user_templates.message_templates import get_instruction_os_message
 from bot.keyboards.user_keyboards.inline.instruction_keyboards import get_instruction_by_os_keyboard
-from bot.keyboards.user_keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.user_templates.keyboards_templates import (
     android_os_text,
     android_tv_os_text,
