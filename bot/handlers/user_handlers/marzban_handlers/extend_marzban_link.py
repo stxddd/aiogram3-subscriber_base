@@ -16,7 +16,7 @@ from bot.templates.admin_templates.errors_templates import (
     client_does_not_exists_error
 )
 from bot.keyboards.user_keyboards.inline.marzban_user_info_keyboards import enter_extend_period_keyboard
-from bot.templates.user_templates.message_templates import enter_period_message, wait_for_payment_message
+from bot.templates.user_templates.message_templates import enter_period_message, wait_for_extend_payment_message
 
 router = Router()
 
@@ -57,19 +57,17 @@ async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
     date_to_datetime = datetime.combine(connection.date_to, datetime.min.time())
     new_date_to = date_to_datetime + relativedelta(months=int(months))
 
-    old_price = connection.price
     new_price = price
 
     client = await ClientDAO.find_one_or_none(tg_id = callback.from_user.id)
     if not client:
          return await callback.message.answer(client_does_not_exists_error)
     
-    
     await callback.message.delete()
     
     key = randint(1000,9999)
     
     await callback.message.answer(
-        wait_for_payment_message(connection = connection, price = price, key = key),
+        wait_for_extend_payment_message(connection = connection, price = price, key = key, new_date_to = new_date_to),
         reply_markup= await get_check_pay_keyboard(connection_id = connection.id, new_price = new_price, new_months = months, key = key)    
     )

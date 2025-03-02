@@ -7,7 +7,10 @@ welcome_message = "Привет 🤖\n\n✅ Выбери, что хочешь с
 
 enter_os_message = "Выбери свою операционную систему."
 
-def wait_for_payment_message(connection, price, key: int): return f"✅ Оплатите услугу {connection.os_name} \n\n{settings.PAYMENT_LINK} \n\n❗️Сумма: {price}\n❗️В коментарии укажите: {key}\n\n"
+def wait_for_payment_message(connection, price, key: int): return f"✅ Оплатите подключение \n\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} \n\nСсылка на оплату:\n{settings.PAYMENT_LINK} \n\n❗️Сумма: {price}\n❗️В коментарии укажите: {key}\n\n"
+
+def wait_for_extend_payment_message(connection, price, new_date_to, key: int): return f"✅ Оплатите продление \n\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} \nДо {format_date(new_date_to)}\n\nСсылка на оплату:\n{settings.PAYMENT_LINK} \n\n❗️Сумма: {price}\n❗️В коментарии укажите: {key}\n\n"
+
 
 wait_for_admin_message = "✅ Дождитесь, когда администатор одобрит заявку."
 
@@ -64,4 +67,4 @@ enter_period_message = '⚙️ Выберите период подписки.'
 
 def you_are_successfully_connected_message(date_to): return f'✅ Вы успешно подключены до {format_date(date_to)}'
 
-def you_need__to_pay_message(connection): return f'Завтра истекает срок действия вашего подключения\n\n{connection.os} | {connection.price} | {connection.date_to}\n\nЧтобы продлить:\n{my_connections_text} -> {connection.os} | {connection.price} | {connection.date_to} -> {renew_subscribtion_text}'
+def you_need_to_pay_message(connection): return f'⚠ Скоро истекает срок действия вашего подключения\n\n{connection.os_name} | {connection.price} | {format_date(connection.date_to)}\n\nЧтобы продлить:\n\n{my_connections_text} ->\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} ->\n{renew_subscribtion_text}'

@@ -135,8 +135,8 @@ def are_you_sure_to_send_mailing_message(message): return f"❔ Вы увере�
 
 def client_wants_to_extend_message(username, connection, new_date_to, old_price, new_price, key): return f'⚠ Клиент @{username} хочет продлить\n\n {connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(connection.date_to)}\n\nДо {format_date(new_date_to)} \n\nКод: {key}\n\nПродолжить?'
 
-def successful_extension_message(username, connection, new_date_to, old_date_to, old_price, new_price): return f"✅ Вы успешно продлили подключение @{username}\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
+def successful_extension_message(username, connection, new_date_to, old_date_to, old_price, new_price): return f"✅ Подключение продленно.\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
 
-def successful_extension_admin_message(connection, username, new_date_to, old_date_to, old_price, new_price):return f"✅ Подключение @{username} продленно.\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
+def successful_extension_admin_message(connection, username, new_date_to, old_date_to, old_price, new_price):return f"✅ Вы успешно продлили подключение @{username}\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
 
 def connection_successfuly_created(username, connection): return f'✅ Клиент @{username} успешно подключен\n\n{connection.os_name} | {connection.date_to} | {connection.price}'

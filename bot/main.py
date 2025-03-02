@@ -34,12 +34,12 @@ from bot.handlers.admin_handlers.search_handlers.search_client import router as 
 from bot.handlers.user_handlers.marzban_handlers.extend_marzban_link import router as extend_marzban_link_router
 from bot.handlers.admin_handlers.notification_handlers.marzban.accept_extend_connection import router as accept_extend_connection_router
 from bot.handlers.admin_handlers.notification_handlers.marzban.reject_extend_connection import router as reject_extend_connection_router
+from bot.utils.notifications.payment_notification import check_expired_clients
 
 logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-
     bot = Bot(token=settings.TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
@@ -74,6 +74,7 @@ async def main():
         reject_extend_connection_router,
     )
 
+    asyncio.create_task(check_expired_clients(bot))
     await dp.start_polling(bot)
 
 

@@ -53,6 +53,8 @@ async def handle_payment_check_completed(callback: CallbackQuery):
     client = await ClientDAO.find_one_or_none(id = connection.client_id)
     if not client:
          return await callback.message.answer(client_does_not_exists_error)
+     
+    await callback.message.delete()
     
     await callback.message.bot.send_message(
         client.tg_id,

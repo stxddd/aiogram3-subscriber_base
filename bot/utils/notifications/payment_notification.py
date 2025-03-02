@@ -1,52 +1,33 @@
-# import asyncio
-# from datetime import datetime, timedelta
+import asyncio
+from datetime import datetime, timedelta
 
-# from sqlalchemy import select
+from bot.config import settings
+from bot.database.clients.dao import ClientDAO
+from bot.database.connections.dao import ConnectionDAO
 
-# from bot.config import settings
-# from bot.database.connections.dao import ConnectionDAO
-# from bot.database.database import async_session_maker
-# from bot.database.clients.models import Client
-# from bot.database.connections.models import Connection
-# from bot.database.users.dao import UserDAO
-# from bot.utils.messages import client_date_to_expired  # Убедись, что этот импорт корректен
-# from bot.keyboards.inline import get_pay_info  # Убедись, что этот импорт корректен
+from bot.templates.user_templates.message_templates import you_need_to_pay_message
 
+async def check_expired_clients(bot):
+    while True:
+        now = datetime.now().replace(
+            hour=settings.HOUR_TO_RECEIVE_NOTIFICATIONS,
+            minute=settings.MINUTE_TO_RECEIVE_NOTIFICATIONS,
+            second=55,
+            microsecond=0,
+        )
+        await asyncio.sleep((now - datetime.now()).total_seconds() % 86400)
+        
+        connections = await ConnectionDAO.find_all()
+        today = datetime.today().date()
+        
+        for connection in connections:
+            if connection.date_to - today <= timedelta(days=1):
+                client = await ClientDAO.find_one_or_none(id=connection.client_id)
+                if client:
+                    await bot.send_message(
+                        client.tg_id,
+                        text=you_need_to_pay_message(connection=connection),
+                    )
 
-# async def check_expired_clients(bot):
-#     while True:
+        await asyncio.sleep(86400)  
 
-#         now = datetime.now()
-#         target_time = now.replace(
-#             hour=settings.HOUR_TO_RECEIVE_NOTIFICATIONS,
-#             minute=settings.MINUTE_TO_RECEIVE_NOTIFICATIONS,
-#             second=0,
-#             microsecond=0,
-#         )
-
-#         if now > target_time:
-#             target_time += timedelta(days=1)
-
-#         await asyncio.sleep((target_time - now).total_seconds())
-
-#         users = await UserDAO.find_all()
-
-#         async with async_session_maker() as session:
-#             today = datetime.today().date()
-#             for user in users:
-#                 query = (
-#                     select(Connection, Client)
-#                     .join(Client, Connection.client_id == Client.id)
-#                     .where(Client.tg_id == user.tg_id)
-#                 )
-#                 result = await session.execute(query)
-#                 connections = result.scalars().all()
-
-#                 for connection in connections:
-#                     client = await ConnectionDAO.find_one_or_none(id=connection.client_id)
-#                     if connection.date_to and connection.date_to - today == timedelta(days=1):
-#                         message = await bot.send_message(
-#                             client.tg_id,
-#                         )
-
-#         await asyncio.sleep(86400)  

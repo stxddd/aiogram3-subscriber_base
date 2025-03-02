@@ -8,7 +8,7 @@ android_tv_os_text = "📺 AndroidTV"
 
 get_new_connection_text = "📡 Подключиться"
 get_instruction_text = "📘 Инструкции"
-renew_subscribtion_text = "💶 Продлить"
+renew_subscribtion_text = "🔄 Продлить"
 my_connections_text = "🏠 Мои подключения"
 
 one_month_text = f"1 мес. - {settings.ONE_MONTH_PRICE}₽"

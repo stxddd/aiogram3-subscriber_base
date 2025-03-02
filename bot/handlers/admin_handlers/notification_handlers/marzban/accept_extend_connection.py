@@ -46,6 +46,8 @@ async def handle_payment_check_completed(callback: CallbackQuery):
     date_to_datetime = datetime.combine(connection.date_to, datetime.min.time())
     new_date_to = date_to_datetime + relativedelta(months=int(new_months))
     
+    await callback.message.delete()
+    
     await callback.message.bot.send_message(
         client.tg_id,
         wait_for_admin_message
