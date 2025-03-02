@@ -8,8 +8,7 @@ services:
     depends_on:
       - db
     restart: always
-    ports:
-      - "5000:5000"
+    network_mode: host
 
   db:
     image: postgres:17
