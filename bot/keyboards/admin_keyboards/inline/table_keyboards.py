@@ -61,7 +61,7 @@ async def get_edit_actions_with_table_keyboard(table_id: int):
             ],
             [
                 InlineKeyboardButton(
-                    text=cancel_text, callback_data=f"delete_last_message"
+                    text=cancel_text, callback_data="delete_last_message"
                 )
             ],
         ]

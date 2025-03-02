@@ -46,7 +46,6 @@ ADD_CONNECTION_PATTERN = '_get_instruction'
 
 @router.callback_query(lambda c: c.data.endswith(ADD_CONNECTION_PATTERN))
 async def handle_get_instruction(callback: CallbackQuery):
-    "Отправляет инструкцию по выбранной ОС"
     await callback.answer()
 
     user_os = callback.data.split("_")[0] 

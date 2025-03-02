@@ -1,6 +1,4 @@
 from sqlalchemy import select
-from sqlalchemy.sql import func
-from sqlalchemy import desc, cast, Date
 from sqlalchemy import cast, String
 
 from bot.database.dao.base import BaseDAO

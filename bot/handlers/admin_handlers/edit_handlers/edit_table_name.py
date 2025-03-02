@@ -11,7 +11,7 @@ from bot.keyboards.admin_keyboards.inline.utils_keyboards import cancel_delete_l
 from bot.keyboards.admin_keyboards.reply.main_keyboards import main_keyboard
 from bot.templates.admin_templates.errors_templates import (
     name_so_long_error,
-    table_dose_not_exists_error,
+    table_does_not_exist_error,
     table_name_not_changed_error,
 )
 from bot.templates.admin_templates.messages_templates import (
@@ -34,7 +34,6 @@ EDIT_TABLE_NAME_PATTERN = r"^edit_name_(\d+)$"
 @router.callback_query(F.data.regexp(EDIT_TABLE_NAME_PATTERN))
 @admin_required
 async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
-    """Ловит команду на изменение имени Базы, уточняет новое имя."""
     await callback.answer()
 
     match = re.match(EDIT_TABLE_NAME_PATTERN, callback.data)
@@ -43,7 +42,7 @@ async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
     table = await TableDAO.find_one_or_none(id=table_id)
 
     if not table:
-        return await callback.message.answer(table_dose_not_exists_error)
+        return await callback.message.answer(table_does_not_exist_error)
 
     table_name = table.name
 
@@ -63,7 +62,6 @@ async def handle_edit_table_name(callback: CallbackQuery, state: FSMContext):
 @router.message(StateFilter(Form.waiting_for_new_table_name_data))
 @admin_required
 async def handle_table_name(message: Message, state: FSMContext):
-    """Переименовывает базу"""
     new_table_name = message.text.strip()
 
     if not is_valid_name(new_table_name):
@@ -77,11 +75,11 @@ async def handle_table_name(message: Message, state: FSMContext):
 
     if not current_table:
         return message.answer(table_name_not_changed_error(table_name=table_name))
-    
+
     updated_table = await TableDAO.update(model_id=table_id, name=new_table_name)
     if not updated_table:
         return message.answer(table_name_not_changed_error(table_name=table_name))
-    
+
     await state.clear()
     return await message.answer(
         table_name_changed_successfully_message(
@@ -89,5 +87,3 @@ async def handle_table_name(message: Message, state: FSMContext):
         ),
         reply_markup=main_keyboard,
     )
-
-   

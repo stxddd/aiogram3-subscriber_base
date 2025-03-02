@@ -17,7 +17,7 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
     connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client_id)
     
     total_connections = len(connections)
-    total_pages = (total_connections + per_page - 1) // per_page 
+    total_pages = (total_connections + per_page - 1) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     connection_page = connections[start:end]
@@ -38,14 +38,14 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
         nav_buttons.append(
             InlineKeyboardButton(
                 text=back_text,
-                callback_data=f"edit_connections_page_{client_id}_{page - 1}"
+                callback_data=f"edit_connections_page_{client_id}_{page - 1}",
             )
         )
     
     nav_buttons.append(
         InlineKeyboardButton(
             text=page_num(page, total_pages),
-            callback_data="noop"  
+            callback_data="noop",
         )
     )
     
@@ -53,17 +53,17 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
         nav_buttons.append(
             InlineKeyboardButton(
                 text=forward_text,
-                callback_data=f"edit_connections_page_{client_id}_{page + 1}"
+                callback_data=f"edit_connections_page_{client_id}_{page + 1}",
             )
         )
 
     if nav_buttons:
-        keyboard.row(*nav_buttons) 
+        keyboard.row(*nav_buttons)
 
     keyboard.row(
         InlineKeyboardButton(
             text=cancel_text,
-            callback_data="delete_last_message"
+            callback_data="delete_last_message",
         )
     )
 

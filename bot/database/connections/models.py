@@ -13,4 +13,3 @@ class Connection(Base):
     marzban_link = Column(String, nullable=True)
     date_to = Column(Date, nullable=False)
     price = Column(Integer, default=0)
-

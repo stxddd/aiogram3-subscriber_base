@@ -13,9 +13,8 @@ from bot.templates.admin_templates.keyboards_templates import (
 
 
 async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
-    
     total_clients = len(clients)
-    total_pages = (total_clients + per_page - 1) // per_page 
+    total_pages = (total_clients + per_page - 1) // per_page
 
     start = (page - 1) * per_page
     end = start + per_page
@@ -27,9 +26,9 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
         connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client.id)
         keyboard.row(
             InlineKeyboardButton(
-                text= get_clients_for_edit_text(
+                text=get_clients_for_edit_text(
                     client_name=client.username,
-                    connections_count = len(connections)
+                    connections_count=len(connections),
                 ),
                 callback_data=f"get_client_to_edit_{client.id}",
             )
@@ -40,32 +39,32 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
         nav_buttons.append(
             InlineKeyboardButton(
                 text=back_text,
-                callback_data=f"edit_client_page_{client.table_id}_{page - 1}"
+                callback_data=f"edit_client_page_{client.table_id}_{page - 1}",
             )
         )
-    
+
     nav_buttons.append(
         InlineKeyboardButton(
             text=page_num(page, total_pages),
-            callback_data="noop"  
+            callback_data="noop",
         )
     )
-    
+
     if page < total_pages:
         nav_buttons.append(
             InlineKeyboardButton(
                 text=forward_text,
-                callback_data=f"edit_client_page_{client.table_id}_{page + 1}"
+                callback_data=f"edit_client_page_{client.table_id}_{page + 1}",
             )
         )
 
     if nav_buttons:
-        keyboard.row(*nav_buttons) 
+        keyboard.row(*nav_buttons)
 
     keyboard.row(
         InlineKeyboardButton(
             text=cancel_text,
-            callback_data="delete_last_message"
+            callback_data="delete_last_message",
         )
     )
 

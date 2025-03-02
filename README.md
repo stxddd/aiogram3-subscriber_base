@@ -12,6 +12,7 @@ Set the following environment variables:
 ```bash
 TOKEN
 ADMIN_TG_ID
+ADMIN_USERNAME
 
 MARZBAN_URL
 MARZBAN_USER
@@ -30,6 +31,8 @@ SIX_MONTH_PRICE
 ONE_YEAR_PRICE
 
 KEY_FOR_DELETE
+
+PAYMENT_LINK
 
 TZ=Europe/Moscow
 ```

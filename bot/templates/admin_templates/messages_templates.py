@@ -8,7 +8,7 @@ action_is_cancel_text = "❌ Действие отменено."
 enter_table_name_message = "❔Введите название Базы (до 32 символов)."
 pick_table_for_download_message = "❔Выберите базу, которую хотите скачать."
 our_tables_message = "✅ Ваши Базы"
-table_are_missing_message = "❌ В настоящие время у Вас нет баз."
+table_are_missing_message = "❌ В настоящее время у Вас нет баз.."
 
 
 def are_you_sure_to_delete_table_message(table_name):
@@ -110,13 +110,13 @@ def marzban_user_rejected_message(username): return f"❌ Клиенту {userna
 
 def pick_table_for_client_message(username): return f'✅ Выберите базу, для клиента @{username}'
 
-def client_dose_not_have_connections_message(username): return f'❌ У клиента @{username} нет подключений'
+client_dose_not_have_connections_message = '❌ У Вас нет подключений'
 
 def client_info_message(username, connections_count): return f'👤 {username} | 📡 {connections_count}'
 
 def connection_info_message(connection, client_username): return f'👤 {client_username}\n\n{connection.os_name} | {connection.price} | {format_date(connection.date_to)}'
 
-def link_message(connection, username): return f'🔗 Ссылка для подключения @{username}:\n\n `{connection.marzban_link}`\n\n{connection.price}₽\n{format_date(connection.date_to)}'
+def link_message(connection): return f'🔗 Ссылка для подключения {connection.os_name}:\n\n `{connection.marzban_link}`\n\nИстекает: {format_date(connection.date_to)}'
 
 enter_message_for_mailing_message = "❔ Введите текст сообщения для рассылки."
 enter_query_text_message = "❔ Введите Username или TgID для поиска клиента."
@@ -139,4 +139,4 @@ def successful_extension_message(username, connection, new_date_to, old_date_to,
 
 def successful_extension_admin_message(connection, username, new_date_to, old_date_to, old_price, new_price):return f"✅ Вы успешно продлили подключение @{username}\n\n{connection.os_name} | {old_price if old_price == new_price else str(old_price) + ' -> ' + str(new_price)} | {format_date(old_date_to)}\n\nДо {format_date(new_date_to)}"
 
-def connection_successfuly_created(username, connection): return f'✅ Клиент @{username} успешно подключен\n\n{connection.os_name} | {connection.date_to} | {connection.price}'
+def connection_successfuly_created(username, connection): return f'✅ Клиент @{username} успешно подключен\n\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price}'

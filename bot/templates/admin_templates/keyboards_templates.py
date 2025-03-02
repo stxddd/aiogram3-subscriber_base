@@ -3,7 +3,7 @@ from bot.utils.data_processing.date_converter import format_date
 my_tables_text = "🪧 Базы"
 create_table_text = "➕ Добавить базу"
 mailing_text = "📧 Рассылка"
-searching_text = "🔍 Поиск"
+search_text  = "🔍 Поиск"
 
 cancel_text = "Отмена"
 
@@ -14,14 +14,14 @@ delete_client_text = "Удалить клиента"
 delete_table_text = "Удалить базу"
 change_table_name_text = "Переименовать"
 
-paid_text = "Оплатил ✅"
+paid_text = "Оплатил(а) ✅"
 didnt_pay_text = "Не оплатил ❌"
 
 yes_text = "ДА"
 no_text = "НЕТ"
 
-forward_text = 'Вперед ➡'
-back_text = '⬅ Назад'
+forward_text = "Вперед ➡"
+back_text = "⬅ Назад"
 
 def get_clients_for_edit_text(client_name, connections_count):
     return f"👤 {client_name} | 📡 {connections_count}"
