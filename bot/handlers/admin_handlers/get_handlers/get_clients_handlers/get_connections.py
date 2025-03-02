@@ -51,7 +51,7 @@ async def handle_get_clients(message: Message):
     client = await ClientDAO.find_one_or_none(tg_id=message.from_user.id)
 
     if not client:
-        return await message.answer(client_does_not_exists_error)
+        return await message.answer(client_dose_not_have_connections_message)
 
     client_username = client.username
     connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client.id)
@@ -80,7 +80,7 @@ async def handle_get_connection_to_edit(callback: CallbackQuery):
 
     client = await ClientDAO.find_one_or_none(id=current_connection.client_id)
     if not client:
-        return await callback.message.answer(client_does_not_exists_error)
+        return await callback.message.answer(connection_does_not_exist_error)
 
     client_username = client.username
 
@@ -99,11 +99,11 @@ async def handle_get_link(callback: CallbackQuery):
 
     current_connection = await ConnectionDAO.find_by_id(model_id=connection_id)
     if not current_connection:
-        return await callback.message.answer(client_dose_not_have_connections_message)
+        return await callback.message.answer(connection_does_not_exist_error)
 
     client = await ClientDAO.find_one_or_none(id=current_connection.client_id)
     if not client:
-        return await callback.message.answer(client_does_not_exists_error)
+        return await callback.message.answer(connection_does_not_exist_error)
 
     marzban_user = await get_user(username=current_connection.name)
 
