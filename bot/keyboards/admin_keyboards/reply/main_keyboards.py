@@ -1,7 +1,6 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 from bot.templates.admin_templates.keyboards_templates import (
-    create_table_text,
-    my_tables_text,
+    my_clients_text,
     mailing_text,
     search_text,
 )
@@ -14,8 +13,7 @@ from bot.templates.user_templates.keyboards_templates import (
 main_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text=my_tables_text),
-            KeyboardButton(text=create_table_text),
+            KeyboardButton(text=my_clients_text),
         ],
         [
             KeyboardButton(text=get_new_connection_text),

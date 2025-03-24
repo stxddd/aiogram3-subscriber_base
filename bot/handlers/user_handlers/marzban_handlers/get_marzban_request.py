@@ -10,9 +10,11 @@ from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
 from bot.database.users.dao import UserDAO
-from bot.keyboards.user_keyboards.inline.payment_keyboards import get_check_pay_connect_keyboard
+from bot.handlers.user_handlers.payment_handlers.stars_payment import (
+    process_activate_subscription_pay_command
+)
 from bot.templates.user_templates.message_templates import (
-    marzban_day_limit_message, wait_for_payment_message
+    marzban_day_limit_message
 )
 from bot.templates.user_templates.errors_templates import added_connection_error
 from bot.templates.user_templates.keyboards_templates import get_new_connection_text
@@ -97,14 +99,9 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
         os_name=user_os,
         name=connection_name
     )    
+      
+    payload = {"type": 'activate-subscription-payload',
+                "connection_id": added_connection.id}
+      
+    await process_activate_subscription_pay_command(message = callback.message, price = price, payload = payload, date_to = date_to, os_name = user_os)
     
-    connection = await ConnectionDAO.find_by_id(added_connection.id)
-    
-    await callback.message.delete()
-    
-    key = randint(1000, 9999)
-    
-    await callback.message.answer(
-        wait_for_payment_message(connection=connection, key=key),
-        reply_markup=await get_check_pay_connect_keyboard(connection_id=connection.id, key=key)    
-    )

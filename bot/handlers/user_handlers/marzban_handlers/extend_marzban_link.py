@@ -1,7 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import re
-from random import randint
 
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
@@ -9,13 +8,13 @@ from aiogram.fsm.context import FSMContext
 
 from bot.database.clients.dao import ClientDAO
 from bot.database.connections.dao import ConnectionDAO
-from bot.keyboards.user_keyboards.inline.payment_keyboards import get_check_pay_keyboard
+from bot.handlers.user_handlers.payment_handlers.stars_payment import process_extend_subscription_pay_command
 from bot.templates.admin_templates.errors_templates import (
     connection_does_not_exist_error,
     client_does_not_exists_error
 )
 from bot.keyboards.user_keyboards.inline.marzban_user_info_keyboards import enter_extend_period_keyboard
-from bot.templates.user_templates.message_templates import enter_period_message, wait_for_extend_payment_message
+from bot.templates.user_templates.message_templates import enter_period_message
 
 router = Router()
 
@@ -59,7 +58,6 @@ async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
     
     date_to_datetime = datetime.combine(connection.date_to, datetime.min.time())
     new_date_to = date_to_datetime + relativedelta(months=int(months))
-
     new_price = price
 
     client = await ClientDAO.find_one_or_none(tg_id=callback.from_user.id)
@@ -68,13 +66,11 @@ async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
     
     await callback.message.delete()
     
-    key = randint(1000, 9999)
+    payload = {"type": 'extend-subscription-payload',
+                "connection_id": connection.id,
+                "new_date_to": str(new_date_to),
+                "new_price": int(new_price)
+    }
+      
+    await process_extend_subscription_pay_command(message = callback.message, price = new_price, payload = payload, os_name=connection.os_name, date_to = new_date_to)
     
-    await callback.message.answer(
-        wait_for_extend_payment_message(
-            connection=connection, price=price, key=key, new_date_to=new_date_to
-        ),
-        reply_markup=await get_check_pay_keyboard(
-            connection_id=connection.id, new_price=new_price, new_months=months, key=key
-        )
-    )

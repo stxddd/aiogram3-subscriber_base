@@ -86,7 +86,7 @@ async def handle_get_connection_to_edit(callback: CallbackQuery):
 
     await callback.message.answer(
         connection_info_message(current_connection, client_username),
-        reply_markup=await get_connection_info_keyboard(connection_id=current_connection.id),
+        reply_markup=await get_connection_info_keyboard(connection_id=current_connection.id, tg_id = callback.from_user.id),
     )
 
 

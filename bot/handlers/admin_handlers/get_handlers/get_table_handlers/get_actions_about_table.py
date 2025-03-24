@@ -1,42 +1,31 @@
 import re
 
 from aiogram import F, Router
-from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import Message
 
-from bot.database.tables.dao import TableDAO
-from bot.keyboards.admin_keyboards.inline.table_keyboards import get_actions_with_table_keyboard
-from bot.templates.admin_templates.errors_templates import table_does_not_exist_error
+from bot.database.clients.dao import ClientDAO
+from bot.database.connections.dao import ConnectionDAO
+from bot.keyboards.admin_keyboards.inline.clients_keyboards import get_actions_with_table_keyboard
+from bot.templates.admin_templates.errors_templates import clients_does_not_exists_error
 from bot.templates.admin_templates.messages_templates import table_name_message
 from bot.decorators.admin_required import admin_required
+from bot.templates.admin_templates.keyboards_templates import my_clients_text
 
 router = Router()
 
-ACTIONS_WITH_TABLE_PATTERN = r"^get_(\d+)_table$"
 
-
-@router.callback_query(F.data.regexp(ACTIONS_WITH_TABLE_PATTERN))
+@router.message(F.text == my_clients_text)
 @admin_required
-async def actions_with_table(callback: CallbackQuery, state: FSMContext):   
-    await callback.answer()
-
-    match = re.match(ACTIONS_WITH_TABLE_PATTERN, callback.data)
-    table_id = int(match.group(1))
-
-    table = await TableDAO.find_one_or_none(id=table_id)
-
-    if not table:
-        return await callback.message.answer(table_does_not_exist_error)
-
-    table_name = table.name
-
-    message_sent = await callback.message.answer(
-        table_name_message(table_name),
-        reply_markup=await get_actions_with_table_keyboard(table_id=table_id),
-    )
-
-    await state.update_data(
-        table_id=table_id,
-        table_name=table_name,
-        message_sent_id=callback.message.message_id,
+async def actions_with_clients(message: Message):   
+    
+    clients = await ClientDAO.find_all()
+    
+    if not clients:
+        return await message.answer(
+            clients_does_not_exists_error
+        )
+    
+    await message.answer(
+        table_name_message(),
+        reply_markup=await get_actions_with_table_keyboard(),
     )

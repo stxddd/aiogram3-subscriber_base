@@ -9,7 +9,6 @@ from bot.config import settings
 from bot.database.database import Base
 
 from bot.database.clients.models import Client   # noqa
-from bot.database.tables.models import Table  # noqa
 from bot.database.users.models import User  # noqa
 from bot.database.connections.models import Connection  # noqa
 

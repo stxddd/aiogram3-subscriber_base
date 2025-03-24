@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
 from bot.templates.admin_templates.keyboards_templates import (
     cancel_text,
@@ -10,10 +11,11 @@ from bot.templates.admin_templates.keyboards_templates import (
     page_num,
     get_marzban_link_text,
     extend_text,
+    delete_text
 )
 
 
-async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int = 3):
+async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int = 5):
     connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client_id)
     
     total_connections = len(connections)
@@ -70,7 +72,7 @@ async def get_connections_to_edit(client_id: int, page: int = 1, per_page: int =
     return keyboard.as_markup()
 
 
-async def get_connection_info_keyboard(connection_id: int):
+async def get_connection_info_keyboard(connection_id: int, tg_id):
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -85,6 +87,12 @@ async def get_connection_info_keyboard(connection_id: int):
                     callback_data=f"extend_marzban_link_{connection_id}",
                 )
             ],
+            [
+                InlineKeyboardButton(
+                    text=delete_text,
+                    callback_data=f"delete_connection_{connection_id}",
+                )
+            ] if tg_id == settings.ADMIN_TG_ID else [],
             [
                 InlineKeyboardButton(
                     text=cancel_text, callback_data="delete_last_message"

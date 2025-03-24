@@ -26,7 +26,7 @@ async def check_expired_clients(bot):
 
         await asyncio.sleep(sleep_time)
 
-        connections = await ConnectionDAO.find_all()
+        connections = await ConnectionDAO.find_all_with_marzban_link()
         today = datetime.today().date()
 
         for connection in connections:

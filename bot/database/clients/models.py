@@ -7,5 +7,4 @@ class Client(Base):
 
     id = Column(Integer, primary_key=True)
     tg_id = Column(BigInteger, nullable=False, unique=True)
-    table_id = Column(ForeignKey("tables.id", ondelete="CASCADE"), nullable=True)
     username = Column(String(32), nullable=False)
