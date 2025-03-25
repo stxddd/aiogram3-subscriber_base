@@ -11,6 +11,7 @@ from bot.database.database import Base
 from bot.database.clients.models import Client   # noqa
 from bot.database.users.models import User  # noqa
 from bot.database.connections.models import Connection  # noqa
+from bot.database.servers.models import Server # noqa
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 

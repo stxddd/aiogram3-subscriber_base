@@ -4,12 +4,14 @@ from bot.templates.user_templates.keyboards_templates import my_connections_text
 
 welcome_message = "Привет 🤖\n\n✅ Выбери, что хочешь сделать."
 enter_os_message = "Выбери свою операционную систему."
+enter_server_message = "Выбери желаемый для подключения регион."
 def wait_for_payment_message(connection, key: int): return f"✅ Подключение \n\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} \n\nСсылка на оплату:\n{settings.PAYMENT_LINK} \n\n❗️Сумма: {connection.price}\n❗️В комментарии укажите: {key}\n\n"
 def wait_for_extend_payment_message(connection, price, new_date_to, key: int): return f"✅ Оплатите продление \n\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} \nДо {format_date(new_date_to)}\n\nСсылка на оплату:\n{settings.PAYMENT_LINK} \n\n❗️Сумма: {price}\n❗️В комментарии укажите: {key}\n\n"
 wait_for_admin_message = "✅ Дождитесь, когда администратор одобрит заявку."
 rejected_message = "❌ Вам отказано в доступе"
 get_instruction_os_message = '✅ Какое устройство Вы хотите подключть?'
 marzban_day_limit_message = "❌ Слишком много запросов сегодня. Попробуйте завтра."
+def buy_stars_tutorial(price): return f'Купить звезды выгоднее всего можно через @PremiumBot \n\n1) Отправьте ему команду /stars \n2) Выберите {price} звезд\n3) Оплатите звезды удобным способом\n4) Оплатите подключение'
 android_instruction_message = "\n".join(('⚙️ Инструкция для подключения Android устройства\n\n',
                                '1. Установите приложение Hiddify. (https://play.google.com/store/apps/details?id=app.hiddify.com)\n',
                                '2. Скопируйте ключ доступа, отправленный сообщением ниже.\n',
@@ -50,6 +52,7 @@ incorrect_os_message = '❌ Нет данных о такой ОС.'
 enter_period_message = '⚙️ Выберите период подписки.'
 def you_are_successfully_connected_message(date_to): return f'✅ Вы успешно подключены до {format_date(date_to)}'
 def you_need_to_pay_message(connection): return f'⚠ Скоро истекает срок действия вашего подключения\n\n{connection.os_name} | {connection.price} | {format_date(connection.date_to)}\n\nЧтобы продлить:\n\n{my_connections_text} ->\n{connection.os_name} | {format_date(connection.date_to)} | {connection.price} ->\n{renew_subscribtion_text}'
-def payment_title(os_name, date_to): return f'Подключение {os_name} до {format_date(date_to)}.'
+def payment_title(os_name, date_to, server_name): return f'{server_name} {os_name} до {format_date(date_to)}.'
 extend_payment_description = 'Оплатите продление'
 accept_payment_description = "Оплатите создание"
+

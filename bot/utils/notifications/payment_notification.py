@@ -30,7 +30,7 @@ async def check_expired_clients(bot):
         today = datetime.today().date()
 
         for connection in connections:
-            if connection.date_to - today <= timedelta(days=1):
+            if connection.date_to - today <= timedelta(days=2):
                 client = await ClientDAO.find_one_or_none(id=connection.client_id)
                 if client:
                     await bot.send_message(

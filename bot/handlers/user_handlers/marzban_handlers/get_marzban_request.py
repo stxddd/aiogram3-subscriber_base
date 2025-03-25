@@ -9,25 +9,26 @@ from aiogram.fsm.context import FSMContext
 from bot.config import settings
 from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
+from bot.database.servers.dao import ServerDAO
 from bot.database.users.dao import UserDAO
 from bot.handlers.user_handlers.payment_handlers.stars_payment import (
     process_activate_subscription_pay_command
 )
 from bot.templates.user_templates.message_templates import (
-    marzban_day_limit_message
+    marzban_day_limit_message, enter_server_message
 )
-from bot.templates.user_templates.errors_templates import added_connection_error
+from bot.templates.user_templates.errors_templates import added_connection_error, server_does_not_exists_error
 from bot.templates.user_templates.keyboards_templates import get_new_connection_text
 from bot.keyboards.user_keyboards.inline.marzban_user_info_keyboards import (
-    enter_os_keyboard, enter_period_keyboard
+    enter_os_keyboard, enter_period_keyboard, get_servers_keyboard
 )
-from bot.templates.user_templates.message_templates import enter_os_message, enter_period_message
+from bot.templates.user_templates.message_templates import enter_os_message, enter_period_message, buy_stars_tutorial
 
 router = Router()
 
 ADD_CONNECTION_DATE_PATTERN = '_connection_period'
 ADD_CONNECTION_OS_PATTERN = '_add_connection_os'
-
+ENTER_SERVER_PATTERN = '_select_server'
 
 @router.message(F.text == get_new_connection_text)
 async def handle_new_connection_selection(message: Message):
@@ -35,8 +36,24 @@ async def handle_new_connection_selection(message: Message):
     if user.marzban_requests_today > settings.MARZBAN_REQUEST_DAY_LIMIT:
         return await message.answer(marzban_day_limit_message)
     
-    return await message.answer(enter_period_message, reply_markup=enter_period_keyboard)
+    return await message.answer(enter_server_message, reply_markup= await get_servers_keyboard())
+    
 
+@router.callback_query(lambda c: c.data.endswith(ENTER_SERVER_PATTERN))
+async def handle_server_name(callback: CallbackQuery, state: FSMContext):
+    await callback.answer()
+    
+    server_id = int(callback.data.split("_")[0])    
+    server = await ServerDAO.find_by_id(server_id)
+    
+    if not server:
+        return await callback.message.answer(server_does_not_exists_error)
+    
+    await state.update_data(server_id = server_id)
+    
+    await callback.message.delete()
+    return await callback.message.answer(enter_period_message, reply_markup=enter_period_keyboard)
+    
 
 @router.callback_query(lambda c: c.data.endswith(ADD_CONNECTION_DATE_PATTERN))
 async def handle_period_selection(callback: CallbackQuery, state: FSMContext):
@@ -66,6 +83,12 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
     
     months = int(data.get('months'))
     price = int(data.get('price'))
+    server_id = int(data.get("server_id"))
+    
+    server = await ServerDAO.find_by_id(server_id)
+    
+    if not server:
+        return await callback.message.answer(server_does_not_exists_error)
     
     date_to = datetime.now() + relativedelta(months=months)
     
@@ -91,17 +114,23 @@ async def handle_add_new_connection(callback: CallbackQuery, state: FSMContext):
     username = callback.from_user.username or callback.from_user.id
 
     connection_name = f"{user_os}_{username}_{randint(10000, 99999)}"
+    server_name = server.name
     
     added_connection = await ConnectionDAO.add(
         client_id=client.id,
         date_to=date_to,
         price=price,
         os_name=user_os,
-        name=connection_name
+        name=connection_name,
+        server_id = server_id
     )    
       
     payload = {"type": 'activate-subscription-payload',
-                "connection_id": added_connection.id}
-      
-    await process_activate_subscription_pay_command(message = callback.message, price = price, payload = payload, date_to = date_to, os_name = user_os)
+                "connection_id": added_connection.id,
+                "server_id": server_id}
+    
+    
+    await callback.message.delete()
+    await callback.message.answer(buy_stars_tutorial(price))
+    await process_activate_subscription_pay_command(message = callback.message, price = price, payload = payload, date_to = date_to, os_name = user_os, server_name = server_name)
     

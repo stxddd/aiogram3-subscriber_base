@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     KEY_FOR_DELETE: str
 
-    PAYMENT_LINK: str
+    MAX_CLIENTS_ON_SERVER: int
 
     @property
     def DATABASE_URL(self) -> str:

@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, Integer, String, ForeignKey
+from sqlalchemy import BigInteger, Column, Integer, String
 
 from bot.database.database import Base
 
@@ -7,4 +7,3 @@ class Client(Base):
 
     id = Column(Integer, primary_key=True)
     tg_id = Column(BigInteger, nullable=False, unique=True)
-    username = Column(String(32), nullable=False)

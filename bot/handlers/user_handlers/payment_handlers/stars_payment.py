@@ -22,12 +22,12 @@ from bot.templates.admin_templates.errors_templates import refunded_error, payme
 router = Router()
 
 
-async def process_activate_subscription_pay_command(message: Message, price: int, payload, os_name, date_to) -> None:
+async def process_activate_subscription_pay_command(message: Message, price: int, payload, os_name, date_to, server_name) -> None:
     try:
         payload = json.dumps(payload)
         prices = [LabeledPrice(label='Stars Payment', amount=price)]
         await message.answer_invoice(
-            title=payment_title(date_to=date_to, os_name=os_name),
+            title=payment_title(date_to=date_to, os_name=os_name, server_name = server_name),
             description=accept_payment_description,
             provider_token="",
             currency="XTR",
@@ -38,12 +38,12 @@ async def process_activate_subscription_pay_command(message: Message, price: int
     except TelegramAPIError:
         await message.answer(payment_create_error)
         
-async def process_extend_subscription_pay_command(message: Message, price: int, payload, os_name, date_to) -> None:
+async def process_extend_subscription_pay_command(message: Message, price: int, payload, os_name, date_to, server_name) -> None:
     try:
         payload = json.dumps(payload)
         prices = [LabeledPrice(label='Stars Payment', amount=price)]
         await message.answer_invoice(
-            title=payment_title(date_to=date_to, os_name=os_name),
+            title=payment_title(date_to=date_to, os_name=os_name, server_name = server_name),
             description=extend_payment_description,
             provider_token="",
             currency="XTR",
@@ -78,8 +78,7 @@ async def process_successful_payment(message: Message) -> None:
     else:
         await message.answer(payment_error)
     
-    
-    
+
 @router.message(Command("refund"))
 @admin_required
 async def process_refund(message: Message, bot: Bot) -> None:

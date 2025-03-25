@@ -43,7 +43,7 @@ async def get_clients_for_edit(clients, page: int = 1, per_page: int = 10):
         keyboard.row(
             InlineKeyboardButton(
                 text=get_clients_for_edit_text(
-                    client_name=client.username,
+                    client_name=client.tg_id,
                     connections_count=len(connections),
                 ),
                 callback_data=f"get_client_to_edit_{client.id}",

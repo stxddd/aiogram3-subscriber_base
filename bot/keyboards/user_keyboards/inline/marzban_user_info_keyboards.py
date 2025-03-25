@@ -1,4 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+from bot.config import settings
+from bot.database.servers.dao import ServerDAO
 from bot.templates.user_templates.keyboards_templates import (
     ios_os_text,
     mac_os_text,
@@ -10,7 +13,24 @@ from bot.templates.user_templates.keyboards_templates import (
     six_month_text,
     twelve_month_text,
 )
-from bot.config import settings
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+async def get_servers_keyboard():
+    
+    servers = await ServerDAO.find_all()
+    
+    keyboard = InlineKeyboardBuilder()
+    
+    for server in servers:
+        if server.count_of_clients <= settings.MAX_CLIENTS_ON_SERVER:
+            keyboard.row(
+                InlineKeyboardButton(
+                    text=server.name,
+                    callback_data=f"{server.id}_select_server",
+                )
+            )
+
+    return keyboard.as_markup()
 
 enter_os_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[

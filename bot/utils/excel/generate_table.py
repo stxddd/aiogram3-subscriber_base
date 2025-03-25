@@ -18,7 +18,7 @@ class ExcelCRUD:
             sheet = workbook.active
             sheet.title = f'Клиенты {tg_id}'
 
-            headers = ['ID', 'Username / TG_ID', 'Название OS', 'Дата окончания', 'Цена', 'Ключ']
+            headers = ['ID', 'TG_ID', 'Название OS', 'Дата окончания', 'Цена', 'Ключ']
             for i, header in enumerate(headers, start=1):
                 cell = sheet.cell(row=1, column=i, value=header)
                 cell.alignment = Alignment(horizontal="center")
@@ -85,7 +85,7 @@ class ExcelCRUD:
             for connection in client_connections:
                 client_data = [
                     client.id,
-                    client.username,
+                    client.tg_id,
                     connection.os_name,
                     format_date(connection.date_to),
                     connection.price,

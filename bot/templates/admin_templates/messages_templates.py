@@ -15,7 +15,7 @@ def one_client_message(client, connections):
     text = (
         f"Выбран клиент\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.username)} \n📡 {len(connections)}\n"
+        f"👤 {hbold(client.tg_id)} \n📡 {len(connections)}\n"
     )
     text += f"{'➖' * 12}\n" 
     return text
@@ -23,7 +23,7 @@ def are_you_sure_to_delete_connection_message(client, connection):
     text = (
         f"Подключение:\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.username)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
+        f"👤 {hbold(client.tg_id)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
     )
     text += f"{'➖' * 12}\n" "❔Вы уверены, что хотите удалить его?"
     return text
@@ -31,7 +31,7 @@ def client_are_not_deleted_message(client, connection):
     text = (
         f"Подключение:\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.username)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
+        f"👤 {hbold(client.tg_id)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
     )
 
     text += f"{'➖' * 12}\n" "❌ Не может быть удалён"
@@ -40,7 +40,7 @@ def client_are_deleted_message(client, connection):
     text = (
         f"Подключение:\n"
         f"{'➖' * 12}\n"
-        f"👤 {hbold(client.username)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
+        f"👤 {hbold(client.tg_id)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
     )
     text += f"{'➖' * 12}\n" "✅ Удален"
     return text
@@ -56,7 +56,7 @@ def clients_by_query_message(query, length): return f"✅ Клиентов по 
 def enter_code_for_delete_table(table_name):
     return f"❔ Введите код для удаления базы «{table_name}»"
 def enter_code_for_delete_client(client, connection):
-    return f"❔ Введите код для удаления 👤 {hbold(client.username)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
+    return f"❔ Введите код для удаления 👤 {hbold(client.tg_id)}\n\n{connection.os_name}\n{connection.price}\n{connection.date_to}\n"
 incorrect_code_message = "❌ Неверный код!"
 def are_you_sure_to_send_mailing_message(message): return f"❔ Вы уверены, что хотите отправить сообщение?\n\n{message}"
 def refunded_succsses_message(transaction_id): return f"✅ Звезды по операции \n\n{transaction_id}\n\nвозвращены! "

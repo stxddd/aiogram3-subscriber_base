@@ -8,6 +8,7 @@ class Connection(Base):
 
     id = Column(Integer, primary_key=True)
     client_id = Column(ForeignKey("clients.id", ondelete="CASCADE"))
+    server_id = Column(ForeignKey("servers.id", ondelete="CASCADE"))
     name = Column(String(64), nullable=False)
     os_name = Column(String(16), nullable=False)
     marzban_link = Column(String, nullable=True)

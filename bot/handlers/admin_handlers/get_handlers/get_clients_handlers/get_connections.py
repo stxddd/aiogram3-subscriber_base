@@ -5,6 +5,7 @@ from aiogram.types import CallbackQuery, Message
 
 from bot.database.connections.dao import ConnectionDAO
 from bot.database.clients.dao import ClientDAO
+from bot.database.servers.dao import ServerDAO
 from bot.keyboards.admin_keyboards.inline.connections_keyboards import (
     get_connection_info_keyboard,
     get_connections_to_edit,
@@ -19,6 +20,7 @@ from bot.templates.admin_templates.messages_templates import (
     client_info_message,
     connection_info_message,
 )
+from bot.templates.user_templates.errors_templates import server_does_not_exists_error
 from bot.decorators.admin_required import admin_required
 from bot.templates.user_templates.keyboards_templates import my_connections_text
 from bot.utils.marzban.marzban_manager import get_user
@@ -53,7 +55,7 @@ async def handle_get_clients(message: Message):
     if not client:
         return await message.answer(client_dose_not_have_connections_message)
 
-    client_username = client.username
+    client_username = client.tg_id
     connections = await ConnectionDAO.find_all_with_marzban_link(client_id=client.id)
 
     if not connections:
@@ -82,7 +84,7 @@ async def handle_get_connection_to_edit(callback: CallbackQuery):
     if not client:
         return await callback.message.answer(connection_does_not_exist_error)
 
-    client_username = client.username
+    client_username = client.tg_id
 
     await callback.message.answer(
         connection_info_message(current_connection, client_username),
@@ -104,8 +106,12 @@ async def handle_get_link(callback: CallbackQuery):
     client = await ClientDAO.find_one_or_none(id=current_connection.client_id)
     if not client:
         return await callback.message.answer(connection_does_not_exist_error)
+    
+    server = await ServerDAO.find_by_id(current_connection.server_id)
+    if not server:
+        return await callback.message.answer(server_does_not_exists_error)
 
-    marzban_user = await get_user(username=current_connection.name)
+    marzban_user = await get_user(port = server.port, username=current_connection.name)
 
     if not marzban_user:
         return await callback.message.answer(marzban_link_get_error)

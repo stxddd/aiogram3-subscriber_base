@@ -69,7 +69,6 @@ dp.include_routers(
 )
 
 async def main():
-
     asyncio.create_task(check_expired_clients(bot))
     await dp.start_polling(bot)
 

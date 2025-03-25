@@ -6,8 +6,8 @@ from bot.config import settings
 
 logger = logging.getLogger(__name__)
 
-async def create_user(username: str, date_to: date):
-    api = MarzbanAPI(base_url=settings.MARZBAN_URL)
+async def create_user(port: int, username: str, date_to: date):
+    api = MarzbanAPI(base_url=f'{settings.MARZBAN_URL}:{port}')
     
     try:
         token = await api.get_token(username=settings.MARZBAN_USER, password=settings.MARZBAN_PASS)
@@ -30,8 +30,8 @@ async def create_user(username: str, date_to: date):
         await api.close()
 
 
-async def get_user(username: str):
-    api = MarzbanAPI(base_url=settings.MARZBAN_URL)
+async def get_user(port: int, username: str):
+    api = MarzbanAPI(base_url=f'{settings.MARZBAN_URL}:{port}')
 
     try:
         token = await api.get_token(username=settings.MARZBAN_USER, password=settings.MARZBAN_PASS)
@@ -45,8 +45,8 @@ async def get_user(username: str):
         await api.close()
 
 
-async def extend_user(username: str, date_to: date):
-    api = MarzbanAPI(base_url=settings.MARZBAN_URL)
+async def extend_user(port: int, username: str, date_to: date):
+    api = MarzbanAPI(base_url=f'{settings.MARZBAN_URL}:{port}')
 
     try:
         token = await api.get_token(username=settings.MARZBAN_USER, password=settings.MARZBAN_PASS)
